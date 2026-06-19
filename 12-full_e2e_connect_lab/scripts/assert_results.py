@@ -47,11 +47,12 @@ def main() -> int:
     assert connectors.get("ok") is True, connectors.get("failures")
     catalog = connectors.get("catalog") or {}
     available = set(catalog.get("available") or [])
-    assert {"planfile", "sqlite-context", "domain-monitor", "http-check", "namecheap-dns", "grpc-transport"}.issubset(available), available
-    assert set(catalog.get("plannedSkipped") or []) == {"browser-control", "mqtt"}, catalog
+    assert {"planfile", "sqlite-context", "domain-monitor", "http-check", "time-tools", "namecheap-dns", "grpc-transport"}.issubset(available), available
+    assert {"browser-control", "mqtt"}.issubset(set(catalog.get("plannedSkipped") or [])), catalog
     route_results = connectors.get("routeResults") or {}
     for key in (
         "http_check",
+        "time_now",
         "domain_monitor_http",
         "domain_monitor_dns_current",
         "domain_flow",

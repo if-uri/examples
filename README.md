@@ -19,7 +19,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 02 | [`02-decorators/`](02-decorators/) | Python decorator-generated bindings | ✅ `example.py` |
 | 03 | [`03-artifacts/`](03-artifacts/) | scan Dockerfile/Makefile/package/manifest | ✅ `urirun scan` |
 | 04 | [`04-python/`](04-python/) | Python adapter, adopt and MCP/A2A tests | ✅ `pytest` |
-| 05 | [`05-generators/`](05-generators/) | JS, Node.js, TypeScript and PHP generation | ✅ js/node/php |
+| 05 | [`05-generators/`](05-generators/) | JS, Node.js, TypeScript, PHP, Go and C generation | ✅ js/node/ts/php/go/c |
 | 06 | [`06-html_uri_app/`](06-html_uri_app/) | browser UI calling a Python backend via URI | ✅ `test.mjs` |
 | 07 | [`07-transports/`](07-transports/) | local, queue, serverless, HTTP, gRPC | ✅ `test_transports.py` |
 | 08 | [`08-multi_transport/`](08-multi_transport/) | HTTP + gRPC worker transport demo | needs Docker |
@@ -43,9 +43,9 @@ The full Docker scenario installs available connectors from
 `connect.ifuri.com`, runs host-node communication across `pc1` and `pc2`,
 executes connector URI routes, verifies gRPC transport, and checks MCP tools plus
 A2A skills. Current connector Docker coverage is `planfile`, `sqlite-context`,
-`domain-monitor`, `http-check`, `namecheap-dns` and `grpc-transport`; planned
-catalog entries `mqtt` and `browser-control` are reported as skipped until their
-packages exist.
+`domain-monitor`, `http-check`, `time-tools`, `namecheap-dns` and
+`grpc-transport`; planned catalog entries `mqtt` and `browser-control` are
+reported as skipped until their packages exist.
 
 ## Run all tests
 
@@ -56,7 +56,7 @@ make test          # or: ./run_tests.sh
 Runs the host-runnable check for every `NN-*` example and prints a summary.
 It auto-detects a Python with `urirun` (prefers `../app/.venv`; override with
 `PYTHON=...`) and skips the Docker-only demos (08, 11 and the full 09 flow).
-Current host run: **14 passed, 0 failed, 3 skipped**.
+Current host run: **18 passed, 0 failed, 4 skipped**.
 
 ## Related repositories
 
