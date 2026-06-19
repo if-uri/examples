@@ -20,8 +20,8 @@ from urirun.v2_mcp import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-BINDINGS = ROOT / "json" / "bindings.v2.example.json"
-HTML_APP = ROOT / "html_uri_app"
+BINDINGS = ROOT / "01-json" / "bindings.v2.example.json"
+HTML_APP = ROOT / "06-html_uri_app"
 
 
 def registry():

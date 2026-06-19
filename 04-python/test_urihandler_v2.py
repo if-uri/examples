@@ -21,9 +21,9 @@ from urirun.v2 import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BINDINGS = ROOT / "json" / "bindings.v2.example.json"
-ARTIFACTS = ROOT / "artifacts"
-HTML_APP = ROOT / "html_uri_app"
+BINDINGS = ROOT / "01-json" / "bindings.v2.example.json"
+ARTIFACTS = ROOT / "03-artifacts"
+HTML_APP = ROOT / "06-html_uri_app"
 ALLOW_ALL = {"execute": {"allow": ["*"]}, "allowShellTemplates": True}
 
 
@@ -130,7 +130,7 @@ class ArtifactAdoptionTests(unittest.TestCase):
         self.assertIn("python://local/script/demo-tool", uris)
         self.assertIn("make://local/target/serve", uris)
         self.assertIn("script://local/deploy/run", uris)
-        self.assertIn("image://artifacts/docker/build", uris)
+        self.assertIn("image://03-artifacts/docker/build", uris)
         self.assertIn("tool://local/report/render", uris)
 
         registry = compile_registry({"bindings": bindings})

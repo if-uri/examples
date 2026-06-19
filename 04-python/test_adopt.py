@@ -14,7 +14,7 @@ from urirun.v2_adopt import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACTS = ROOT / "artifacts"
+ARTIFACTS = ROOT / "03-artifacts"
 ALLOW_ALL = {"execute": {"allow": ["*"]}}
 
 
