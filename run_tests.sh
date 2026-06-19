@@ -20,6 +20,9 @@ case "$PY" in */*) PY="$(cd "$(dirname "$PY")" && pwd)/$(basename "$PY")";; esac
 echo "Using Python: $PY ($("$PY" -c 'import urirun,sys;print("urirun",getattr(urirun,"__version__","?"))' 2>/dev/null))"
 HAVE_NODE=0; command -v node >/dev/null 2>&1 && HAVE_NODE=1
 HAVE_PHP=0;  command -v php  >/dev/null 2>&1 && HAVE_PHP=1
+HAVE_TSC=0;  command -v tsc  >/dev/null 2>&1 && HAVE_TSC=1
+HAVE_GO=0;   command -v go   >/dev/null 2>&1 && HAVE_GO=1
+HAVE_GCC=0;  command -v gcc  >/dev/null 2>&1 && HAVE_GCC=1
 
 PASS=0; FAIL=0; SKIP=0; FAILED=()
 run() { # name, command
@@ -39,12 +42,21 @@ echo "== 04-python =="
 run "04-python pytest"            "cd 04-python && $PY -m pytest -q ."
 echo "== 05-generators =="
 if [ "$HAVE_NODE" = 1 ]; then
-  run "05-generators js"          "cd 05-generators && node js/example.mjs"
-  run "05-generators nodejs"      "cd 05-generators && node nodejs/generate-bindings.mjs"
+  run "05-generators js"          "cd 05-generators && node js/example.mjs > /tmp/gen_js_$$.json && $PY -m urirun.v2 validate /tmp/gen_js_$$.json"
+  run "05-generators nodejs"      "cd 05-generators && node nodejs/generate-bindings.mjs /tmp/gen_node_$$.json && $PY -m urirun.v2 validate /tmp/gen_node_$$.json"
 else skip "05-generators js/nodejs" "no node"; fi
+if [ "$HAVE_TSC" = 1 ] && [ "$HAVE_NODE" = 1 ]; then
+  run "05-generators ts"          "cd 05-generators && rm -rf /tmp/gen_ts_$$ && tsc --target ES2022 --module ES2022 --outDir /tmp/gen_ts_$$ ts/decorators.ts && node /tmp/gen_ts_$$/decorators.js > /tmp/gen_ts_$$.json && $PY -m urirun.v2 validate /tmp/gen_ts_$$.json"
+else skip "05-generators ts" "no tsc/node"; fi
 if [ "$HAVE_PHP" = 1 ]; then
-  run "05-generators php"         "cd 05-generators && php php/example.php"
+  run "05-generators php"         "cd 05-generators && php php/example.php > /tmp/gen_php_$$.json && $PY -m urirun.v2 validate /tmp/gen_php_$$.json"
 else skip "05-generators php" "no php"; fi
+if [ "$HAVE_GO" = 1 ]; then
+  run "05-generators go"          "cd 05-generators && go run go/example.go > /tmp/gen_go_$$.json && $PY -m urirun.v2 validate /tmp/gen_go_$$.json"
+else skip "05-generators go" "no go"; fi
+if [ "$HAVE_GCC" = 1 ]; then
+  run "05-generators c"           "cd 05-generators && gcc c/example.c -o /tmp/gen_c_$$ && /tmp/gen_c_$$ > /tmp/gen_c_$$.json && $PY -m urirun.v2 validate /tmp/gen_c_$$.json"
+else skip "05-generators c" "no gcc"; fi
 echo "== 06-html_uri_app =="
 if [ "$HAVE_NODE" = 1 ]; then run "06-html_uri_app test.mjs" "cd 06-html_uri_app && node test.mjs"
 else skip "06-html_uri_app test.mjs" "no node"; fi

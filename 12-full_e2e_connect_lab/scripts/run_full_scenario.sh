@@ -64,7 +64,7 @@ install_node pc2
 wait_http_from_host "http://pc1:8765/health" "pc1"
 wait_http_from_host "http://pc2:8765/health" "pc2"
 
-CONNECTORS="${CONNECTORS:-planfile,sqlite-context,domain-monitor,http-check,grpc-transport,namecheap-dns}"
+CONNECTORS="${CONNECTORS:-planfile,sqlite-context,domain-monitor,http-check,time-tools,grpc-transport,namecheap-dns}"
 echo "==> Install host runtime/connectors from $CONNECT_BASE_URL ($CONNECTORS)"
 exec_pc host "curl -fsSL '$CONNECT_BASE_URL/install?connectors=$CONNECTORS' | bash"
 

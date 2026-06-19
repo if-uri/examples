@@ -62,6 +62,16 @@ print(json.dumps(urirun_bindings(), indent=2))
     (BASE / "http-check-bindings.json").write_text(result.stdout, encoding="utf-8")
 
 
+def emit_time_tools_bindings() -> None:
+    code = """
+import json
+from urirun_connector_time_tools import urirun_bindings
+print(json.dumps(urirun_bindings(), indent=2))
+""".strip()
+    result = run(["python3", "-c", code])
+    (BASE / "time-tools-bindings.json").write_text(result.stdout, encoding="utf-8")
+
+
 def build_registry() -> None:
     BASE.mkdir(parents=True, exist_ok=True)
     PROJECT.mkdir(parents=True, exist_ok=True)
@@ -69,6 +79,7 @@ def build_registry() -> None:
     write_json(POLICY, {"execute": {"allow": ["**"]}})
 
     emit_http_check_bindings()
+    emit_time_tools_bindings()
     run(["urirun", "host", "data", "bindings", "--target", "host", "--db", str(DB), "--out", str(BASE / "data-bindings.json")])
     run([
         "urirun",
@@ -91,6 +102,7 @@ def build_registry() -> None:
         "urirun",
         "compile",
         str(BASE / "http-check-bindings.json"),
+        str(BASE / "time-tools-bindings.json"),
         str(BASE / "data-bindings.json"),
         str(BASE / "monitor-bindings.json"),
         str(BASE / "task-bindings.json"),
@@ -100,6 +112,7 @@ def build_registry() -> None:
         "keep",
     ])
     run(["urirun", "validate", str(BASE / "http-check-bindings.json")])
+    run(["urirun", "validate", str(BASE / "time-tools-bindings.json")])
     run(["urirun", "validate", str(BASE / "data-bindings.json")])
     run(["urirun", "validate", str(BASE / "monitor-bindings.json")])
     run(["urirun", "validate", str(BASE / "task-bindings.json")])
@@ -164,6 +177,7 @@ def run_connector_routes() -> dict:
     results["check_recent"] = uri_run("check://host/checks/query/recent", {"db": str(DB), "subject": "ifuri-site", "limit": 10})
     results["log_write"] = uri_run("log://host/daily/command/write", {"db": str(DB), "stream": "daily", "event": "connector.e2e.started", "detail": {"url": IFURI_URL}})
     results["http_check"] = uri_run("httpcheck://host/http/query/status", {"url": IFURI_URL, "expectStatus": 200, "timeout": 5})
+    results["time_now"] = uri_run("time://host/clock/query/now", {"timezone": "UTC", "output": "iso"})
     results["domain_monitor_http"] = uri_run("monitor://host/http/query/status", {"url": IFURI_URL, "expected_status": 200, "timeout": 5})
     results["domain_monitor_dns_current"] = uri_run("dns://host/records/query/current", {"domain": "ifuri-site", "record_types": ["A"]})
     results["domain_flow"] = uri_run(
@@ -320,6 +334,7 @@ def main() -> int:
         "check_recent",
         "log_write",
         "http_check",
+        "time_now",
         "domain_monitor_http",
         "domain_monitor_dns_current",
         "domain_flow",
@@ -338,11 +353,13 @@ def main() -> int:
     connector_skills = (mcp_a2a["card"].get("skills") or [])
     tool_names = {tool.get("name") for tool in connector_tools}
     skill_examples = [example for skill in connector_skills for example in (skill.get("examples") or [])]
-    for expected in ("httpcheck_host_http_query", "data_host_dataset_command", "task_host_ticket_command"):
+    for expected in ("httpcheck_host_http_query", "time_host_clock_query", "data_host_dataset_command", "task_host_ticket_command"):
         if expected not in tool_names:
             failures.append(f"missing MCP tool {expected}")
     if "httpcheck://host/http/query/status" not in skill_examples:
         failures.append("missing A2A skill for httpcheck")
+    if "time://host/clock/query/now" not in skill_examples:
+        failures.append("missing A2A skill for time-tools")
     if not grpc.get("ok"):
         failures.append("grpc transport call failed")
     if available_not_tested:
