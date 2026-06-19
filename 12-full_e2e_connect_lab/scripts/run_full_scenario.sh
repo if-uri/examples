@@ -49,6 +49,10 @@ PY"
 
 install_node() {
   local name="$1"
+  if exec_pc "$name" "curl -fsS http://127.0.0.1:8765/health >/dev/null 2>&1"; then
+    echo "$name already running on 8765"
+    return
+  fi
   exec_pc "$name" "export URIRUN_GIT_URL='$URIRUN_GIT_URL'; curl -fsSL '$GET_BASE_URL/node.sh' | bash -s -- --name '$name' --port 8765 --bind 0.0.0.0 --background"
 }
 
@@ -59,8 +63,9 @@ install_node pc2
 wait_http_from_host "http://pc1:8765/health" "pc1"
 wait_http_from_host "http://pc2:8765/health" "pc2"
 
-echo "==> Install host runtime/connectors from $CONNECT_BASE_URL"
-exec_pc host "curl -fsSL '$CONNECT_BASE_URL/install?connectors=planfile' | bash"
+CONNECTORS="${CONNECTORS:-planfile,sqlite-context,domain-monitor,http-check,grpc-transport,namecheap-dns}"
+echo "==> Install host runtime/connectors from $CONNECT_BASE_URL ($CONNECTORS)"
+exec_pc host "curl -fsSL '$CONNECT_BASE_URL/install?connectors=$CONNECTORS' | bash"
 
 echo "==> Register nodes on host"
 exec_pc host "rm -f '$MESH_CONFIG'; urirun host init --config '$MESH_CONFIG' --name e2e-host >/dev/null; urirun host add-node --config '$MESH_CONFIG' pc1 http://pc1:8765 >/dev/null; urirun host add-node --config '$MESH_CONFIG' pc2 http://pc2:8765 >/dev/null"
@@ -74,6 +79,9 @@ exec_pc host "urirun host nodes --config '$MESH_CONFIG' --json > /lab/generated/
 exec_pc host "urirun host routes --config '$MESH_CONFIG' --json > /lab/generated/routes.json"
 exec_pc host "urirun host agents --config '$MESH_CONFIG' > /lab/generated/agents.json"
 exec_pc host "urirun host ask --config '$MESH_CONFIG' --node pc1 --node pc2 --no-llm --execute 'sprawdz procesy system date pc1 pc2' > /lab/generated/flow-result.json"
+
+echo "==> Build and execute connector registry, MCP tools and A2A skills"
+exec_pc host "CONNECT_BASE_URL='$CONNECT_BASE_URL' python3 /lab/scripts/connector_checks.py"
 
 python3 scripts/assert_results.py generated
 echo "full E2E scenario OK"

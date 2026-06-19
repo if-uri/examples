@@ -8,6 +8,8 @@ This lab verifies the complete user path:
 4. `host` installs urirun + connectors, discovers both nodes and runs a URI flow.
 5. `registry-runtime` exposes a live registry built from the node routes.
 6. `ifuri-site` serves a local test page representing `ifuri.com`.
+7. Connector routes are compiled into a host registry and projected to MCP tools
+   and A2A skills.
 
 The default test intentionally uses public installer endpoints:
 
@@ -46,6 +48,21 @@ The scenario writes artifacts to `generated/`:
 - `registry-runtime.json`
 - `flow-result.json`
 - `ifuri-test-page.html`
+- `connectors-catalog.json`
+- `connectors-registry.json`
+- `connectors-result.json`
+
+The connector checks execute:
+
+- `httpcheck://host/http/query/status` against the local `ifuri-site`,
+- `data://`, `artifact://`, `check://` and `log://` host SQLite routes,
+- `task://` and `planfile://` planfile-backed routes,
+- `monitor://`, `dns://`, `flow://` and safe mock `namecheap-dns` routes,
+- gRPC transport by serving the same registry over `urirun.v2_grpc`,
+- MCP tools and A2A card generation from the same registry.
+
+Planned catalog entries such as `mqtt` and `browser-control` are reported as
+skipped until their connector packages exist.
 
 ## Manual commands
 

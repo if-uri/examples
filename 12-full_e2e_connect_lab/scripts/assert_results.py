@@ -16,6 +16,7 @@ def main() -> int:
     agents = load(base / "agents.json")
     registry = load(base / "registry-runtime.json")
     flow = load(base / "flow-result.json")
+    connectors = load(base / "connectors-result.json")
     page = (base / "ifuri-test-page.html").read_text(encoding="utf-8")
 
     node_items = nodes.get("nodes") or nodes
@@ -43,6 +44,36 @@ def main() -> int:
     assert all(item.get("ok") for item in timeline), timeline
     assert {"pc1", "pc2"}.issubset({item.get("target") for item in timeline}), timeline
 
+    assert connectors.get("ok") is True, connectors.get("failures")
+    catalog = connectors.get("catalog") or {}
+    available = set(catalog.get("available") or [])
+    assert {"planfile", "sqlite-context", "domain-monitor", "http-check", "namecheap-dns", "grpc-transport"}.issubset(available), available
+    assert set(catalog.get("plannedSkipped") or []) == {"browser-control", "mqtt"}, catalog
+    route_results = connectors.get("routeResults") or {}
+    for key in (
+        "http_check",
+        "domain_monitor_http",
+        "domain_monitor_dns_current",
+        "domain_flow",
+        "namecheap_plan",
+        "namecheap_backup",
+        "namecheap_apply_mock",
+        "sqlite_dataset_create",
+        "sqlite_record_upsert",
+        "artifact_register",
+        "artifact_list",
+        "check_add",
+        "check_recent",
+        "task_create",
+        "planfile_dsl",
+        "task_complete",
+        "logs_recent",
+    ):
+        assert route_results.get(key, {}).get("ok") is True, (key, route_results.get(key))
+    assert connectors.get("mcp", {}).get("toolCount", 0) >= 10, connectors.get("mcp")
+    assert connectors.get("a2a", {}).get("skillCount", 0) >= 10, connectors.get("a2a")
+    assert connectors.get("grpc", {}).get("ok") is True, connectors.get("grpc")
+
     print(
         json.dumps(
             {
@@ -51,6 +82,9 @@ def main() -> int:
                 "routes": len(routes),
                 "flowSteps": len(timeline),
                 "registryBindings": len(registry_bindings),
+                "connectorRoutes": len(route_results),
+                "connectorMcpTools": connectors.get("mcp", {}).get("toolCount"),
+                "connectorA2aSkills": connectors.get("a2a", {}).get("skillCount"),
             },
             indent=2,
         )

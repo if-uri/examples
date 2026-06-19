@@ -27,6 +27,7 @@ services:
       URIRUN_GIT_URL: "${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@main#subdirectory=adapters/python}"
     volumes:
       - ./generated:/lab/generated
+      - ./scripts:/lab/scripts:ro
     depends_on:
       - pc1
       - pc2
