@@ -77,6 +77,11 @@ skip "11-novnc_lan_flow" "needs Docker + noVNC"
 echo "== 12-full_e2e_connect_lab (public smoke) =="
 run "12 public endpoints"        "cd 12-full_e2e_connect_lab && ./scripts/public_smoke.sh"
 skip "12 full Docker E2E" "needs Docker; run cd 12-full_e2e_connect_lab && make test"
+echo "== 13-simple_defaults =="
+run "13 python connector defaults" "cd 13-simple_defaults && $PY python_connector.py > /tmp/defaults_py_$$.json && $PY -m urirun.v2 validate /tmp/defaults_py_$$.json"
+if [ "$HAVE_NODE" = 1 ]; then
+  run "13 js connector defaults"  "cd 13-simple_defaults && node js/example.mjs > /tmp/defaults_js_$$.json && $PY -m urirun.v2 validate /tmp/defaults_js_$$.json"
+else skip "13 js connector defaults" "no node"; fi
 
 rm -f /tmp/ex_$$.log
 echo

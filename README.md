@@ -27,6 +27,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 10 | [`10-device_mesh_lab/`](10-device_mesh_lab/) | dashboard, device agents, `browser://` routes | ✅ host tests |
 | 11 | [`11-novnc_lan_flow/`](11-novnc_lan_flow/) | multi-computer noVNC LAN workflow | needs Docker + noVNC |
 | 12 | [`12-full_e2e_connect_lab/`](12-full_e2e_connect_lab/) | get/connect/ifuri public smoke + pc1/pc2 Docker E2E + connector/MCP/A2A checks | ✅ public smoke; full flow needs Docker |
+| 13 | [`13-simple_defaults/`](13-simple_defaults/) | convention-based connector defaults in Python and JS | ✅ python/js validate |
 
 All host-runnable checks pass with `urirun` installed (e.g. from
 `github.com/tellmesh/urirun`). Docker-based demos (08, 11 and the full 09 flow)
@@ -56,7 +57,7 @@ make test          # or: ./run_tests.sh
 Runs the host-runnable check for every `NN-*` example and prints a summary.
 It auto-detects a Python with `urirun` (prefers `../app/.venv`; override with
 `PYTHON=...`) and skips the Docker-only demos (08, 11 and the full 09 flow).
-Current host run: **18 passed, 0 failed, 4 skipped**.
+Current host run: **20 passed, 0 failed, 4 skipped**.
 
 ## Related repositories
 

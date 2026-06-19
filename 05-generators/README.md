@@ -37,3 +37,7 @@ Run from the repository root:
 
 The smoke tests execute every installed language generator and validate the
 generated binding document through `urirun validate`.
+
+For the shorter convention-based style, see
+[`../13-simple_defaults`](../13-simple_defaults/): it declares the connector once
+and then uses short route paths in Python and JavaScript.
