@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Run the host-runnable checks for every NN-* example.
-# Docker-only demos (08-multi_transport, 11-novnc_lan_flow and the full
-# 09-docker_uri_flow compose flow) are skipped with a note.
+# Docker-only demos (08-multi_transport, 11-novnc_lan_flow, the full
+# 09-docker_uri_flow compose flow and the full 12 E2E flow) are skipped with a
+# note.
 set -u
 cd "$(dirname "$0")"
 
@@ -61,6 +62,9 @@ run "10 device_agent_policy"      "cd 10-device_mesh_lab && PYTHONPATH=. $PY tes
 run "10 gui_smoke"                "cd 10-device_mesh_lab && PYTHONPATH=. $PY tests/gui_smoke.py"
 echo "== 11-novnc_lan_flow =="
 skip "11-novnc_lan_flow" "needs Docker + noVNC"
+echo "== 12-full_e2e_connect_lab (public smoke) =="
+run "12 public endpoints"        "cd 12-full_e2e_connect_lab && ./scripts/public_smoke.sh"
+skip "12 full Docker E2E" "needs Docker; run cd 12-full_e2e_connect_lab && make test"
 
 rm -f /tmp/ex_$$.log
 echo

@@ -1,0 +1,56 @@
+services:
+  ifuri-site:
+    image: nginx:1.27-alpine
+    ports:
+      - "${IFURI_SITE_PORT:-18100}:80"
+    volumes:
+      - ./sites/ifuri.com:/usr/share/nginx/html:ro
+    networks: [ifuri-e2e]
+
+  registry-runtime:
+    build:
+      context: ./registry-runtime
+    environment:
+      NODES: "pc1=http://pc1:8765,pc2=http://pc2:8765"
+    ports:
+      - "${REGISTRY_RUNTIME_PORT:-18120}:8120"
+    networks: [ifuri-e2e]
+
+  host:
+    build:
+      context: ./pc
+    hostname: host
+    command: ["sleep", "infinity"]
+    environment:
+      GET_BASE_URL: "${GET_BASE_URL:-https://get.ifuri.com}"
+      CONNECT_BASE_URL: "${CONNECT_BASE_URL:-https://connect.ifuri.com}"
+      URIRUN_GIT_URL: "${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@main#subdirectory=adapters/python}"
+    volumes:
+      - ./generated:/lab/generated
+    depends_on:
+      - pc1
+      - pc2
+      - ifuri-site
+      - registry-runtime
+    networks: [ifuri-e2e]
+
+  pc1:
+    build:
+      context: ./pc
+    hostname: pc1
+    command: ["sleep", "infinity"]
+    environment:
+      URIRUN_GIT_URL: "${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@main#subdirectory=adapters/python}"
+    networks: [ifuri-e2e]
+
+  pc2:
+    build:
+      context: ./pc
+    hostname: pc2
+    command: ["sleep", "infinity"]
+    environment:
+      URIRUN_GIT_URL: "${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@main#subdirectory=adapters/python}"
+    networks: [ifuri-e2e]
+
+networks:
+  ifuri-e2e:

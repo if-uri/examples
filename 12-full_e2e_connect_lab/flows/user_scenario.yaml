@@ -1,0 +1,26 @@
+task:
+  id: full_e2e_user_scenario
+  title: Install pc1/pc2 from get.ifuri.com, install host connectors, discover routes and execute URI flow
+steps:
+  - id: install_pc1
+    uri: get://ifuri/node/command/install
+    payload:
+      target: pc1
+      source: https://get.ifuri.com/node.sh
+  - id: install_pc2
+    uri: get://ifuri/node/command/install
+    payload:
+      target: pc2
+      source: https://get.ifuri.com/node.sh
+  - id: install_host_connectors
+    uri: connect://ifuri/connectors/command/install
+    payload:
+      connectors: [planfile]
+  - id: discover_nodes
+    uri: urirun://host/mesh/query/nodes
+    depends_on: [install_pc1, install_pc2, install_host_connectors]
+  - id: execute_flow
+    uri: urirun://host/flow/command/run
+    payload:
+      prompt: sprawdz procesy i system pc1 pc2
+    depends_on: [discover_nodes]

@@ -26,10 +26,18 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 09 | [`09-docker_uri_flow/`](09-docker_uri_flow/) | Compose services over URI resources | ✅ host tests; flow needs Docker |
 | 10 | [`10-device_mesh_lab/`](10-device_mesh_lab/) | dashboard, device agents, `browser://` routes | ✅ host tests |
 | 11 | [`11-novnc_lan_flow/`](11-novnc_lan_flow/) | multi-computer noVNC LAN workflow | needs Docker + noVNC |
+| 12 | [`12-full_e2e_connect_lab/`](12-full_e2e_connect_lab/) | get/connect/ifuri public smoke + pc1/pc2 Docker E2E | ✅ public smoke; full flow needs Docker |
 
 All host-runnable checks pass with `urirun` installed (e.g. from
 `github.com/tellmesh/urirun`). Docker-based demos (08, 11 and the full 09 flow)
 require Docker.
+
+Full installer/connector/registry scenario:
+
+```bash
+cd 12-full_e2e_connect_lab
+make test
+```
 
 ## Run all tests
 
