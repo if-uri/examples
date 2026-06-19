@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 import os
 import platform
+import shlex
 import socket
 import subprocess
 import time
+import urllib.error
 import urllib.parse
+import urllib.request
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -25,12 +28,108 @@ def object_schema(properties: dict, required: list[str] | None = None) -> dict:
     return schema
 
 
+DEFAULT_BROWSER_TARGETS = {
+    "desktop": {"pc": "pc1", "apiUrl": "http://127.0.0.1:9001"},
+    "laptop": {"pc": "pc2", "apiUrl": "http://127.0.0.1:9002"},
+    "pc1": {"pc": "pc1", "apiUrl": "http://127.0.0.1:9001"},
+    "pc2": {"pc": "pc2", "apiUrl": "http://127.0.0.1:9002"},
+    "pc3": {"pc": "pc3", "apiUrl": "http://127.0.0.1:9003"},
+    "pc4": {"pc": "pc4", "apiUrl": "http://127.0.0.1:9004"},
+}
+
+
+def default_browser_targets() -> dict[str, dict[str, str]]:
+    return {name: dict(target) for name, target in DEFAULT_BROWSER_TARGETS.items()}
+
+
+def browser_target_from_spec(name: str, spec: str) -> dict[str, str]:
+    if "@" in spec:
+        pc_name, api_url = spec.split("@", 1)
+    else:
+        pc_name, api_url = name, spec
+    return {"pc": pc_name.strip() or name, "apiUrl": api_url.strip().rstrip("/")}
+
+
+def parse_browser_targets(value: str | None = None) -> dict[str, dict[str, str]]:
+    raw = (value if value is not None else os.getenv("URIRUN_MESH_BROWSER_TARGETS", "")).strip()
+    targets = default_browser_targets()
+    if not raw:
+        return targets
+
+    if raw.startswith("{"):
+        parsed = json.loads(raw)
+        for name, spec in parsed.items():
+            key = str(name).strip()
+            if not key:
+                continue
+            if isinstance(spec, str):
+                targets[key] = browser_target_from_spec(key, spec)
+            elif isinstance(spec, dict):
+                pc_name = str(spec.get("pc") or spec.get("name") or key).strip()
+                api_url = str(spec.get("apiUrl") or spec.get("api") or spec.get("url") or "").strip().rstrip("/")
+                if api_url:
+                    targets[key] = {"pc": pc_name or key, "apiUrl": api_url}
+        return targets
+
+    for item in raw.split(","):
+        if not item.strip() or "=" not in item:
+            continue
+        name, spec = item.split("=", 1)
+        key = name.strip()
+        if key:
+            targets[key] = browser_target_from_spec(key, spec)
+    return targets
+
+
+def build_novnc_browser_command(url: str) -> str:
+    quoted_url = shlex.quote(url)
+    return "\n".join(
+        [
+            f"URL={quoted_url}",
+            'export DISPLAY="${DISPLAY:-:1}"',
+            "for BROWSER in firefox-esr firefox chromium chromium-browser google-chrome x-www-browser; do",
+            '  if command -v "$BROWSER" >/dev/null 2>&1; then',
+            '    nohup "$BROWSER" "$URL" >/tmp/urirun-browser.log 2>&1 &',
+            '    echo "started $BROWSER $URL"',
+            "    exit 0",
+            "  fi",
+            "done",
+            (
+                "printf 'No browser installed in this noVNC PC.\\nURL: %s\\n"
+                "Install firefox-esr or chromium in the noVNC image.\\n' "
+                '"$URL" > /tmp/urirun-browser-request.txt'
+            ),
+            "if command -v xterm >/dev/null 2>&1; then",
+            (
+                "  nohup xterm -geometry 120x24+120+120 -title 'browser:// missing' "
+                "-e bash -lc 'cat /tmp/urirun-browser-request.txt; echo; exec bash' "
+                ">/tmp/urirun-browser-missing.log 2>&1 &"
+            ),
+            "  cat /tmp/urirun-browser-request.txt",
+            "  exit 42",
+            "fi",
+            "cat /tmp/urirun-browser-request.txt >&2",
+            "exit 43",
+        ]
+    )
+
+
 class DeviceAgent:
-    def __init__(self, name: str, role: str, root: Path, allow_browser: bool = True):
+    def __init__(
+        self,
+        name: str,
+        role: str,
+        root: Path,
+        allow_browser: bool = True,
+        browser_backend: str = "novnc",
+        browser_targets: dict[str, dict[str, str]] | None = None,
+    ):
         self.name = name
         self.role = role
         self.root = root
         self.allow_browser = allow_browser
+        self.browser_backend = (browser_backend or "novnc").strip().lower()
+        self.browser_targets = browser_targets or default_browser_targets()
         self.log_file = root / "logs" / f"{name}.jsonl"
         self.notes_file = root / "notes" / f"{name}.jsonl"
 
@@ -73,6 +172,8 @@ class DeviceAgent:
 
     def routes(self) -> list[dict]:
         target = self.name
+        browser_target = self.browser_target()
+        browser_adapter = "browser-host" if self.browser_backend == "host" else "browser-novnc"
         return [
             {
                 "uri": f"device://{target}/capabilities/query/list",
@@ -144,11 +245,15 @@ class DeviceAgent:
             {
                 "uri": f"browser://{target}/page/command/open",
                 "kind": "command",
-                "adapter": "browser-intent",
+                "adapter": browser_adapter,
                 "safe": True,
                 "enabled": self.allow_browser,
-                "policy": {"allowBrowser": self.allow_browser},
-                "title": "Open a URL on this device when browser execution is enabled",
+                "policy": {
+                    "allowBrowser": self.allow_browser,
+                    "backend": self.browser_backend,
+                    "target": browser_target,
+                },
+                "title": "Open a URL on the mapped noVNC device when browser execution is enabled",
                 "inputSchema": object_schema({"url": {"type": "string"}}, ["url"]),
             },
             {
@@ -188,8 +293,13 @@ class DeviceAgent:
             "platform": platform.platform(),
             "python": platform.python_version(),
             "allowBrowser": self.allow_browser,
+            "browserBackend": self.browser_backend,
+            "browserTarget": self.browser_target(),
             "routeCount": len(self.routes()),
         }
+
+    def browser_target(self) -> dict[str, str] | None:
+        return self.browser_targets.get(self.name) or self.browser_targets.get(self.role)
 
     def installable(self) -> list[dict]:
         return [
@@ -253,8 +363,95 @@ class DeviceAgent:
         self.log("shell.safe", result)
         return {"ok": proc.returncode == 0, "result": result}
 
+    def open_browser_on_host(self, url: str, detail: dict) -> dict:
+        detail["executed"] = webbrowser.open(url, new=2)
+        if not detail["executed"]:
+            detail["reason"] = "webbrowser.open returned False"
+            self.log("browser.open.failed", detail)
+            return {
+                "ok": False,
+                "error": {"type": "runtime", "message": "Python webbrowser could not open the URL"},
+                "result": detail,
+            }
+        self.log("browser.open", detail)
+        return {"ok": True, "result": detail}
+
+    def open_browser_in_novnc(self, url: str, detail: dict) -> dict:
+        target = self.browser_target()
+        if not target:
+            detail["reason"] = f"no noVNC browser target mapped for {self.name}"
+            self.log("browser.open.failed", detail)
+            return {
+                "ok": False,
+                "error": {
+                    "type": "browser-target",
+                    "message": (
+                        "No noVNC target is mapped for this device. Set "
+                        "URIRUN_MESH_BROWSER_TARGETS, for example "
+                        "desktop=pc1@http://127.0.0.1:9001."
+                    ),
+                },
+                "result": detail,
+            }
+
+        pc_name = target["pc"]
+        api_url = target["apiUrl"].rstrip("/")
+        run_uri = f"pc://{pc_name}/terminal/command/run"
+        command = build_novnc_browser_command(url)
+        request_body = {"uri": run_uri, "payload": {"command": command}}
+        detail.update({"target": target, "runUri": run_uri})
+
+        try:
+            request = urllib.request.Request(
+                f"{api_url}/run",
+                data=json.dumps(request_body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(request, timeout=12) as response:
+                response_body = json.loads(response.read().decode("utf-8") or "{}")
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", "replace")
+            try:
+                response_body = json.loads(body)
+            except json.JSONDecodeError:
+                response_body = {"ok": False, "error": body}
+            detail.update({"response": response_body, "status": exc.code})
+            self.log("browser.open.failed", detail)
+            return {
+                "ok": False,
+                "error": {"type": "novnc-api", "message": f"noVNC API returned HTTP {exc.code}"},
+                "result": detail,
+            }
+        except urllib.error.URLError as exc:
+            detail["reason"] = str(exc)
+            self.log("browser.open.failed", detail)
+            return {
+                "ok": False,
+                "error": {"type": "novnc-api", "message": f"Could not reach noVNC API at {api_url}: {exc}"},
+                "result": detail,
+            }
+
+        terminal_result = response_body.get("result") or {}
+        returncode = terminal_result.get("returncode")
+        detail.update({"response": response_body, "returncode": returncode, "executed": returncode == 0})
+        if returncode == 0:
+            self.log("browser.open", detail)
+            return {"ok": True, "result": detail}
+
+        error_message = "Browser command was delegated to noVNC, but did not complete successfully."
+        if returncode == 42:
+            error_message = "The noVNC computer received the URI command, but no browser is installed there."
+        self.log("browser.open.failed", detail)
+        return {"ok": False, "error": {"type": "novnc-browser", "message": error_message}, "result": detail}
+
     def open_browser(self, url: str) -> dict:
-        detail = {"url": url, "executed": False, "allowBrowser": self.allow_browser}
+        detail = {
+            "url": url,
+            "executed": False,
+            "allowBrowser": self.allow_browser,
+            "backend": self.browser_backend,
+        }
         if not self.allow_browser:
             detail["reason"] = "browser execution is disabled by URIRUN_MESH_ALLOW_BROWSER"
             self.log("browser.blocked", detail)
@@ -269,17 +466,9 @@ class DeviceAgent:
                 },
                 "result": detail,
             }
-        detail["executed"] = webbrowser.open(url, new=2)
-        if not detail["executed"]:
-            detail["reason"] = "webbrowser.open returned False"
-            self.log("browser.open.failed", detail)
-            return {
-                "ok": False,
-                "error": {"type": "runtime", "message": "Python webbrowser could not open the URL"},
-                "result": detail,
-            }
-        self.log("browser.open", detail)
-        return {"ok": True, "result": detail}
+        if self.browser_backend == "host":
+            return self.open_browser_on_host(url, detail)
+        return self.open_browser_in_novnc(url, detail)
 
     def dispatch(self, uri: str, payload: dict | None = None) -> dict:
         payload = payload or {}
@@ -376,7 +565,15 @@ def make_agent_from_env() -> DeviceAgent:
     role = os.getenv("URIRUN_MESH_DEVICE_ROLE", "workstation").strip() or "workstation"
     root = Path(os.getenv("URIRUN_MESH_STATE_DIR", ".run")).resolve()
     allow_browser = os.getenv("URIRUN_MESH_ALLOW_BROWSER", "1") == "1"
-    return DeviceAgent(name=name, role=role, root=root, allow_browser=allow_browser)
+    browser_backend = os.getenv("URIRUN_MESH_BROWSER_BACKEND", "novnc")
+    return DeviceAgent(
+        name=name,
+        role=role,
+        root=root,
+        allow_browser=allow_browser,
+        browser_backend=browser_backend,
+        browser_targets=parse_browser_targets(),
+    )
 
 
 def main() -> int:
