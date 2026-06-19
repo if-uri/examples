@@ -10,7 +10,7 @@ fi
 
 GET_BASE_URL="${GET_BASE_URL:-https://get.ifuri.com}"
 CONNECT_BASE_URL="${CONNECT_BASE_URL:-https://connect.ifuri.com}"
-URIRUN_REF="${URIRUN_REF:-v0.3.11}"
+URIRUN_REF="${URIRUN_REF:-v0.3.12}"
 URIRUN_GIT_URL="${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@${URIRUN_REF}#subdirectory=adapters/python}"
 MESH_CONFIG="/tmp/ifuri-e2e-mesh.json"
 

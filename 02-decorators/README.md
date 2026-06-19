@@ -1,6 +1,6 @@
 # 02-decorators — Python decorator bindings
 
-`example.py` uses `urirun.v2` decorators (`@uri_command`) to generate URI
+`example.py` uses the public `@urirun.command` decorator to generate URI
 bindings and their JSON Schema directly from Python function signatures — no
 hand-written schema.
 

@@ -9,13 +9,12 @@ import unittest
 from pathlib import Path
 from urllib import request
 
+import urirun
 from urirun.v2 import (
     compile_registry,
     decorated_bindings,
     run,
     scan_artifacts,
-    uri_command,
-    uri_shell,
     validate_binding_document,
 )
 
@@ -29,7 +28,7 @@ ALLOW_ALL = {"execute": {"allow": ["*"]}, "allowShellTemplates": True}
 
 class DecoratorTests(unittest.TestCase):
     def test_decorator_generates_schema_and_argv_runtime(self):
-        @uri_command("test://local/echo/message")
+        @urirun.command("test://local/echo/message")
         def echo_message(text: str, upper: bool = False):
             return [sys.executable, "-c", "import sys; print(sys.argv[1])", "{text}"]
 
@@ -54,7 +53,7 @@ class DecoratorTests(unittest.TestCase):
         self.assertEqual(executed["result"]["stdout"].strip(), "hello")
 
     def test_shell_decorator_executes_only_when_shell_policy_allows_it(self):
-        @uri_shell("test-shell://local/echo/message")
+        @urirun.shell("test-shell://local/echo/message")
         def echo_shell(text: str):
             return "printf '%s\\n' '{text}'"
 

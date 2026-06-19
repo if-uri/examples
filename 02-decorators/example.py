@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from urirun.v2 import compile_registry, decorated_bindings, run, uri_command, uri_shell
+import urirun
+from urirun.v2 import compile_registry, decorated_bindings, run
 
 
-@uri_command("say://local/echo/message")
+@urirun.command("say://local/echo/message")
 def echo_message(text: str):
     return ["python3", "-c", "import sys; print(sys.argv[1])", "{text}"]
 
 
-@uri_command("media://local/video/transcode")
+@urirun.command("media://local/video/transcode")
 def transcode(input: str, output: str, width: int = 1280, height: int = 720):
     return ["ffmpeg", "-i", "{input}", "-vf", "scale={width}:{height}", "{output}"]
 
 
-@uri_shell("shell://local/echo/message")
+@urirun.shell("shell://local/echo/message")
 def shell_echo(text: str):
     return "printf '%s\\n' '{text}'"
 
