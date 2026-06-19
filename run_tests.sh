@@ -14,7 +14,7 @@ pick_python() {
   done
   return 1
 }
-PY="$(pick_python)" || { echo "ERROR: no Python with 'urirun' found. Install: pip install 'git+https://github.com/tellmesh/urirun.git@main#subdirectory=adapters/python'"; exit 2; }
+PY="$(pick_python)" || { echo "ERROR: no Python with 'urirun' found. Install: pip install 'git+https://github.com/tellmesh/urirun.git@v0.3.5#subdirectory=adapters/python'"; exit 2; }
 # Make a path-based interpreter absolute so it survives `cd` into example dirs.
 case "$PY" in */*) PY="$(cd "$(dirname "$PY")" && pwd)/$(basename "$PY")";; esac
 echo "Using Python: $PY ($("$PY" -c 'import urirun,sys;print("urirun",getattr(urirun,"__version__","?"))' 2>/dev/null))"
