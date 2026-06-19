@@ -55,7 +55,7 @@ def page(title, body, depth):
 <link rel="stylesheet" href="{base}style.css">
 </head><body>
 <header><a class="brand" href="{base}index.html">ifURI <span>examples</span></a>
-<nav><a href="https://ifuri.com/">ifuri.com</a><a href="https://ifuri.com/docs/">Docs</a><a href="{GH}">GitHub</a></nav></header>
+<nav><a href="https://ifuri.com/">ifuri.com</a><a href="https://ifuri.com/docs/">Docs</a><a href="https://roadmap.ifuri.com/">Roadmap</a><a href="{GH}">GitHub</a></nav></header>
 <main>{body}</main>
 <footer>ifURI examples · runnable examples for <a href="https://github.com/tellmesh/urirun">urirun</a> · <a href="https://ifuri.com/">ifuri.com</a></footer>
 <script src="{base}copy.js"></script>
