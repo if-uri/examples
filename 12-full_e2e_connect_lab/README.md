@@ -8,8 +8,7 @@ This lab verifies the complete user path:
 4. `host` installs urirun + connectors, discovers both nodes and runs a URI flow.
 5. `registry-runtime` exposes a live registry built from the node routes.
 6. `ifuri-site` serves a local test page representing `ifuri.com`.
-7. Connector routes are compiled into a host registry and projected to MCP tools
-   and A2A skills.
+7. Connector routes are compiled into a host registry and projected to MCP tools and A2A skills.
 
 The default test intentionally uses public installer endpoints:
 
