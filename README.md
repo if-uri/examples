@@ -31,6 +31,17 @@ All host-runnable checks pass with `urirun` installed (e.g. from
 `github.com/tellmesh/urirun`). Docker-based demos (08, 11 and the full 09 flow)
 require Docker.
 
+## Run all tests
+
+```bash
+make test          # or: ./run_tests.sh
+```
+
+Runs the host-runnable check for every `NN-*` example and prints a summary.
+It auto-detects a Python with `urirun` (prefers `../app/.venv`; override with
+`PYTHON=...`) and skips the Docker-only demos (08, 11 and the full 09 flow).
+Current host run: **14 passed, 0 failed, 3 skipped**.
+
 ## Related repositories
 
 - `github.com/if-uri/app`
