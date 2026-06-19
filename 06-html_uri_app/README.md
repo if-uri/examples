@@ -9,7 +9,7 @@ execution, and policy-gated shell execution.
 ## Run
 
 ```bash
-bash v2/examples/html_uri_app/run.sh
+bash run.sh
 ```
 
 Open:

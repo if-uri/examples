@@ -20,7 +20,7 @@ output; `test_transports.py` asserts they agree (and that schema validation is
 uniform).
 
 ```bash
-cd v2/examples/transports
+cd 07-transports
 PYTHONPATH=../../../adapters/python python3 demo.py
 ```
 

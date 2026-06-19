@@ -44,7 +44,7 @@ Without this opt-in, `browser://` must be handled by the mapped noVNC PC API.
 Start the dashboard and agents from this directory:
 
 ```bash
-cd v2/examples/device_mesh_lab
+cd 10-device_mesh_lab
 
 python3 controller.py
 ```

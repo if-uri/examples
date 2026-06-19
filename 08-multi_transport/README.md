@@ -64,7 +64,7 @@ between hops (normalized text -> slug -> rendered report).
 ## Run
 
 ```bash
-cd v2/examples/multi_transport
+cd 08-multi_transport
 make test-docker          # or: bash run_tests.sh
 ```
 

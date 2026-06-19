@@ -1,8 +1,8 @@
 services:
   web-worker:
     build:
-      context: ../../..
-      dockerfile: v2/examples/multi_transport/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: urirun-v2-multi-worker:local
     environment:
       WORKER_TRANSPORT: http
@@ -13,8 +13,8 @@ services:
   rpc-worker:
     image: urirun-v2-multi-worker:local
     build:
-      context: ../../..
-      dockerfile: v2/examples/multi_transport/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     environment:
       WORKER_TRANSPORT: grpc
       WORKER_BINDINGS: /app/rpc-bindings.json

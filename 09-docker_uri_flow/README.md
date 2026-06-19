@@ -35,7 +35,7 @@ Dockerfile labels + bindings.json + scripts + Makefile
 Generate a registry from the supplied artifacts:
 
 ```bash
-cd v2/examples/docker_uri_flow
+cd 09-docker_uri_flow
 make registry
 ```
 
@@ -101,7 +101,7 @@ worker locally on an explicit `WORKER_PORT`, or add a `ports:` mapping to
 Start the Python worker in one terminal:
 
 ```bash
-cd v2/examples/docker_uri_flow
+cd 09-docker_uri_flow
 WORKER_PORT=18080 python3 python-worker/server.py
 ```
 
@@ -221,13 +221,13 @@ Fields ending in `_from` read values from previous step results.
 ## Run
 
 ```bash
-bash v2/examples/docker_uri_flow/run.sh
+bash run.sh
 ```
 
 Equivalent explicit steps:
 
 ```bash
-cd v2/examples/docker_uri_flow
+cd 09-docker_uri_flow
 make registry
 docker compose up --build --abort-on-container-exit --exit-code-from orchestrator
 docker compose down -v --remove-orphans
@@ -236,7 +236,7 @@ docker compose down -v --remove-orphans
 `make run` is the same workflow wrapped by the Makefile:
 
 ```bash
-cd v2/examples/docker_uri_flow
+cd 09-docker_uri_flow
 make run
 ```
 
@@ -256,7 +256,7 @@ The workers and orchestrator are portable, so the whole flow also runs without
 Docker - which is how it is tested in CI:
 
 ```bash
-python3 v2/examples/docker_uri_flow/test_flow_e2e.py   # PASS docker_uri_flow e2e (no docker)
+python3 test_flow_e2e.py   # PASS docker_uri_flow e2e (no docker)
 ```
 
 The harness starts each worker on an ephemeral port and points the orchestrator
@@ -309,7 +309,7 @@ Its exit code drives the run, so this is a self-contained integration test of th
 library against real, networked, polyglot services:
 
 ```bash
-cd v2/examples/docker_uri_flow
+cd 09-docker_uri_flow
 make test-docker          # or: bash run_tests.sh
 ```
 
