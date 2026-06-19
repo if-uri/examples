@@ -1,0 +1,43 @@
+name: e2e
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"   # nightly 03:17 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  full-e2e:
+    name: full Docker E2E (12-full_e2e_connect_lab)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Public endpoint smoke
+        run: make -C 12-full_e2e_connect_lab public-smoke
+      - name: Full Docker scenario (nodes + connectors + MCP/A2A + flow)
+        run: make -C 12-full_e2e_connect_lab test
+      - name: Logs on failure
+        if: failure()
+        run: make -C 12-full_e2e_connect_lab logs || true
+
+  host-examples:
+    name: host-runnable examples (NN-*)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install PHP (for 05-generators)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends php-cli
+      - name: Install urirun (pinned release tag)
+        run: pip install "git+https://github.com/tellmesh/urirun.git@v0.3.5#subdirectory=adapters/python"
+      - name: Run host examples (Docker demos skipped)
+        run: PYTHON=python ./run_tests.sh
