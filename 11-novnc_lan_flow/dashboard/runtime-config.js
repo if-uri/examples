@@ -1,5 +1,6 @@
 window.URI_RUN_NOVNC_CONFIG = {
   dashboardPort: "8192",
+  visiblePcs: ["pc1", "pc2"],
   pcs: {
     pc1: { novncPort: "7901", apiPort: "9001" },
     pc2: { novncPort: "7902", apiPort: "9002" },

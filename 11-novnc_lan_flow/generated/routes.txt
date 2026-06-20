@@ -1,18 +1,24 @@
-URI                               KIND     ADAPTER
---------------------------------  -------  ------------
-app://pc1/notes/command/add       service  http-service
-app://pc1/notes/query/list        service  http-service
-app://pc2/orders/command/create   service  http-service
-app://pc2/orders/query/list       service  http-service
-app://pc3/reports/command/render  service  http-service
-app://pc3/reports/query/latest    service  http-service
-app://pc4/monitor/command/check   service  http-service
-app://pc4/monitor/query/status    service  http-service
-log://pc1/session/command/write   service  http-service
-log://pc1/session/query/recent    service  http-service
-pc://pc1/network/command/ping     service  http-service
-pc://pc2/service/command/start    service  http-service
-pc://pc2/terminal/command/run     service  http-service
-pc://pc3/http/command/get         service  http-service
-pc://pc3/service/command/start    service  http-service
-pc://pc4/http/command/get         service  http-service
+app://pc1/notes/command/add
+app://pc1/notes/query/list
+app://pc2/orders/command/create
+app://pc2/orders/query/list
+app://pc3/reports/command/render
+app://pc3/reports/query/latest
+app://pc4/monitor/command/check
+app://pc4/monitor/query/status
+browser://pc1/page/command/open
+browser://pc1/page/command/screenshot
+browser://pc2/page/command/open
+browser://pc2/page/command/screenshot
+browser://pc3/page/command/open
+browser://pc3/page/command/screenshot
+browser://pc4/page/command/open
+browser://pc4/page/command/screenshot
+log://pc1/session/command/write
+log://pc1/session/query/recent
+log://pc2/session/command/write
+log://pc2/session/query/recent
+log://pc3/session/command/write
+log://pc3/session/query/recent
+log://pc4/session/command/write
+log://pc4/session/query/recent

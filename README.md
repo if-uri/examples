@@ -25,13 +25,23 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 08 | [`08-multi_transport/`](08-multi_transport/) | HTTP + gRPC worker transport demo | needs Docker |
 | 09 | [`09-docker_uri_flow/`](09-docker_uri_flow/) | Compose services over URI resources | ✅ host tests; flow needs Docker |
 | 10 | [`10-device_mesh_lab/`](10-device_mesh_lab/) | dashboard, device agents, `browser://` routes | ✅ host tests |
-| 11 | [`11-novnc_lan_flow/`](11-novnc_lan_flow/) | multi-computer noVNC LAN workflow | needs Docker + noVNC |
+| 11 | [`11-novnc_lan_flow/`](11-novnc_lan_flow/) | multi-computer noVNC LAN workflow | ✅ Docker/noVNC `make test-full` |
 | 12 | [`12-full_e2e_connect_lab/`](12-full_e2e_connect_lab/) | get/connect/ifuri public smoke + pc1/pc2 Docker E2E + connector/MCP/A2A checks | ✅ public smoke; full flow needs Docker |
 | 13 | [`13-simple_defaults/`](13-simple_defaults/) | convention-based connector defaults in Python and JS | ✅ python/js validate |
 
 All host-runnable checks pass with `urirun` installed (e.g. from
 `github.com/tellmesh/urirun`). Docker-based demos (08, 11 and the full 09 flow)
 require Docker.
+
+The noVNC LAN flow now has a full four-computer smoke test:
+
+```bash
+cd 11-novnc_lan_flow
+make test-full
+```
+
+It executes 16 URI steps across 24 generated routes and verifies screenshots
+from `pc1`, `pc2`, `pc3` and `pc4`.
 
 Full installer/connector/registry scenario:
 
@@ -63,5 +73,15 @@ Current host run: **20 passed, 0 failed, 4 skipped**.
 
 - `github.com/if-uri/app`
 - `github.com/if-uri/docs`
+- `github.com/if-uri/connect.ifuri.com`
+- `github.com/if-uri/get`
+- `github.com/if-uri/urirun-connector-browser-control`
+- `github.com/if-uri/urirun-connector-http-check`
+- `github.com/if-uri/urirun-connector-time-tools`
 - `github.com/tellmesh/urirun`
 - `roadmap.ifuri.com` / `github.com/if-uri/roadmap`
+
+Current cross-repository implementation summary:
+[`if-uri/docs/work-summary-2026-06-20.md`](https://github.com/if-uri/docs/blob/main/work-summary-2026-06-20.md).
+
+Repository notes: [TODO.md](TODO.md) · [CHANGELOG.md](CHANGELOG.md)

@@ -1,0 +1,123 @@
+services:
+  dashboard:
+    image: nginx:1.27-alpine
+    ports:
+      - "${DASHBOARD_PORT:-8192}:80"
+    volumes:
+      - ./dashboard:/usr/share/nginx/html:ro
+      - ./generated:/usr/share/nginx/html/generated:ro
+    depends_on:
+      - pc1-api
+      - pc2-api
+    networks: [novnc-uri]
+
+  pc1-browser:
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    environment:
+      SE_VNC_NO_PASSWORD: "1"
+      SE_SCREEN_WIDTH: "1280"
+      SE_SCREEN_HEIGHT: "900"
+    ports:
+      - "${PC1_NOVNC_PORT:-7901}:7900"
+    networks: [novnc-uri]
+
+  pc1-api:
+    build:
+      context: ./computer
+    environment:
+      NODE_NAME: pc1
+      SELENIUM_URL: http://pc1-browser:4444
+      ARTIFACT_DIR: /data
+    ports:
+      - "${PC1_API_PORT:-9001}:9001"
+    volumes:
+      - ./generated:/data
+    depends_on:
+      - pc1-browser
+    networks: [novnc-uri]
+
+  pc2-browser:
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    environment:
+      SE_VNC_NO_PASSWORD: "1"
+      SE_SCREEN_WIDTH: "1280"
+      SE_SCREEN_HEIGHT: "900"
+    ports:
+      - "${PC2_NOVNC_PORT:-7902}:7900"
+    networks: [novnc-uri]
+
+  pc2-api:
+    build:
+      context: ./computer
+    environment:
+      NODE_NAME: pc2
+      SELENIUM_URL: http://pc2-browser:4444
+      ARTIFACT_DIR: /data
+    ports:
+      - "${PC2_API_PORT:-9002}:9001"
+    volumes:
+      - ./generated:/data
+    depends_on:
+      - pc2-browser
+    networks: [novnc-uri]
+
+  pc3-browser:
+    profiles: ["full"]
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    environment:
+      SE_VNC_NO_PASSWORD: "1"
+      SE_SCREEN_WIDTH: "1280"
+      SE_SCREEN_HEIGHT: "900"
+    ports:
+      - "${PC3_NOVNC_PORT:-7903}:7900"
+    networks: [novnc-uri]
+
+  pc3-api:
+    profiles: ["full"]
+    build:
+      context: ./computer
+    environment:
+      NODE_NAME: pc3
+      SELENIUM_URL: http://pc3-browser:4444
+      ARTIFACT_DIR: /data
+    ports:
+      - "${PC3_API_PORT:-9003}:9001"
+    volumes:
+      - ./generated:/data
+    depends_on:
+      - pc3-browser
+    networks: [novnc-uri]
+
+  pc4-browser:
+    profiles: ["full"]
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    environment:
+      SE_VNC_NO_PASSWORD: "1"
+      SE_SCREEN_WIDTH: "1280"
+      SE_SCREEN_HEIGHT: "900"
+    ports:
+      - "${PC4_NOVNC_PORT:-7904}:7900"
+    networks: [novnc-uri]
+
+  pc4-api:
+    profiles: ["full"]
+    build:
+      context: ./computer
+    environment:
+      NODE_NAME: pc4
+      SELENIUM_URL: http://pc4-browser:4444
+      ARTIFACT_DIR: /data
+    ports:
+      - "${PC4_API_PORT:-9004}:9001"
+    volumes:
+      - ./generated:/data
+    depends_on:
+      - pc4-browser
+    networks: [novnc-uri]
+
+networks:
+  novnc-uri:
