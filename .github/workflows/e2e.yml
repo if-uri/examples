@@ -50,6 +50,6 @@ jobs:
       - name: Install PHP (for 05-generators)
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends php-cli
       - name: Install urirun (pinned release tag)
-        run: pip install "git+https://github.com/tellmesh/urirun.git@v0.3.13#subdirectory=adapters/python"
+        run: pip install "git+https://github.com/if-uri/urirun.git@v0.3.14#subdirectory=adapters/python"
       - name: Run host examples (Docker demos skipped)
         run: PYTHON=python ./run_tests.sh
