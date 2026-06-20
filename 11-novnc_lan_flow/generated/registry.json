@@ -4,62 +4,62 @@
     "browser://pc1/page/command/open": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "browser://pc1/page/command/screenshot": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "log://pc1/session/command/write": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "log://pc1/session/query/recent": {
       "kind": "query",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "app://pc1/notes/command/add": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "app://pc1/notes/query/list": {
       "kind": "query",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19001"
+      "service": "http://127.0.0.1:9001"
     },
     "browser://pc2/page/command/open": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     },
     "browser://pc2/page/command/screenshot": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     },
     "log://pc2/session/command/write": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     },
     "log://pc2/session/query/recent": {
       "kind": "query",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     },
     "app://pc2/orders/command/create": {
       "kind": "command",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     },
     "app://pc2/orders/query/list": {
       "kind": "query",
       "adapter": "http-service",
-      "service": "http://127.0.0.1:19002"
+      "service": "http://127.0.0.1:9002"
     }
   }
 }
