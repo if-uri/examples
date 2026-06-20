@@ -44,9 +44,9 @@ The full Docker scenario installs available connectors from
 `connect.ifuri.com`, runs host-node communication across `pc1` and `pc2`,
 executes connector URI routes, verifies gRPC transport, and checks MCP tools plus
 A2A skills. Current connector Docker coverage is `planfile`, `sqlite-context`,
-`domain-monitor`, `http-check`, `time-tools`, `namecheap-dns` and
-`grpc-transport`; planned catalog entries `mqtt` and `browser-control` are
-reported as skipped until their packages exist.
+`domain-monitor`, `http-check`, `time-tools`, `namecheap-dns`,
+`browser-control` and `grpc-transport`; planned catalog entry `mqtt` is
+reported as skipped until its package exists.
 
 ## Run all tests
 

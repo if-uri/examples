@@ -57,11 +57,13 @@ The connector checks execute:
 - `data://`, `artifact://`, `check://` and `log://` host SQLite routes,
 - `task://` and `planfile://` planfile-backed routes,
 - `monitor://`, `dns://`, `flow://` and safe mock `namecheap-dns` routes,
+- `browser://desktop/page/command/open` and `browser://desktop/page/command/screenshot`
+  through the `browser-control` connector in safe no-local-browser mode,
 - gRPC transport by serving the same registry over `urirun.v2_grpc`,
 - MCP tools and A2A card generation from the same registry.
 
-Planned catalog entries such as `mqtt` and `browser-control` are reported as
-skipped until their connector packages exist.
+Planned catalog entries such as `mqtt` are reported as skipped until their
+connector packages exist.
 
 ## Manual commands
 

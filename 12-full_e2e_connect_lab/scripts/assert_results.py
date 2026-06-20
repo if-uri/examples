@@ -18,6 +18,7 @@ def main() -> int:
     flow = load(base / "flow-result.json")
     connectors = load(base / "connectors-result.json")
     page = (base / "ifuri-test-page.html").read_text(encoding="utf-8")
+    installer_routes = (base / "connectors-install-routes.txt").read_text(encoding="utf-8")
 
     node_items = nodes.get("nodes") or nodes
     assert len(node_items) >= 2, node_items
@@ -45,14 +46,28 @@ def main() -> int:
     assert {"pc1", "pc2"}.issubset({item.get("target") for item in timeline}), timeline
 
     assert connectors.get("ok") is True, connectors.get("failures")
+    for uri in (
+        "httpcheck://host/http/query/status",
+        "time://host/clock/query/now",
+        "data://host/records/query/search",
+        "monitor://host/http/query/status",
+        "dns://host/records/command/plan",
+        "task://host/ticket/command/create",
+        "planfile://host/dsl/command/run",
+        "browser://desktop/page/command/open",
+        "browser://desktop/page/command/screenshot",
+    ):
+        assert uri in installer_routes, (uri, installer_routes)
     catalog = connectors.get("catalog") or {}
     available = set(catalog.get("available") or [])
-    assert {"planfile", "sqlite-context", "domain-monitor", "http-check", "time-tools", "namecheap-dns", "grpc-transport"}.issubset(available), available
-    assert {"browser-control", "mqtt"}.issubset(set(catalog.get("plannedSkipped") or [])), catalog
+    assert {"planfile", "sqlite-context", "domain-monitor", "http-check", "time-tools", "namecheap-dns", "grpc-transport", "browser-control"}.issubset(available), available
+    assert {"mqtt"}.issubset(set(catalog.get("plannedSkipped") or [])), catalog
     route_results = connectors.get("routeResults") or {}
     for key in (
         "http_check",
         "time_now",
+        "browser_open",
+        "browser_screenshot",
         "domain_monitor_http",
         "domain_monitor_dns_current",
         "domain_flow",
@@ -83,6 +98,7 @@ def main() -> int:
                 "routes": len(routes),
                 "flowSteps": len(timeline),
                 "registryBindings": len(registry_bindings),
+                "installerRegistryRoutes": len([line for line in installer_routes.splitlines() if "://" in line]),
                 "connectorRoutes": len(route_results),
                 "connectorMcpTools": connectors.get("mcp", {}).get("toolCount"),
                 "connectorA2aSkills": connectors.get("a2a", {}).get("skillCount"),

@@ -10,7 +10,7 @@ fi
 
 GET_BASE_URL="${GET_BASE_URL:-https://get.ifuri.com}"
 CONNECT_BASE_URL="${CONNECT_BASE_URL:-https://connect.ifuri.com}"
-URIRUN_REF="${URIRUN_REF:-v0.3.13}"
+URIRUN_REF="${URIRUN_REF:-v0.3.14}"
 URIRUN_GIT_URL="${URIRUN_GIT_URL:-git+https://github.com/tellmesh/urirun.git@${URIRUN_REF}#subdirectory=adapters/python}"
 MESH_CONFIG="/tmp/ifuri-e2e-mesh.json"
 
@@ -64,9 +64,10 @@ install_node pc2
 wait_http_from_host "http://pc1:8765/health" "pc1"
 wait_http_from_host "http://pc2:8765/health" "pc2"
 
-CONNECTORS="${CONNECTORS:-planfile,sqlite-context,domain-monitor,http-check,time-tools,grpc-transport,namecheap-dns}"
+CONNECTORS="${CONNECTORS:-planfile,sqlite-context,domain-monitor,http-check,time-tools,grpc-transport,namecheap-dns,browser-control}"
 echo "==> Install host runtime/connectors from $CONNECT_BASE_URL ($CONNECTORS)"
 exec_pc host "curl -fsSL '$CONNECT_BASE_URL/install?connectors=$CONNECTORS' | bash"
+exec_pc host "test -s \"\$HOME/.ifuri/connectors.registry.json\"; cp \"\$HOME/.ifuri/connectors.registry.json\" /lab/generated/connectors-install-registry.json; urirun list \"\$HOME/.ifuri/connectors.registry.json\" > /lab/generated/connectors-install-routes.txt"
 
 echo "==> Register nodes on host"
 exec_pc host "rm -f '$MESH_CONFIG'; urirun host init --config '$MESH_CONFIG' --name e2e-host >/dev/null; urirun host add-node --config '$MESH_CONFIG' pc1 http://pc1:8765 >/dev/null; urirun host add-node --config '$MESH_CONFIG' pc2 http://pc2:8765 >/dev/null"
