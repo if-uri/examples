@@ -62,6 +62,7 @@ def page(title, body, depth):
 <main>{body}</main>
 <footer>ifURI examples · runnable examples for <a href="https://github.com/tellmesh/urirun">urirun</a> · <a href="https://ifuri.com/">ifuri.com</a></footer>
 <script src="{base}copy.js"></script>
+<script src="https://ifuri.com/assets/ifuri-ecobar.js" defer></script>
 </body></html>"""
 
 def first_title_desc(readme):
