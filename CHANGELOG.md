@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Record the IFURI-016 full connector matrix as the next examples milestone.
 - Add a full Docker/noVNC implementation for `11-novnc_lan_flow`.
 - Add a four-computer URI flow in `11-novnc_lan_flow` with `browser://`,
   `log://` and per-node `app://` routes.
@@ -13,6 +14,8 @@
 
 ### Changed
 - Update the examples README to show `11-novnc_lan_flow` as Docker/noVNC tested.
+- Point active runtime install and Docker environment defaults at
+  `github.com/if-uri/urirun`.
 
 ## [2026-06-20]
 

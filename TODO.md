@@ -2,6 +2,9 @@
 
 ## Next examples
 
+- [ ] Implement IFURI-016: one Docker target that installs connector packages
+      from hub/GitHub pins on host, pc1 and pc2, generates registry, runs flows
+      and stores logs/results.
 - [ ] Add a lightweight Playwright/browser test for the noVNC dashboard once CI
       has Playwright browsers installed.
 - [ ] Pin heavy Docker image tags in Docker-based examples for reproducible CI.
