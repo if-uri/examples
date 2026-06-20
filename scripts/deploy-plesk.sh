@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 # Build the static examples site and publish it to examples.ifuri.com (Plesk).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

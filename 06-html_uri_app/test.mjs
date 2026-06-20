@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 

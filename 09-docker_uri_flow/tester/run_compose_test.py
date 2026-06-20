@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """In-container test: drive the whole flow with the urirun library.
 
 This runs inside its own container on the Compose network and proves the

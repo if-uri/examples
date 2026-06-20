@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 import { writeFileSync } from 'node:fs';
 import { bindingDocument, string, uriCommand } from '../js/uri-command.mjs';
 

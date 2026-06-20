@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Docker-free end-to-end test for the cross-service URI flow.
 
 It launches the three workers on ephemeral ports, points the orchestrator at

@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 import { connector, string } from './defaults.mjs';
 
 const demo = connector({ id: 'defaults-demo', scheme: 'demo', meta: { area: 'example' } });

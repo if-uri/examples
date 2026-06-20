@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');

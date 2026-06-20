@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 window.URI_RUN_NOVNC_CONFIG = {
   dashboardPort: "8192",
   visiblePcs: ["pc1", "pc2"],

@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 const promptInput = document.querySelector("#nl-prompt");
 const generatedFlow = document.querySelector("#generated-flow");
 const output = document.querySelector("#output");

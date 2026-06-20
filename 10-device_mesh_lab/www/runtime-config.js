@@ -1,3 +1,6 @@
+// Author: Tom Sapletta · https://tom.sapletta.com
+// Part of the ifURI solution.
+
 (() => {
   const host = window.location.hostname || "127.0.0.1";
   window.URI_RUN_NOVNC_CONFIG = window.URI_RUN_NOVNC_CONFIG || {

@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Drive the workers through the library's service dispatch (no bespoke code).
 
 Shows the orchestrator's job expressed with `urirun.v2_service`: it validates

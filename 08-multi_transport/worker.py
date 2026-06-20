@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Generic worker: serve a v2 bindings file over HTTP or gRPC.
 
 Selected by env:

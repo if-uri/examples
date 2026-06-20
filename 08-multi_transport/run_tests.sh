@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 # Multi-transport Docker integration test: HTTP + gRPC workers, auto-generated
 # registry, conflict detection, and a cross-environment URI flow.
 set -euo pipefail

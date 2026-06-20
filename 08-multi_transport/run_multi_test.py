@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Multi-transport integration test (in Docker).
 
 Connects all networked layers (HTTP + gRPC workers, each owning URI endpoints),

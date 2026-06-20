@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """One registry, many transports.
 
 The URI + registry + JSON Schema + policy gate are the contract; a transport just

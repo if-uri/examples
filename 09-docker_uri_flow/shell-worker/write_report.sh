@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 set -eu
 
 slug="$1"

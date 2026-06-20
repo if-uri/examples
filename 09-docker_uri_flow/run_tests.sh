@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 # Docker test environment: workers + a library-based tester that discovers,
 # validates and dispatches the flow via urirun.v2_service over the network.
 set -euo pipefail

@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Simple scan & run: point at a source, name a URI, pick a transport.
 
     python scan_and_run.py <dir|bindings.json|registry.json> <uri> [--payload JSON]

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Build a static, brand-styled site for the ifURI examples (-> examples.ifuri.com).
 
 Usage: python3 scripts/build_site.py [OUT_DIR]   (default: _site)

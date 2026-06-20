@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 # Run the host-runnable checks for every NN-* example.
 # Docker-only demos (08-multi_transport, 11-novnc_lan_flow, the full
 # 09-docker_uri_flow compose flow and the full 12 E2E flow) are skipped with a

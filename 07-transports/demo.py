@@ -1,3 +1,6 @@
+# Author: Tom Sapletta · https://tom.sapletta.com
+# Part of the ifURI solution.
+
 """Drive the same URI over every transport and show identical results."""
 
 from __future__ import annotations
