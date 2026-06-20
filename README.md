@@ -30,7 +30,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 13 | [`13-simple_defaults/`](13-simple_defaults/) | convention-based connector defaults in Python and JS | ✅ python/js validate |
 
 All host-runnable checks pass with `urirun` installed (e.g. from
-`github.com/tellmesh/urirun`). Docker-based demos (08, 11 and the full 09 flow)
+`github.com/if-uri/urirun`). Docker-based demos (08, 11 and the full 09 flow)
 require Docker.
 
 The noVNC LAN flow now has a full four-computer smoke test:
@@ -78,7 +78,7 @@ Current host run: **20 passed, 0 failed, 4 skipped**.
 - `github.com/if-uri/urirun-connector-browser-control`
 - `github.com/if-uri/urirun-connector-http-check`
 - `github.com/if-uri/urirun-connector-time-tools`
-- `github.com/tellmesh/urirun`
+- `github.com/if-uri/urirun`
 - `roadmap.ifuri.com` / `github.com/if-uri/roadmap`
 
 Current cross-repository implementation summary:

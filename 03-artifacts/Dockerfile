@@ -1,7 +1,7 @@
 FROM python:3.13-slim
 
 LABEL org.opencontainers.image.title="urirun v2 demo tool"
-LABEL org.opencontainers.image.source="https://github.com/tellmesh/urirun"
+LABEL org.opencontainers.image.source="https://github.com/if-uri/urirun"
 LABEL io.tellmesh.urirun.manifest="urirun.manifest.json"
 
 WORKDIR /app
