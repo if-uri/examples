@@ -1,0 +1,17 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Pet API", "version": "1.0" },
+  "servers": [{ "url": "https://api.example.test" }],
+  "paths": {
+    "/pets": {
+      "get":  { "operationId": "listPets" },
+      "post": { "operationId": "createPet" }
+    },
+    "/pets/{id}": {
+      "get": {
+        "operationId": "getPet",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }]
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Offline flow: stamp a timestamp, then write an audit log line.
+# Runnable with no network and no Chrome.
+task:
+  title: Local offline flow (timestamp + audit log)
+registry: tools.bindings.json          # generate: make setup
+allow: [ "time://*", "log://*" ]
+steps:
+  - id: stamp
+    uri: time://host/clock/query/now
+    payload: {}
+  - id: audit
+    uri: log://host/run/command/write
+    payload:
+      event: "flow-demo"
+      detail: "local flow ran"
+    depends_on: [ stamp ]

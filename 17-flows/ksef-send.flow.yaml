@@ -1,0 +1,20 @@
+# KSeF: request an auth challenge, then send an (already encrypted) invoice.
+# The access token is a secret REFERENCE (getv://KSEF_ACCESS_TOKEN) gated by
+# secretAllow. Default mode is dry-run (no live KSeF call, no secret resolved).
+task:
+  title: "KSeF — challenge then send an encrypted invoice"
+registry: ksef.bindings.json            # generate: make setup
+allow: [ "ksef://*" ]
+secretAllow: [ "getv://KSEF_ACCESS_TOKEN" ]
+steps:
+  - id: challenge
+    uri: ksef://test/auth/challenge
+    payload:
+      contextIdentifier: { type: onip, value: "1234567890" }
+  - id: send
+    uri: ksef://test/session/online/{ref}/send
+    payload:
+      ref: "SESSION-REF"
+      invoiceHash: "BASE64-SHA256"
+      encryptedInvoiceContent: "BASE64-AES-CBC"
+    depends_on: [ challenge ]

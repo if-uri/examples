@@ -1,0 +1,30 @@
+ifURI flow scenarios — URI step pipelines (plain text)
+======================================================
+A flow is an ordered list of URI steps; `query` reads, `command` mutates (gated
+by --execute / --allow). Each line: <step-id>  <uri>  <payload>. "<- id" means the
+step chains a prior step's result. This is the human/LLM-readable form of the YAML
+flows; the bash files run them, run_flow.py executes the YAML.
+
+1) LOCAL (offline) — timestamp + audit log
+   stamp   time://host/clock/query/now           {}
+   audit   log://host/run/command/write          {event: flow-demo}        <- stamp
+
+2) WEB RECON — up? read page in Chrome, log it
+   up      httpcheck://host/url/query/status      {url: https://example.com}
+   read    browser://chrome/page/query/dom        {url: https://example.com} <- up
+   audit   log://host/run/command/write           {event: recon}            <- read
+
+3) DECLARATIVE HTTP — call any REST from a TOML spec (no code)
+   status  httpbin://default/status/query/code    {code: 418}
+   echo    httpbin://default/echo/command/post    {name: ifuri}             <- status
+
+4) SECRET CALL — credential by reference, deny-by-default
+   call    sdemo://local/auth/command/call        {}     # header: Bearer {getv:DEMO_TOKEN}
+   # execute needs:  --execute --allow 'sdemo://*' --secret-allow 'getv://DEMO_TOKEN'
+
+5) KSeF — challenge then send an encrypted invoice (dry-run safe)
+   challenge ksef://test/auth/challenge            {contextIdentifier: {...}}
+   send      ksef://test/session/online/{ref}/send {ref, invoiceHash, encryptedInvoiceContent} <- challenge
+
+6) LLM AGENT — the loop picks the URIs (see ../14-llm-uri-agent)
+   plan -> [time, httpcheck, browser, log] chosen by the planner, each gated by policy

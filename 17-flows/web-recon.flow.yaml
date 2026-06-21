@@ -1,0 +1,18 @@
+# Web recon: is the site up (query), read its DOM in real Chrome (query),
+# then record the run (command). Needs network + Chrome; run with --execute.
+task:
+  title: Web recon — is it up, read the page, log it
+registry: tools.bindings.json
+allow: [ "httpcheck://*", "browser://*", "log://*", "time://*" ]
+steps:
+  - id: up
+    uri: httpcheck://host/url/query/status
+    payload: { url: "https://example.com" }
+  - id: read
+    uri: browser://chrome/page/query/dom
+    payload: { url: "https://example.com", max: 400 }
+    depends_on: [ up ]
+  - id: audit
+    uri: log://host/run/command/write
+    payload: { event: "recon", detail: "read example.com" }
+    depends_on: [ read ]

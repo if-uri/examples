@@ -1,0 +1,5 @@
+tools.bindings.json
+ksef.bindings.json
+httpbin.registry.json
+*.log
+shot.png
