@@ -7,6 +7,9 @@ forms so you can pick the one that fits:
 - **`scenarios.txt`** — human/LLM-readable catalog (step-id · uri · payload · `<- dep`).
 - **`flow-*.sh`** — runnable bash (plain `urirun run` chains).
 - **`*.flow.yaml`** + **`run_flow.py`** — declarative flow files executed by a tiny runner.
+- **`*.flow.py`** (typed) — author the flow in typed Python with
+  [`urirun-flow`](https://github.com/if-uri/urirun-flow) (Pydantic): `urirun-flow to-yaml
+  web_recon.flow:flow` emits the YAML above, `urirun-flow run … --execute` runs it.
 
 ```bash
 make setup                 # generate the registries the flows reference
