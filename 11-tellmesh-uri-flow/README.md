@@ -48,17 +48,17 @@ flow ok: True
 
 ## Why this matters
 
-Pointed at the tellmesh packs unchanged, urirun adopted **28 packs · 116 routes** via
-their manifests; **20 packs are fully green** and **95/116 routes dispatch** through the
-runtime (the rest are characterised below). Any green route is composable in a flow like
-the one above — see [docs.ifuri.com/adopt-as-uri](https://docs.ifuri.com/adopt-as-uri.html).
+Pointed at the tellmesh packs unchanged, urirun adopted **27 packs · 116 routes** via
+their manifests; **26 packs are fully green** and **113/116 routes dispatch** through the
+runtime with concrete param values. Any green route is composable in a flow like the one
+above — see [docs.ifuri.com/adopt-as-uri](https://docs.ifuri.com/adopt-as-uri.html).
 
 ### Known characterisation
 
 - **Mid-path `{param}` routing** — patterns like `kvm://{host}/monitor/{monitor}/query/screenshot`
-  adopt and validate, but urirun routes by exact segment match, so the `{monitor}` segment
-  must be passed literally (only the `{host}` authority is substituted). Param-aware routing
-  would close this.
+  now resolve from a concrete URI (`…/monitor/2/…`): urirun falls back from an exact segment
+  to a single `{param}` key, binds the value and passes it to the handler. Exact matches still
+  win over the param.
 - **`shell://{command}`** — only an authority, no resource/operation segments; rejected by the
   bindings.v2 grammar. Such a pattern must add segments to be adopted.
 - **Handler-less patterns** — a few packs declare a `uri_pattern` with no `handlers.python`
