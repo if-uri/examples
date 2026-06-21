@@ -85,3 +85,7 @@ Current cross-repository implementation summary:
 [`if-uri/docs/work-summary-2026-06-20.md`](https://github.com/if-uri/docs/blob/main/work-summary-2026-06-20.md).
 
 Repository notes: [TODO.md](TODO.md) · [CHANGELOG.md](CHANGELOG.md)
+
+## License
+
+Released under the terms in [LICENSE](LICENSE).
