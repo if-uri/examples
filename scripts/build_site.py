@@ -51,9 +51,16 @@ def md(text):
 
 def page(title, body, depth):
     base="../" if depth else ""
+    _desc="Runnable ifURI examples for urirun — URI flows, LAN apps, noVNC browser control and host-node demos."
     return f"""<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title><meta name="theme-color" content="#1E1B4B">
+<meta name="description" content="{_desc}">
+<link rel="canonical" href="https://examples.ifuri.com/">
+<meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{_desc}">
+<meta property="og:image" content="https://ifuri.com/assets/og-ifuri.png"><meta property="og:url" content="https://examples.ifuri.com/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://ifuri.com/assets/og-ifuri.png">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"WebSite","name":"ifURI examples","url":"https://examples.ifuri.com/","description":"{_desc}"}}</script>
 <link rel="icon" href="https://ifuri.com/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{base}style.css">
 </head><body>
