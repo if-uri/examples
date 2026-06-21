@@ -67,7 +67,7 @@ def page(title, body, depth):
 <header><a class="brand" href="{base}index.html">ifURI <span>examples</span></a>
 <nav><a href="https://ifuri.com/">ifuri.com</a><a href="https://ifuri.com/docs/">Docs</a><a href="https://roadmap.ifuri.com/">Roadmap</a><a href="{GH}">GitHub</a></nav></header>
 <main>{body}</main>
-<footer>ifURI examples · runnable examples for <a href="https://github.com/if-uri/urirun">urirun</a> · <a href="https://ifuri.com/">ifuri.com</a></footer>
+<footer>ifURI examples · runnable examples for <a href="https://github.com/if-uri/urirun">urirun</a> · <a href="https://ifuri.com/">ifuri.com</a> · © 2026 <a href="https://ifuri.com">ifuri.com</a> / <a href="https://tom.sapletta.com">Tom Sapletta</a></footer>
 <script src="{base}copy.js"></script>
 <script src="https://ifuri.com/assets/ifuri-ecobar.js" defer></script>
 </body></html>"""

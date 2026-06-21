@@ -1,0 +1,538 @@
+flowchart LR
+%% generated in 0.01s
+    subgraph M_05_generators__c
+        N_05_generators__c__example__puts["puts"]
+        N_05_generators__c__example__main["main"]
+    end
+    subgraph M_05_generators__go
+        N_05_generators__go__example__uriCommand["uriCommand"]
+        N_05_generators__go__example__main["main"]
+    end
+    subgraph M_05_generators__php
+        N_05_generators__php__example__UriCommand__schemaType["schemaType"]
+        N_05_generators__php__example__UriCommand__bindingFromFunction["bindingFromFunction"]
+    end
+    subgraph M_06_html_uri_app__app
+        N_06_html_uri_app__app__routeResponse["routeResponse"]
+        N_06_html_uri_app__app__payloadDefaults["payloadDefaults"]
+        N_06_html_uri_app__app__refreshLogs["refreshLogs"]
+        N_06_html_uri_app__app__renderToolList["renderToolList"]
+        N_06_html_uri_app__app__schemaFor["schemaFor"]
+        N_06_html_uri_app__app__inputType["inputType"]
+        N_06_html_uri_app__app__card["card"]
+        N_06_html_uri_app__app__required["required"]
+        N_06_html_uri_app__app__escapeHtml["escapeHtml"]
+        N_06_html_uri_app__app__renderActions["renderActions"]
+        N_06_html_uri_app__app__iconFor["iconFor"]
+        N_06_html_uri_app__app__classFor["classFor"]
+        N_06_html_uri_app__app__defaults["defaults"]
+        N_06_html_uri_app__app__renderForm["renderForm"]
+        N_06_html_uri_app__app__data["data"]
+    end
+    subgraph M_06_html_uri_app__backend
+        N_06_html_uri_app__backend__routes["routes"]
+        N_06_html_uri_app__backend__main["main"]
+        N_06_html_uri_app__backend__env_bool["env_bool"]
+        N_06_html_uri_app__backend__Handler__log_message["log_message"]
+        N_06_html_uri_app__backend__add_log["add_log"]
+        N_06_html_uri_app__backend__read_json["read_json"]
+        N_06_html_uri_app__backend__load_env["load_env"]
+        N_06_html_uri_app__backend__dispatch["dispatch"]
+        N_06_html_uri_app__backend__dispatch_tool["dispatch_tool"]
+        N_06_html_uri_app__backend__registry["registry"]
+        N_06_html_uri_app__backend__binding_document["binding_document"]
+        N_06_html_uri_app__backend__Handler__do_GET["do_GET"]
+        N_06_html_uri_app__backend__Handler__do_POST["do_POST"]
+    end
+    subgraph M_07_transports__transport_lib
+        N_07_transports__transport_lib__serverless_handler["serverless_handler"]
+        N_07_transports__transport_lib__run_inprocess["run_inprocess"]
+        N_07_transports__transport_lib__run_via["run_via"]
+        N_07_transports__transport_lib__available_transports["available_transports"]
+        N_07_transports__transport_lib__run_queue["run_queue"]
+        N_07_transports__transport_lib__grpc_available["grpc_available"]
+        N_07_transports__transport_lib__start_http_worker["start_http_worker"]
+    end
+    subgraph M_08_multi_transport__worker
+        N_08_multi_transport__worker__serve_http["serve_http"]
+        N_08_multi_transport__worker__serve_grpc["serve_grpc"]
+    end
+    subgraph M_09_docker_uri_flow__node_worker
+        N_09_docker_uri_flow__node_worker__server__server["server"]
+        N_09_docker_uri_flow__node_worker__server__send["send"]
+        N_09_docker_uri_flow__node_worker__server__slugify["slugify"]
+        N_09_docker_uri_flow__node_worker__server__body["body"]
+        N_09_docker_uri_flow__node_worker__server__readBody["readBody"]
+        N_09_docker_uri_flow__node_worker__server__slug["slug"]
+    end
+    subgraph M_09_docker_uri_flow__orchestrator
+        N_09_docker_uri_flow__orchestrator__flow_runner__registry_route_count["registry_route_count"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__wait_for_services["wait_for_services"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__parse_scalar["parse_scalar"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__normalize_uri["normalize_uri"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__registry_has_uri["registry_has_uri"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__main["main"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__load_registry["load_registry"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__service_url["service_url"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__get_path["get_path"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__route_key["route_key"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__resolve_payload["resolve_payload"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__validate_flow_registry["validate_flow_registry"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__json_get["json_get"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__parse_flow["parse_flow"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__run_flow["run_flow"]
+        N_09_docker_uri_flow__orchestrator__flow_runner__json_post["json_post"]
+    end
+    subgraph M_09_docker_uri_flow__python_worker
+        N_09_docker_uri_flow__python_worker__server__normalize["normalize"]
+        N_09_docker_uri_flow__python_worker__server__dispatch["dispatch"]
+        N_09_docker_uri_flow__python_worker__server__summary["summary"]
+        N_09_docker_uri_flow__python_worker__server__Handler__do_POST["do_POST"]
+        N_09_docker_uri_flow__python_worker__server__Handler__do_GET["do_GET"]
+    end
+    subgraph M_09_docker_uri_flow__shell_worker
+        N_09_docker_uri_flow__shell_worker__server__dispatch["dispatch"]
+        N_09_docker_uri_flow__shell_worker__server__Handler__do_GET["do_GET"]
+        N_09_docker_uri_flow__shell_worker__server__Handler__do_POST["do_POST"]
+    end
+    subgraph M_10_device_mesh_lab__controller
+        N_10_device_mesh_lab__controller__llm_messages["llm_messages"]
+        N_10_device_mesh_lab__controller__generate_flow["generate_flow"]
+        N_10_device_mesh_lab__controller__generate_with_litellm["generate_with_litellm"]
+        N_10_device_mesh_lab__controller__Handler__do_GET["do_GET"]
+        N_10_device_mesh_lab__controller__json_get["json_get"]
+        N_10_device_mesh_lab__controller__fallback_flow["fallback_flow"]
+        N_10_device_mesh_lab__controller__Handler__do_POST["do_POST"]
+        N_10_device_mesh_lab__controller__execute_flow["execute_flow"]
+        N_10_device_mesh_lab__controller__json_post["json_post"]
+        N_10_device_mesh_lab__controller__fallback_steps["fallback_steps"]
+        N_10_device_mesh_lab__controller__main["main"]
+        N_10_device_mesh_lab__controller__target_from_uri["target_from_uri"]
+        N_10_device_mesh_lab__controller__nl_flow["nl_flow"]
+        N_10_device_mesh_lab__controller__slug["slug"]
+        N_10_device_mesh_lab__controller__discover_mesh["discover_mesh"]
+        N_10_device_mesh_lab__controller__route_summary["route_summary"]
+        N_10_device_mesh_lab__controller__postprocess_flow["postprocess_flow"]
+        N_10_device_mesh_lab__controller__discover_device["discover_device"]
+        N_10_device_mesh_lab__controller__build_registry["build_registry"]
+        N_10_device_mesh_lab__controller__json_from_text["json_from_text"]
+        N_10_device_mesh_lab__controller__registry_route_count["registry_route_count"]
+        N_10_device_mesh_lab__controller__append_step_if_missing["append_step_if_missing"]
+        N_10_device_mesh_lab__controller__route_binding["route_binding"]
+        N_10_device_mesh_lab__controller__normalize_flow["normalize_flow"]
+        N_10_device_mesh_lab__controller__is_safe_route["is_safe_route"]
+        N_10_device_mesh_lab__controller__Handler__do_OPTIONS["do_OPTIONS"]
+    end
+    subgraph M_10_device_mesh_lab__device_agent
+        N_10_device_mesh_lab__device_agent__DeviceAgent__open_browser_in_novnc["open_browser_in_novnc"]
+        N_10_device_mesh_lab__device_agent__parse_browser_targets["parse_browser_targets"]
+        N_10_device_mesh_lab__device_agent__build_novnc_browser_command["build_novnc_browser_command"]
+        N_10_device_mesh_lab__device_agent__default_browser_targets["default_browser_targets"]
+        N_10_device_mesh_lab__device_agent__DeviceAgent__log["log"]
+        N_10_device_mesh_lab__device_agent__make_agent_from_env["make_agent_from_env"]
+        N_10_device_mesh_lab__device_agent__DeviceAgent____init__["__init__"]
+        N_10_device_mesh_lab__device_agent__DeviceAgent__handler["handler"]
+        N_10_device_mesh_lab__device_agent__DeviceAgent__routes["routes"]
+        N_10_device_mesh_lab__device_agent__object_schema["object_schema"]
+        N_10_device_mesh_lab__device_agent__main["main"]
+    end
+    subgraph M_10_device_mesh_lab__mesh_env
+        N_10_device_mesh_lab__mesh_env__check_auth["check_auth"]
+        N_10_device_mesh_lab__mesh_env__read_json["read_json"]
+        N_10_device_mesh_lab__mesh_env__auth_headers["auth_headers"]
+        N_10_device_mesh_lab__mesh_env__load_env["load_env"]
+        N_10_device_mesh_lab__mesh_env__auth_token["auth_token"]
+        N_10_device_mesh_lab__mesh_env__send_json["send_json"]
+        N_10_device_mesh_lab__mesh_env__parse_peers["parse_peers"]
+    end
+    subgraph M_10_device_mesh_lab__www
+        N_10_device_mesh_lab__www__app__deviceRows["deviceRows"]
+        N_10_device_mesh_lab__www__app__renderRoutes["renderRoutes"]
+        N_10_device_mesh_lab__www__app__parsePayloadValue["parsePayloadValue"]
+        N_10_device_mesh_lab__www__app__renderActivityLog["renderActivityLog"]
+        N_10_device_mesh_lab__www__app__showJson["showJson"]
+        N_10_device_mesh_lab__www__app__inputType["inputType"]
+        N_10_device_mesh_lab__www__app__required["required"]
+        N_10_device_mesh_lab__www__app__row["row"]
+        N_10_device_mesh_lab__www__app__filter["filter"]
+        N_10_device_mesh_lab__www__app__setMenuActive["setMenuActive"]
+        N_10_device_mesh_lab__www__app__renderDevices["renderDevices"]
+        N_10_device_mesh_lab__www__app__url["url"]
+        N_10_device_mesh_lab__www__app__step["step"]
+        N_10_device_mesh_lab__www__app__novncEntryFor["novncEntryFor"]
+        N_10_device_mesh_lab__www__app__response["response"]
+        N_10_device_mesh_lab__www__app__renderField["renderField"]
+        N_10_device_mesh_lab__www__app__selectRoute["selectRoute"]
+        N_10_device_mesh_lab__www__app__showView["showView"]
+        N_10_device_mesh_lab__www__app__runNlFlow["runNlFlow"]
+        N_10_device_mesh_lab__www__app__targetFromUri["targetFromUri"]
+        N_10_device_mesh_lab__www__app__recordActivity["recordActivity"]
+        N_10_device_mesh_lab__www__app__renderNovnc["renderNovnc"]
+        N_10_device_mesh_lab__www__app__escapeHtml["escapeHtml"]
+        N_10_device_mesh_lab__www__app__installable["installable"]
+        N_10_device_mesh_lab__www__app__appendTimeline["appendTimeline"]
+        N_10_device_mesh_lab__www__app__focusArea["focusArea"]
+        N_10_device_mesh_lab__www__app__routeByUri["routeByUri"]
+        N_10_device_mesh_lab__www__app__novncUrlFor["novncUrlFor"]
+        N_10_device_mesh_lab__www__app__groups["groups"]
+        N_10_device_mesh_lab__www__app__frontendRows["frontendRows"]
+        N_10_device_mesh_lab__www__app__previewPayload["previewPayload"]
+        N_10_device_mesh_lab__www__app__renderPayloadForm["renderPayloadForm"]
+        N_10_device_mesh_lab__www__app__focusTargetFor["focusTargetFor"]
+        N_10_device_mesh_lab__www__app__runSelectedRoute["runSelectedRoute"]
+        N_10_device_mesh_lab__www__app__refreshLogs["refreshLogs"]
+        N_10_device_mesh_lab__www__app__li["li"]
+        N_10_device_mesh_lab__www__app__data["data"]
+        N_10_device_mesh_lab__www__app__payloadFromForm["payloadFromForm"]
+        N_10_device_mesh_lab__www__app__description["description"]
+        N_10_device_mesh_lab__www__app__routeBadge["routeBadge"]
+        N_10_device_mesh_lab__www__app__extractRunResult["extractRunResult"]
+        N_10_device_mesh_lab__www__app__refreshDevices["refreshDevices"]
+        N_10_device_mesh_lab__www__app__isRouteSafe["isRouteSafe"]
+        N_10_device_mesh_lab__www__app__prompt["prompt"]
+        N_10_device_mesh_lab__www__app__runUri["runUri"]
+        N_10_device_mesh_lab__www__app__status["status"]
+        N_10_device_mesh_lab__www__app__rows["rows"]
+        N_10_device_mesh_lab__www__app__requiredSet["requiredSet"]
+        N_10_device_mesh_lab__www__app__valueToInput["valueToInput"]
+        N_10_device_mesh_lab__www__app__schemaFor["schemaFor"]
+        N_10_device_mesh_lab__www__app__reachable["reachable"]
+        N_10_device_mesh_lab__www__app__defaultValueFor["defaultValueFor"]
+    end
+    subgraph M_11_novnc_lan_flow__computer
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_GET["do_GET"]
+        N_11_novnc_lan_flow__computer__browser_node__log["log"]
+        N_11_novnc_lan_flow__computer__browser_node__webdriver["webdriver"]
+        N_11_novnc_lan_flow__computer__browser_node__app_service_call["app_service_call"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__log_message["log_message"]
+        N_11_novnc_lan_flow__computer__browser_node__route_call["route_call"]
+        N_11_novnc_lan_flow__computer__browser_node__current_url["current_url"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_POST["do_POST"]
+        N_11_novnc_lan_flow__computer__browser_node__ensure_session["ensure_session"]
+        N_11_novnc_lan_flow__computer__browser_node__main["main"]
+        N_11_novnc_lan_flow__computer__browser_node__route_kind["route_kind"]
+        N_11_novnc_lan_flow__computer__browser_node__open_page["open_page"]
+        N_11_novnc_lan_flow__computer__browser_node__wait_for_webdriver["wait_for_webdriver"]
+        N_11_novnc_lan_flow__computer__browser_node__screenshot_page["screenshot_page"]
+        N_11_novnc_lan_flow__computer__browser_node__json_response["json_response"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_OPTIONS["do_OPTIONS"]
+    end
+    subgraph M_11_novnc_lan_flow__orchestrator
+        N_11_novnc_lan_flow__orchestrator__run_flow__collect_routes["collect_routes"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__wait_health["wait_health"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__fetch_json["fetch_json"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__run_step["run_step"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__main["main"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__target_from_uri["target_from_uri"]
+    end
+    subgraph M_12_full_e2e_connect_lab__registry_runtime
+        N_12_full_e2e_connect_lab__registry_runtime__registry_server__discover["discover"]
+        N_12_full_e2e_connect_lab__registry_runtime__registry_server__get_json["get_json"]
+        N_12_full_e2e_connect_lab__registry_runtime__registry_server__Handler__do_GET["do_GET"]
+        N_12_full_e2e_connect_lab__registry_runtime__registry_server__registry_document["registry_document"]
+        N_12_full_e2e_connect_lab__registry_runtime__registry_server__nodes["nodes"]
+    end
+    subgraph M_12_full_e2e_connect_lab__scripts
+        N_12_full_e2e_connect_lab__scripts__run_full_scenario__print["print"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__fetch_catalog["fetch_catalog"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__project_mcp_a2a["project_mcp_a2a"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__main["main"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__run["run"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__uri_run["uri_run"]
+        N_12_full_e2e_connect_lab__scripts__assert_results__main["main"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry["build_registry"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__emit_browser_control_bindings["emit_browser_control_bindings"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__summarize_catalog["summarize_catalog"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__emit_time_tools_bindings["emit_time_tools_bindings"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__run_connector_routes["run_connector_routes"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__test_grpc_transport["test_grpc_transport"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__emit_http_check_bindings["emit_http_check_bindings"]
+        N_12_full_e2e_connect_lab__scripts__assert_results__load["load"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__run_json["run_json"]
+        N_12_full_e2e_connect_lab__scripts__connector_checks__write_json["write_json"]
+    end
+    subgraph M_13_simple_defaults__js
+        N_13_simple_defaults__js__defaults__field["field"]
+        N_13_simple_defaults__js__defaults__fullUri["fullUri"]
+        N_13_simple_defaults__js__defaults__connector["connector"]
+        N_13_simple_defaults__js__defaults__boolean["boolean"]
+        N_13_simple_defaults__js__defaults__string["string"]
+        N_13_simple_defaults__js__defaults__integer["integer"]
+    end
+    subgraph M_13_simple_defaults__python_connector
+        N_13_simple_defaults__python_connector__bindings["bindings"]
+        N_13_simple_defaults__python_connector__main["main"]
+    end
+    N_06_html_uri_app__app__routeResponse --> N_06_html_uri_app__app__renderActions
+    N_06_html_uri_app__app__routeResponse --> N_06_html_uri_app__app__renderForm
+    N_06_html_uri_app__app__renderActions --> N_06_html_uri_app__app__classFor
+    N_06_html_uri_app__app__renderActions --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__renderActions --> N_06_html_uri_app__app__iconFor
+    N_06_html_uri_app__app__renderForm --> N_06_html_uri_app__app__schemaFor
+    N_06_html_uri_app__app__renderForm --> N_06_html_uri_app__app__payloadDefaults
+    N_06_html_uri_app__app__renderForm --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__required --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__defaults --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__inputType --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__refreshLogs --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__data --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__card --> N_06_html_uri_app__app__renderToolList
+    N_06_html_uri_app__app__renderToolList --> N_06_html_uri_app__app__escapeHtml
+    N_06_html_uri_app__app__iconFor --> N_06_html_uri_app__app__classFor
+    N_09_docker_uri_flow__node_worker__server__server --> N_09_docker_uri_flow__node_worker__server__send
+    N_09_docker_uri_flow__node_worker__server__server --> N_09_docker_uri_flow__node_worker__server__readBody
+    N_09_docker_uri_flow__node_worker__server__server --> N_09_docker_uri_flow__node_worker__server__slugify
+    N_09_docker_uri_flow__node_worker__server__body --> N_09_docker_uri_flow__node_worker__server__send
+    N_09_docker_uri_flow__node_worker__server__slug --> N_09_docker_uri_flow__node_worker__server__send
+    N_10_device_mesh_lab__www__app__showView --> N_10_device_mesh_lab__www__app__setMenuActive
+    N_10_device_mesh_lab__www__app__focusArea --> N_10_device_mesh_lab__www__app__showView
+    N_10_device_mesh_lab__www__app__focusArea --> N_10_device_mesh_lab__www__app__setMenuActive
+    N_10_device_mesh_lab__www__app__focusArea --> N_10_device_mesh_lab__www__app__focusTargetFor
+    N_10_device_mesh_lab__www__app__recordActivity --> N_10_device_mesh_lab__www__app__renderActivityLog
+    N_10_device_mesh_lab__www__app__routeBadge --> N_10_device_mesh_lab__www__app__isRouteSafe
+    N_10_device_mesh_lab__www__app__renderDevices --> N_10_device_mesh_lab__www__app__filter
+    N_10_device_mesh_lab__www__app__renderDevices --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__reachable --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__installable --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__novncUrlFor --> N_10_device_mesh_lab__www__app__novncEntryFor
+    N_10_device_mesh_lab__www__app__renderNovnc --> N_10_device_mesh_lab__www__app__novncUrlFor
+    N_10_device_mesh_lab__www__app__renderNovnc --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__url --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__status --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderRoutes --> N_10_device_mesh_lab__www__app__filter
+    N_10_device_mesh_lab__www__app__renderRoutes --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderRoutes --> N_10_device_mesh_lab__www__app__routeBadge
+    N_10_device_mesh_lab__www__app__filter --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__rows --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__selectRoute --> N_10_device_mesh_lab__www__app__renderRoutes
+    N_10_device_mesh_lab__www__app__selectRoute --> N_10_device_mesh_lab__www__app__renderPayloadForm
+    N_10_device_mesh_lab__www__app__selectRoute --> N_10_device_mesh_lab__www__app__setMenuActive
+    N_10_device_mesh_lab__www__app__selectRoute --> N_10_device_mesh_lab__www__app__showJson
+    N_10_device_mesh_lab__www__app__selectRoute --> N_10_device_mesh_lab__www__app__previewPayload
+    N_10_device_mesh_lab__www__app__renderField --> N_10_device_mesh_lab__www__app__defaultValueFor
+    N_10_device_mesh_lab__www__app__renderField --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderField --> N_10_device_mesh_lab__www__app__valueToInput
+    N_10_device_mesh_lab__www__app__description --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__inputType --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__step --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__isRouteSafe
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__schemaFor
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__requiredSet
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__routeBadge
+    N_10_device_mesh_lab__www__app__renderPayloadForm --> N_10_device_mesh_lab__www__app__renderField
+    N_10_device_mesh_lab__www__app__required --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__payloadFromForm --> N_10_device_mesh_lab__www__app__parsePayloadValue
+    N_10_device_mesh_lab__www__app__previewPayload --> N_10_device_mesh_lab__www__app__payloadFromForm
+    N_10_device_mesh_lab__www__app__appendTimeline --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__li --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__renderActivityLog --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__frontendRows --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__deviceRows --> N_10_device_mesh_lab__www__app__escapeHtml
+    N_10_device_mesh_lab__www__app__refreshLogs --> N_10_device_mesh_lab__www__app__renderActivityLog
+    N_10_device_mesh_lab__www__app__refreshLogs --> N_10_device_mesh_lab__www__app__routeByUri
+    N_10_device_mesh_lab__www__app__refreshLogs --> N_10_device_mesh_lab__www__app__runUri
+    N_10_device_mesh_lab__www__app__refreshLogs --> N_10_device_mesh_lab__www__app__extractRunResult
+    N_10_device_mesh_lab__www__app__groups --> N_10_device_mesh_lab__www__app__routeByUri
+    N_10_device_mesh_lab__www__app__groups --> N_10_device_mesh_lab__www__app__runUri
+    N_10_device_mesh_lab__www__app__groups --> N_10_device_mesh_lab__www__app__extractRunResult
+    N_10_device_mesh_lab__www__app__data --> N_10_device_mesh_lab__www__app__showJson
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__renderDevices
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__renderNovnc
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__renderRoutes
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__renderPayloadForm
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__showJson
+    N_10_device_mesh_lab__www__app__refreshDevices --> N_10_device_mesh_lab__www__app__filter
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__recordActivity
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__showJson
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__appendTimeline
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__refreshDevices
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__refreshLogs
+    N_10_device_mesh_lab__www__app__runNlFlow --> N_10_device_mesh_lab__www__app__showView
+    N_10_device_mesh_lab__www__app__prompt --> N_10_device_mesh_lab__www__app__recordActivity
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__payloadFromForm
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__showJson
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__recordActivity
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__targetFromUri
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__runUri
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__appendTimeline
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__refreshDevices
+    N_10_device_mesh_lab__www__app__runSelectedRoute --> N_10_device_mesh_lab__www__app__refreshLogs
+    N_10_device_mesh_lab__www__app__row --> N_10_device_mesh_lab__www__app__recordActivity
+    N_05_generators__go__example__main --> N_05_generators__go__example__uriCommand
+    N_05_generators__php__example__UriCommand__bindingFromFunction --> N_05_generators__php__example__UriCommand__schemaType
+    N_05_generators__c__example__main --> N_05_generators__c__example__puts
+    N_13_simple_defaults__python_connector__main --> N_13_simple_defaults__python_connector__bindings
+    N_13_simple_defaults__python_connector__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_13_simple_defaults__js__defaults__string --> N_13_simple_defaults__js__defaults__field
+    N_13_simple_defaults__js__defaults__integer --> N_13_simple_defaults__js__defaults__field
+    N_13_simple_defaults__js__defaults__boolean --> N_13_simple_defaults__js__defaults__field
+    N_13_simple_defaults__js__defaults__connector --> N_13_simple_defaults__js__defaults__fullUri
+    N_12_full_e2e_connect_lab__scripts__connector_checks__run_json --> N_12_full_e2e_connect_lab__scripts__connector_checks__run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__emit_http_check_bindings --> N_12_full_e2e_connect_lab__scripts__connector_checks__run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__emit_time_tools_bindings --> N_12_full_e2e_connect_lab__scripts__connector_checks__run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__emit_browser_control_bindings --> N_12_full_e2e_connect_lab__scripts__connector_checks__run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry --> N_12_full_e2e_connect_lab__scripts__connector_checks__write_json
+    N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry --> N_12_full_e2e_connect_lab__scripts__connector_checks__emit_http_check_bindings
+    N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry --> N_12_full_e2e_connect_lab__scripts__connector_checks__emit_time_tools_bindings
+    N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry --> N_12_full_e2e_connect_lab__scripts__connector_checks__emit_browser_control_bindings
+    N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry --> N_12_full_e2e_connect_lab__scripts__connector_checks__run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__uri_run --> N_12_full_e2e_connect_lab__scripts__connector_checks__run_json
+    N_12_full_e2e_connect_lab__scripts__connector_checks__run_connector_routes --> N_12_full_e2e_connect_lab__scripts__connector_checks__uri_run
+    N_12_full_e2e_connect_lab__scripts__connector_checks__project_mcp_a2a --> N_12_full_e2e_connect_lab__scripts__connector_checks__run_json
+    N_12_full_e2e_connect_lab__scripts__connector_checks__test_grpc_transport --> N_12_full_e2e_connect_lab__scripts__connector_checks__run_json
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__fetch_catalog
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__write_json
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__run_connector_routes
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__project_mcp_a2a
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__test_grpc_transport
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__connector_checks__summarize_catalog
+    N_12_full_e2e_connect_lab__scripts__connector_checks__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_09_docker_uri_flow__orchestrator__flow_runner__parse_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__parse_scalar
+    N_09_docker_uri_flow__orchestrator__flow_runner__resolve_payload --> N_09_docker_uri_flow__orchestrator__flow_runner__get_path
+    N_09_docker_uri_flow__orchestrator__flow_runner__registry_has_uri --> N_09_docker_uri_flow__orchestrator__flow_runner__route_key
+    N_09_docker_uri_flow__orchestrator__flow_runner__registry_has_uri --> N_09_docker_uri_flow__orchestrator__flow_runner__normalize_uri
+    N_09_docker_uri_flow__orchestrator__flow_runner__validate_flow_registry --> N_09_docker_uri_flow__orchestrator__flow_runner__registry_route_count
+    N_09_docker_uri_flow__orchestrator__flow_runner__validate_flow_registry --> N_09_docker_uri_flow__orchestrator__flow_runner__registry_has_uri
+    N_09_docker_uri_flow__orchestrator__flow_runner__wait_for_services --> N_09_docker_uri_flow__orchestrator__flow_runner__service_url
+    N_09_docker_uri_flow__orchestrator__flow_runner__wait_for_services --> N_09_docker_uri_flow__orchestrator__flow_runner__json_get
+    N_09_docker_uri_flow__orchestrator__flow_runner__run_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__validate_flow_registry
+    N_09_docker_uri_flow__orchestrator__flow_runner__run_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__wait_for_services
+    N_09_docker_uri_flow__orchestrator__flow_runner__run_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__load_registry
+    N_09_docker_uri_flow__orchestrator__flow_runner__run_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__resolve_payload
+    N_09_docker_uri_flow__orchestrator__flow_runner__run_flow --> N_09_docker_uri_flow__orchestrator__flow_runner__json_post
+    N_09_docker_uri_flow__orchestrator__flow_runner__main --> N_09_docker_uri_flow__orchestrator__flow_runner__parse_flow
+    N_09_docker_uri_flow__orchestrator__flow_runner__main --> N_09_docker_uri_flow__orchestrator__flow_runner__run_flow
+    N_09_docker_uri_flow__orchestrator__flow_runner__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_12_full_e2e_connect_lab__scripts__assert_results__main --> N_12_full_e2e_connect_lab__scripts__assert_results__load
+    N_07_transports__transport_lib__run_via --> N_07_transports__transport_lib__run_inprocess
+    N_07_transports__transport_lib__run_via --> N_07_transports__transport_lib__run_queue
+    N_07_transports__transport_lib__run_via --> N_07_transports__transport_lib__serverless_handler
+    N_07_transports__transport_lib__run_via --> N_07_transports__transport_lib__start_http_worker
+    N_07_transports__transport_lib__available_transports --> N_07_transports__transport_lib__grpc_available
+    N_10_device_mesh_lab__mesh_env__auth_headers --> N_10_device_mesh_lab__mesh_env__auth_token
+    N_10_device_mesh_lab__mesh_env__check_auth --> N_10_device_mesh_lab__mesh_env__auth_token
+    N_11_novnc_lan_flow__orchestrator__run_flow__wait_health --> N_11_novnc_lan_flow__orchestrator__run_flow__fetch_json
+    N_11_novnc_lan_flow__orchestrator__run_flow__collect_routes --> N_11_novnc_lan_flow__orchestrator__run_flow__fetch_json
+    N_11_novnc_lan_flow__orchestrator__run_flow__run_step --> N_11_novnc_lan_flow__orchestrator__run_flow__target_from_uri
+    N_11_novnc_lan_flow__orchestrator__run_flow__run_step --> N_11_novnc_lan_flow__orchestrator__run_flow__fetch_json
+    N_11_novnc_lan_flow__orchestrator__run_flow__main --> N_11_novnc_lan_flow__orchestrator__run_flow__collect_routes
+    N_11_novnc_lan_flow__orchestrator__run_flow__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_11_novnc_lan_flow__orchestrator__run_flow__main --> N_11_novnc_lan_flow__orchestrator__run_flow__wait_health
+    N_11_novnc_lan_flow__orchestrator__run_flow__main --> N_11_novnc_lan_flow__orchestrator__run_flow__run_step
+    N_09_docker_uri_flow__shell_worker__server__Handler__do_GET --> N_10_device_mesh_lab__www__app__response
+    N_09_docker_uri_flow__shell_worker__server__Handler__do_POST --> N_09_docker_uri_flow__shell_worker__server__dispatch
+    N_09_docker_uri_flow__shell_worker__server__Handler__do_POST --> N_10_device_mesh_lab__www__app__response
+    N_08_multi_transport__worker__serve_http --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_08_multi_transport__worker__serve_grpc --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__discover --> N_12_full_e2e_connect_lab__registry_runtime__registry_server__nodes
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__discover --> N_12_full_e2e_connect_lab__registry_runtime__registry_server__get_json
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__registry_document --> N_12_full_e2e_connect_lab__registry_runtime__registry_server__discover
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__Handler__do_GET --> N_09_docker_uri_flow__node_worker__server__send
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__Handler__do_GET --> N_12_full_e2e_connect_lab__registry_runtime__registry_server__discover
+    N_12_full_e2e_connect_lab__registry_runtime__registry_server__Handler__do_GET --> N_12_full_e2e_connect_lab__registry_runtime__registry_server__registry_document
+    N_10_device_mesh_lab__device_agent__parse_browser_targets --> N_10_device_mesh_lab__device_agent__default_browser_targets
+    N_10_device_mesh_lab__device_agent__DeviceAgent____init__ --> N_10_device_mesh_lab__device_agent__default_browser_targets
+    N_10_device_mesh_lab__device_agent__DeviceAgent__log --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_10_device_mesh_lab__device_agent__DeviceAgent__routes --> N_10_device_mesh_lab__device_agent__object_schema
+    N_10_device_mesh_lab__device_agent__DeviceAgent__open_browser_in_novnc --> N_10_device_mesh_lab__device_agent__build_novnc_browser_command
+    N_10_device_mesh_lab__device_agent__DeviceAgent__handler --> N_10_device_mesh_lab__mesh_env__send_json
+    N_10_device_mesh_lab__device_agent__DeviceAgent__handler --> N_10_device_mesh_lab__mesh_env__check_auth
+    N_10_device_mesh_lab__device_agent__make_agent_from_env --> N_10_device_mesh_lab__mesh_env__load_env
+    N_10_device_mesh_lab__device_agent__make_agent_from_env --> N_10_device_mesh_lab__device_agent__parse_browser_targets
+    N_10_device_mesh_lab__device_agent__main --> N_10_device_mesh_lab__device_agent__make_agent_from_env
+    N_10_device_mesh_lab__controller__json_get --> N_10_device_mesh_lab__mesh_env__auth_headers
+    N_10_device_mesh_lab__controller__json_post --> N_10_device_mesh_lab__mesh_env__auth_headers
+    N_10_device_mesh_lab__controller__discover_device --> N_10_device_mesh_lab__controller__json_get
+    N_10_device_mesh_lab__controller__discover_mesh --> N_10_device_mesh_lab__mesh_env__parse_peers
+    N_10_device_mesh_lab__controller__discover_mesh --> N_10_device_mesh_lab__controller__discover_device
+    N_10_device_mesh_lab__controller__build_registry --> N_10_device_mesh_lab__controller__route_binding
+    N_10_device_mesh_lab__controller__route_summary --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__fallback_steps --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__fallback_flow --> N_10_device_mesh_lab__controller__fallback_steps
+    N_10_device_mesh_lab__controller__fallback_flow --> N_10_device_mesh_lab__controller__slug
+    N_10_device_mesh_lab__controller__append_step_if_missing --> N_10_device_mesh_lab__controller__slug
+    N_10_device_mesh_lab__controller__postprocess_flow --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__postprocess_flow --> N_10_device_mesh_lab__controller__target_from_uri
+    N_10_device_mesh_lab__controller__postprocess_flow --> N_10_device_mesh_lab__controller__append_step_if_missing
+    N_10_device_mesh_lab__controller__normalize_flow --> N_10_device_mesh_lab__controller__slug
+    N_10_device_mesh_lab__controller__llm_messages --> N_10_device_mesh_lab__controller__route_summary
+    N_10_device_mesh_lab__controller__generate_with_litellm --> N_10_device_mesh_lab__controller__json_from_text
+    N_10_device_mesh_lab__controller__generate_with_litellm --> N_10_device_mesh_lab__controller__normalize_flow
+    N_10_device_mesh_lab__controller__generate_with_litellm --> N_10_device_mesh_lab__controller__postprocess_flow
+    N_10_device_mesh_lab__controller__generate_with_litellm --> N_10_device_mesh_lab__controller__llm_messages
+    N_10_device_mesh_lab__controller__generate_with_litellm --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__generate_flow --> N_10_device_mesh_lab__controller__fallback_flow
+    N_10_device_mesh_lab__controller__generate_flow --> N_10_device_mesh_lab__controller__postprocess_flow
+    N_10_device_mesh_lab__controller__generate_flow --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__generate_flow --> N_10_device_mesh_lab__controller__generate_with_litellm
+    N_10_device_mesh_lab__controller__generate_flow --> N_10_device_mesh_lab__controller__normalize_flow
+    N_10_device_mesh_lab__controller__execute_flow --> N_10_device_mesh_lab__controller__target_from_uri
+    N_10_device_mesh_lab__controller__execute_flow --> N_10_device_mesh_lab__controller__json_post
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__discover_mesh
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__build_registry
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__generate_flow
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__execute_flow
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__is_safe_route
+    N_10_device_mesh_lab__controller__nl_flow --> N_10_device_mesh_lab__controller__registry_route_count
+    N_10_device_mesh_lab__controller__Handler__do_OPTIONS --> N_10_device_mesh_lab__mesh_env__send_json
+    N_10_device_mesh_lab__controller__Handler__do_GET --> N_10_device_mesh_lab__controller__discover_mesh
+    N_10_device_mesh_lab__controller__Handler__do_GET --> N_10_device_mesh_lab__mesh_env__send_json
+    N_10_device_mesh_lab__controller__Handler__do_GET --> N_10_device_mesh_lab__controller__route_summary
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__mesh_env__send_json
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__mesh_env__read_json
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__controller__nl_flow
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__controller__discover_mesh
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_12_full_e2e_connect_lab__scripts__connector_checks__build_registry
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__controller__normalize_flow
+    N_10_device_mesh_lab__controller__Handler__do_POST --> N_10_device_mesh_lab__controller__execute_flow
+    N_10_device_mesh_lab__controller__main --> N_10_device_mesh_lab__mesh_env__load_env
+    N_10_device_mesh_lab__controller__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_10_device_mesh_lab__controller__main --> N_10_device_mesh_lab__mesh_env__parse_peers
+    N_09_docker_uri_flow__python_worker__server__dispatch --> N_09_docker_uri_flow__python_worker__server__normalize
+    N_09_docker_uri_flow__python_worker__server__dispatch --> N_09_docker_uri_flow__python_worker__server__summary
+    N_09_docker_uri_flow__python_worker__server__Handler__do_GET --> N_10_device_mesh_lab__www__app__response
+    N_09_docker_uri_flow__python_worker__server__Handler__do_POST --> N_09_docker_uri_flow__shell_worker__server__dispatch
+    N_09_docker_uri_flow__python_worker__server__Handler__do_POST --> N_10_device_mesh_lab__www__app__response
+    N_11_novnc_lan_flow__computer__browser_node__wait_for_webdriver --> N_11_novnc_lan_flow__computer__browser_node__webdriver
+    N_11_novnc_lan_flow__computer__browser_node__ensure_session --> N_11_novnc_lan_flow__computer__browser_node__wait_for_webdriver
+    N_11_novnc_lan_flow__computer__browser_node__ensure_session --> N_11_novnc_lan_flow__computer__browser_node__webdriver
+    N_11_novnc_lan_flow__computer__browser_node__current_url --> N_11_novnc_lan_flow__computer__browser_node__webdriver
+    N_11_novnc_lan_flow__computer__browser_node__open_page --> N_11_novnc_lan_flow__computer__browser_node__ensure_session
+    N_11_novnc_lan_flow__computer__browser_node__open_page --> N_11_novnc_lan_flow__computer__browser_node__webdriver
+    N_11_novnc_lan_flow__computer__browser_node__open_page --> N_11_novnc_lan_flow__computer__browser_node__log
+    N_11_novnc_lan_flow__computer__browser_node__open_page --> N_11_novnc_lan_flow__computer__browser_node__current_url
+    N_11_novnc_lan_flow__computer__browser_node__screenshot_page --> N_11_novnc_lan_flow__computer__browser_node__ensure_session
+    N_11_novnc_lan_flow__computer__browser_node__screenshot_page --> N_11_novnc_lan_flow__computer__browser_node__webdriver
+    N_11_novnc_lan_flow__computer__browser_node__screenshot_page --> N_11_novnc_lan_flow__computer__browser_node__log
+    N_11_novnc_lan_flow__computer__browser_node__app_service_call --> N_11_novnc_lan_flow__computer__browser_node__log
+    N_11_novnc_lan_flow__computer__browser_node__route_call --> N_11_novnc_lan_flow__computer__browser_node__open_page
+    N_11_novnc_lan_flow__computer__browser_node__route_call --> N_11_novnc_lan_flow__computer__browser_node__screenshot_page
+    N_11_novnc_lan_flow__computer__browser_node__route_call --> N_11_novnc_lan_flow__computer__browser_node__log
+    N_11_novnc_lan_flow__computer__browser_node__route_call --> N_11_novnc_lan_flow__computer__browser_node__app_service_call
+    N_11_novnc_lan_flow__computer__browser_node__Handler__log_message --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_11_novnc_lan_flow__computer__browser_node__Handler__do_OPTIONS --> N_11_novnc_lan_flow__computer__browser_node__json_response
+    N_11_novnc_lan_flow__computer__browser_node__Handler__do_GET --> N_11_novnc_lan_flow__computer__browser_node__json_response
+    N_11_novnc_lan_flow__computer__browser_node__Handler__do_GET --> N_11_novnc_lan_flow__computer__browser_node__route_kind
+    N_11_novnc_lan_flow__computer__browser_node__Handler__do_POST --> N_11_novnc_lan_flow__computer__browser_node__json_response
+    N_11_novnc_lan_flow__computer__browser_node__Handler__do_POST --> N_11_novnc_lan_flow__computer__browser_node__route_call
+    N_11_novnc_lan_flow__computer__browser_node__main --> N_11_novnc_lan_flow__computer__browser_node__log
+    N_11_novnc_lan_flow__computer__browser_node__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print
+    N_06_html_uri_app__backend__binding_document --> N_06_html_uri_app__backend__read_json
+    N_06_html_uri_app__backend__registry --> N_06_html_uri_app__backend__binding_document
+    N_06_html_uri_app__backend__routes --> N_06_html_uri_app__backend__binding_document
+    N_06_html_uri_app__backend__dispatch --> N_06_html_uri_app__backend__add_log
+    N_06_html_uri_app__backend__dispatch --> N_06_html_uri_app__backend__env_bool
+    N_06_html_uri_app__backend__dispatch_tool --> N_06_html_uri_app__backend__registry
+    N_06_html_uri_app__backend__dispatch_tool --> N_06_html_uri_app__backend__add_log
+    N_06_html_uri_app__backend__dispatch_tool --> N_06_html_uri_app__backend__env_bool
+    N_06_html_uri_app__backend__Handler__log_message --> N_06_html_uri_app__backend__add_log
+    N_06_html_uri_app__backend__Handler__do_GET --> N_11_novnc_lan_flow__computer__browser_node__json_response
+    N_06_html_uri_app__backend__Handler__do_POST --> N_11_novnc_lan_flow__computer__browser_node__json_response
+    N_06_html_uri_app__backend__Handler__do_POST --> N_06_html_uri_app__backend__add_log
+    N_06_html_uri_app__backend__Handler__do_POST --> N_09_docker_uri_flow__shell_worker__server__dispatch
+    N_06_html_uri_app__backend__Handler__do_POST --> N_06_html_uri_app__backend__dispatch_tool
+    N_06_html_uri_app__backend__main --> N_06_html_uri_app__backend__load_env
+    N_06_html_uri_app__backend__main --> N_06_html_uri_app__backend__add_log
+    N_06_html_uri_app__backend__main --> N_12_full_e2e_connect_lab__scripts__run_full_scenario__print

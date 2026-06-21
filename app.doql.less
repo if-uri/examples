@@ -1,0 +1,29 @@
+// LESS format — define @variables here as needed
+
+app {
+  name: examples;
+  version: 0.1.0;
+}
+
+workflow[name="test"] {
+  trigger: manual;
+  step-1: run cmd=./run_tests.sh;
+}
+
+workflow[name="site"] {
+  trigger: manual;
+  step-1: run cmd=python3 scripts/build_site.py _site;
+}
+
+workflow[name="deploy"] {
+  trigger: manual;
+  step-1: run cmd=bash scripts/deploy-plesk.sh;
+}
+
+deploy {
+  target: docker;
+}
+
+environment[name="local"] {
+  runtime: docker-compose;
+}

@@ -1,0 +1,39 @@
+flowchart TD
+%% generated in 0.01s
+    M_06_html_uri_app__backend["06-html_uri_app.backend<br/>18 funcs"]
+    M_06_html_uri_app__test["06-html_uri_app.test<br/>2 funcs"]
+    M_08_multi_transport__worker["08-multi_transport.worker<br/>3 funcs"]
+    M_09_docker_uri_flow__node_worker["09-docker_uri_flow.node-worker<br/>11 funcs"]
+    M_09_docker_uri_flow__orchestrator["09-docker_uri_flow.orchestrator<br/>16 funcs"]
+    M_09_docker_uri_flow__python_worker["09-docker_uri_flow.python-worker<br/>7 funcs"]
+    M_09_docker_uri_flow__shell_worker["09-docker_uri_flow.shell-worker<br/>5 funcs"]
+    M_10_device_mesh_lab__controller["10-device_mesh_lab.controller<br/>28 funcs"]
+    M_10_device_mesh_lab__device_agent["10-device_mesh_lab.device_agent<br/>23 funcs"]
+    M_10_device_mesh_lab__mesh_env["10-device_mesh_lab.mesh_env<br/>7 funcs"]
+    M_10_device_mesh_lab__www["10-device_mesh_lab.www<br/>92 funcs"]
+    M_11_novnc_lan_flow__computer["11-novnc_lan_flow.computer<br/>17 funcs"]
+    M_11_novnc_lan_flow__orchestrator["11-novnc_lan_flow.orchestrator<br/>6 funcs"]
+    M_12_full_e2e_connect_lab__registry_runtime["12-full_e2e_connect_lab.registry-runtime<br/>7 funcs"]
+    M_12_full_e2e_connect_lab__scripts["12-full_e2e_connect_lab.scripts<br/>22 funcs"]
+    M_13_simple_defaults__python_connector["13-simple_defaults.python_connector<br/>3 funcs"]
+    M_10_device_mesh_lab__device_agent ==>|14| M_10_device_mesh_lab__mesh_env
+    M_10_device_mesh_lab__controller ==>|14| M_10_device_mesh_lab__mesh_env
+    M_06_html_uri_app__backend ==>|10| M_11_novnc_lan_flow__computer
+    M_09_docker_uri_flow__shell_worker ==>|5| M_10_device_mesh_lab__www
+    M_09_docker_uri_flow__python_worker ==>|5| M_10_device_mesh_lab__www
+    M_12_full_e2e_connect_lab__registry_runtime ==>|4| M_09_docker_uri_flow__node_worker
+    M_08_multi_transport__worker -->|2| M_12_full_e2e_connect_lab__scripts
+    M_10_device_mesh_lab__controller -->|2| M_12_full_e2e_connect_lab__scripts
+    M_11_novnc_lan_flow__computer -->|2| M_12_full_e2e_connect_lab__scripts
+    M_13_simple_defaults__python_connector -->|1| M_12_full_e2e_connect_lab__scripts
+    M_09_docker_uri_flow__orchestrator -->|1| M_12_full_e2e_connect_lab__scripts
+    M_11_novnc_lan_flow__orchestrator -->|1| M_12_full_e2e_connect_lab__scripts
+    M_10_device_mesh_lab__device_agent -->|1| M_12_full_e2e_connect_lab__scripts
+    M_10_device_mesh_lab__device_agent -->|1| M_10_device_mesh_lab__www
+    M_10_device_mesh_lab__controller -->|1| M_10_device_mesh_lab__www
+    M_09_docker_uri_flow__python_worker -->|1| M_09_docker_uri_flow__shell_worker
+    M_11_novnc_lan_flow__computer -->|1| M_10_device_mesh_lab__device_agent
+    M_06_html_uri_app__backend -->|1| M_06_html_uri_app__test
+    M_06_html_uri_app__backend -->|1| M_10_device_mesh_lab__device_agent
+    M_06_html_uri_app__backend -->|1| M_09_docker_uri_flow__shell_worker
+    M_06_html_uri_app__backend -->|1| M_12_full_e2e_connect_lab__scripts

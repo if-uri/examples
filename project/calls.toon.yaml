@@ -1,0 +1,261 @@
+# code2llm call graph | /home/tom/github/if-uri/examples
+# generated in 0.10s
+# nodes: 221 | edges: 273 | modules: 23
+# CC̄=3.5
+
+HUBS[20]:
+  12-full_e2e_connect_lab.scripts.assert_results.main
+    CC=38  in:0  out:60  total:60
+  12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes
+    CC=7  in:1  out:47  total:48
+  12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+    CC=1  in:2  out:38  total:40
+  10-device_mesh_lab.controller.normalize_flow
+    CC=20  in:4  out:35  total:39
+  11-novnc_lan_flow.computer.browser_node.app_service_call
+    CC=22  in:1  out:35  total:36
+  10-device_mesh_lab.device_agent.DeviceAgent.handler
+    CC=1  in:0  out:32  total:32
+  12-full_e2e_connect_lab.scripts.connector_checks.main
+    CC=20  in:0  out:30  total:30
+  10-device_mesh_lab.mesh_env.send_json
+    CC=1  in:18  out:12  total:30
+  11-novnc_lan_flow.computer.browser_node.json_response
+    CC=1  in:18  out:12  total:30
+  10-device_mesh_lab.device_agent.parse_browser_targets
+    CC=19  in:1  out:26  total:27
+  12-full_e2e_connect_lab.scripts.connector_checks.uri_run
+    CC=2  in:23  out:4  total:27
+  11-novnc_lan_flow.computer.browser_node.screenshot_page
+    CC=10  in:1  out:26  total:27
+  09-docker_uri_flow.orchestrator.flow_runner.parse_flow
+    CC=24  in:1  out:26  total:27
+  08-multi_transport.worker.serve_http
+    CC=1  in:0  out:25  total:25
+  07-transports.transport_lib.start_http_worker
+    CC=1  in:1  out:24  total:25
+  10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc
+    CC=9  in:0  out:24  total:24
+  10-device_mesh_lab.controller.Handler.do_POST
+    CC=12  in:0  out:24  total:24
+  11-novnc_lan_flow.computer.browser_node.Handler.do_POST
+    CC=9  in:0  out:23  total:23
+  10-device_mesh_lab.www.app.escapeHtml
+    CC=1  in:20  out:2  total:22
+  06-html_uri_app.backend.Handler.do_GET
+    CC=8  in:0  out:21  total:21
+
+MODULES:
+  05-generators.c.example  [2 funcs]
+    main  CC=1  out:1
+    puts  CC=1  out:0
+  05-generators.go.example  [2 funcs]
+    main  CC=4  out:3
+    uriCommand  CC=4  out:4
+  05-generators.php.example  [2 funcs]
+    bindingFromFunction  CC=2  out:9
+    schemaType  CC=2  out:3
+  06-html_uri_app.app  [15 funcs]
+    card  CC=2  out:2
+    classFor  CC=1  out:2
+    data  CC=2  out:1
+    defaults  CC=8  out:5
+    escapeHtml  CC=1  out:2
+    iconFor  CC=2  out:3
+    inputType  CC=2  out:2
+    payloadDefaults  CC=4  out:0
+    refreshLogs  CC=5  out:7
+    renderActions  CC=5  out:5
+  06-html_uri_app.backend  [13 funcs]
+    do_GET  CC=8  out:21
+    do_POST  CC=4  out:10
+    log_message  CC=1  out:1
+    add_log  CC=2  out:2
+    binding_document  CC=1  out:2
+    dispatch  CC=6  out:14
+    dispatch_tool  CC=7  out:13
+    env_bool  CC=1  out:2
+    load_env  CC=6  out:10
+    main  CC=5  out:10
+  07-transports.transport_lib  [7 funcs]
+    available_transports  CC=4  out:1
+    grpc_available  CC=2  out:0
+    run_inprocess  CC=2  out:1
+    run_queue  CC=1  out:10
+    run_via  CC=6  out:16
+    serverless_handler  CC=1  out:2
+    start_http_worker  CC=1  out:24
+  08-multi_transport.worker  [2 funcs]
+    serve_grpc  CC=1  out:2
+    serve_http  CC=1  out:25
+  09-docker_uri_flow.node-worker.server  [6 funcs]
+    body  CC=2  out:1
+    readBody  CC=2  out:4
+    send  CC=1  out:4
+    server  CC=10  out:4
+    slug  CC=1  out:1
+    slugify  CC=1  out:4
+  09-docker_uri_flow.orchestrator.flow_runner  [16 funcs]
+    get_path  CC=2  out:1
+    json_get  CC=1  out:4
+    json_post  CC=1  out:7
+    load_registry  CC=3  out:4
+    main  CC=3  out:5
+    normalize_uri  CC=6  out:7
+    parse_flow  CC=24  out:26
+    parse_scalar  CC=3  out:2
+    registry_has_uri  CC=4  out:9
+    registry_route_count  CC=5  out:9
+  09-docker_uri_flow.python-worker.server  [5 funcs]
+    do_GET  CC=3  out:3
+    do_POST  CC=6  out:11
+    dispatch  CC=3  out:2
+    normalize  CC=1  out:6
+    summary  CC=1  out:2
+  09-docker_uri_flow.shell-worker.server  [3 funcs]
+    do_GET  CC=3  out:3
+    do_POST  CC=6  out:11
+    dispatch  CC=2  out:5
+  10-device_mesh_lab.controller  [26 funcs]
+    do_GET  CC=2  out:5
+    do_OPTIONS  CC=1  out:1
+    do_POST  CC=12  out:24
+    append_step_if_missing  CC=7  out:6
+    build_registry  CC=5  out:3
+    discover_device  CC=6  out:9
+    discover_mesh  CC=5  out:6
+    execute_flow  CC=9  out:15
+    fallback_flow  CC=1  out:4
+    fallback_steps  CC=33  out:19
+  10-device_mesh_lab.device_agent  [11 funcs]
+    __init__  CC=3  out:3
+    handler  CC=1  out:32
+    log  CC=2  out:7
+    open_browser_in_novnc  CC=9  out:24
+    routes  CC=2  out:13
+    build_novnc_browser_command  CC=1  out:2
+    default_browser_targets  CC=2  out:2
+    main  CC=1  out:6
+    make_agent_from_env  CC=3  out:14
+    object_schema  CC=2  out:0
+  10-device_mesh_lab.mesh_env  [7 funcs]
+    auth_headers  CC=2  out:1
+    auth_token  CC=1  out:2
+    check_auth  CC=2  out:2
+    load_env  CC=9  out:10
+    parse_peers  CC=8  out:14
+    read_json  CC=3  out:5
+    send_json  CC=1  out:12
+  10-device_mesh_lab.www.app  [52 funcs]
+    appendTimeline  CC=3  out:3
+    data  CC=2  out:1
+    defaultValueFor  CC=20  out:2
+    description  CC=3  out:1
+    deviceRows  CC=2  out:1
+    escapeHtml  CC=1  out:2
+    extractRunResult  CC=10  out:0
+    filter  CC=3  out:1
+    focusArea  CC=3  out:6
+    focusTargetFor  CC=2  out:0
+  11-novnc_lan_flow.computer.browser_node  [16 funcs]
+    do_GET  CC=6  out:6
+    do_OPTIONS  CC=1  out:1
+    do_POST  CC=9  out:23
+    log_message  CC=1  out:2
+    app_service_call  CC=22  out:35
+    current_url  CC=3  out:4
+    ensure_session  CC=6  out:7
+    json_response  CC=1  out:12
+    log  CC=2  out:2
+    main  CC=1  out:5
+  11-novnc_lan_flow.orchestrator.run_flow  [6 funcs]
+    collect_routes  CC=4  out:10
+    fetch_json  CC=4  out:7
+    main  CC=7  out:12
+    run_step  CC=2  out:8
+    target_from_uri  CC=2  out:2
+    wait_health  CC=4  out:6
+  12-full_e2e_connect_lab.registry-runtime.registry_server  [5 funcs]
+    do_GET  CC=4  out:9
+    discover  CC=4  out:9
+    get_json  CC=2  out:4
+    nodes  CC=4  out:6
+    registry_document  CC=5  out:7
+  12-full_e2e_connect_lab.scripts.assert_results  [2 funcs]
+    load  CC=1  out:2
+    main  CC=38  out:60
+  12-full_e2e_connect_lab.scripts.connector_checks  [14 funcs]
+    build_registry  CC=1  out:38
+    emit_browser_control_bindings  CC=1  out:3
+    emit_http_check_bindings  CC=1  out:3
+    emit_time_tools_bindings  CC=1  out:3
+    fetch_catalog  CC=1  out:6
+    main  CC=20  out:30
+    project_mcp_a2a  CC=1  out:4
+    run  CC=4  out:2
+    run_connector_routes  CC=7  out:47
+    run_json  CC=2  out:3
+  12-full_e2e_connect_lab.scripts.run_full_scenario  [1 funcs]
+    print  CC=0  out:0
+  13-simple_defaults.js.defaults  [6 funcs]
+    boolean  CC=1  out:1
+    connector  CC=2  out:13
+    field  CC=2  out:1
+    fullUri  CC=2  out:2
+    integer  CC=1  out:1
+    string  CC=1  out:1
+  13-simple_defaults.python_connector  [2 funcs]
+    bindings  CC=1  out:1
+    main  CC=2  out:5
+
+EDGES:
+  06-html_uri_app.app.routeResponse → 06-html_uri_app.app.renderActions
+  06-html_uri_app.app.routeResponse → 06-html_uri_app.app.renderForm
+  06-html_uri_app.app.renderActions → 06-html_uri_app.app.classFor
+  06-html_uri_app.app.renderActions → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.renderActions → 06-html_uri_app.app.iconFor
+  06-html_uri_app.app.renderForm → 06-html_uri_app.app.schemaFor
+  06-html_uri_app.app.renderForm → 06-html_uri_app.app.payloadDefaults
+  06-html_uri_app.app.renderForm → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.required → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.defaults → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.inputType → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.refreshLogs → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.data → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.card → 06-html_uri_app.app.renderToolList
+  06-html_uri_app.app.renderToolList → 06-html_uri_app.app.escapeHtml
+  06-html_uri_app.app.iconFor → 06-html_uri_app.app.classFor
+  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.send
+  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.readBody
+  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.slugify
+  09-docker_uri_flow.node-worker.server.body → 09-docker_uri_flow.node-worker.server.send
+  09-docker_uri_flow.node-worker.server.slug → 09-docker_uri_flow.node-worker.server.send
+  10-device_mesh_lab.www.app.showView → 10-device_mesh_lab.www.app.setMenuActive
+  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.showView
+  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.setMenuActive
+  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.focusTargetFor
+  10-device_mesh_lab.www.app.recordActivity → 10-device_mesh_lab.www.app.renderActivityLog
+  10-device_mesh_lab.www.app.routeBadge → 10-device_mesh_lab.www.app.isRouteSafe
+  10-device_mesh_lab.www.app.renderDevices → 10-device_mesh_lab.www.app.filter
+  10-device_mesh_lab.www.app.renderDevices → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.reachable → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.installable → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.novncUrlFor → 10-device_mesh_lab.www.app.novncEntryFor
+  10-device_mesh_lab.www.app.renderNovnc → 10-device_mesh_lab.www.app.novncUrlFor
+  10-device_mesh_lab.www.app.renderNovnc → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.url → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.status → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.filter
+  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.routeBadge
+  10-device_mesh_lab.www.app.filter → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.rows → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.renderRoutes
+  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.renderPayloadForm
+  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.setMenuActive
+  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.showJson
+  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.previewPayload
+  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.defaultValueFor
+  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.escapeHtml
+  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.valueToInput
+  10-device_mesh_lab.www.app.description → 10-device_mesh_lab.www.app.escapeHtml

@@ -1,0 +1,2811 @@
+project: /home/tom/github/if-uri/examples
+generated_from: code2llm call graph analysis
+stats:
+  total_nodes: 221
+  total_edges: 273
+  modules_count: 23
+nodes:
+  12-full_e2e_connect_lab.scripts.run_full_scenario.print:
+    name: print
+    module: 12-full_e2e_connect_lab.scripts.run_full_scenario
+    line: 45
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 12
+  06-html_uri_app.backend.routes:
+    name: routes
+    module: 06-html_uri_app.backend
+    line: 55
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 0
+  06-html_uri_app.app.routeResponse:
+    name: routeResponse
+    module: 06-html_uri_app.app
+    line: 25
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  12-full_e2e_connect_lab.registry-runtime.registry_server.discover:
+    name: discover
+    module: 12-full_e2e_connect_lab.registry-runtime.registry_server
+    line: 29
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 3
+  06-html_uri_app.backend.main:
+    name: main
+    module: 06-html_uri_app.backend
+    line: 207
+    cyclomatic_complexity: 5
+    calls_out: 10
+    calls_in: 0
+  05-generators.c.example.puts:
+    name: puts
+    module: 05-generators.c.example
+    line: 23
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 1
+  09-docker_uri_flow.shell-worker.server.dispatch:
+    name: dispatch
+    module: 09-docker_uri_flow.shell-worker.server
+    line: 25
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 3
+  10-device_mesh_lab.controller.llm_messages:
+    name: llm_messages
+    module: 10-device_mesh_lab.controller
+    line: 315
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.fetch_catalog:
+    name: fetch_catalog
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 52
+    cyclomatic_complexity: 1
+    calls_out: 6
+    calls_in: 1
+  05-generators.php.example.UriCommand.schemaType:
+    name: schemaType
+    module: 05-generators.php.example
+    line: 13
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.www.app.deviceRows:
+    name: deviceRows
+    module: 10-device_mesh_lab.www.app
+    line: 395
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.mesh_env.check_auth:
+    name: check_auth
+    module: 10-device_mesh_lab.mesh_env
+    line: 55
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  07-transports.transport_lib.serverless_handler:
+    name: serverless_handler
+    module: 07-transports.transport_lib
+    line: 69
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  11-novnc_lan_flow.orchestrator.run_flow.collect_routes:
+    name: collect_routes
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 220
+    cyclomatic_complexity: 4
+    calls_out: 10
+    calls_in: 1
+  10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc:
+    name: open_browser_in_novnc
+    module: 10-device_mesh_lab.device_agent
+    line: 398
+    cyclomatic_complexity: 9
+    calls_out: 24
+    calls_in: 0
+  10-device_mesh_lab.www.app.renderRoutes:
+    name: renderRoutes
+    module: 10-device_mesh_lab.www.app
+    line: 253
+    cyclomatic_complexity: 9
+    calls_out: 11
+    calls_in: 2
+  10-device_mesh_lab.controller.generate_flow:
+    name: generate_flow
+    module: 10-device_mesh_lab.controller
+    line: 364
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 1
+  10-device_mesh_lab.www.app.parsePayloadValue:
+    name: parsePayloadValue
+    module: 10-device_mesh_lab.www.app
+    line: 341
+    cyclomatic_complexity: 13
+    calls_out: 4
+    calls_in: 1
+  08-multi_transport.worker.serve_http:
+    name: serve_http
+    module: 08-multi_transport.worker
+    line: 39
+    cyclomatic_complexity: 1
+    calls_out: 25
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.registry_route_count:
+    name: registry_route_count
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 131
+    cyclomatic_complexity: 5
+    calls_out: 9
+    calls_in: 1
+  06-html_uri_app.backend.env_bool:
+    name: env_bool
+    module: 06-html_uri_app.backend
+    line: 39
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 4
+  06-html_uri_app.app.payloadDefaults:
+    name: payloadDefaults
+    module: 06-html_uri_app.app
+    line: 62
+    cyclomatic_complexity: 4
+    calls_out: 0
+    calls_in: 1
+  10-device_mesh_lab.controller.generate_with_litellm:
+    name: generate_with_litellm
+    module: 10-device_mesh_lab.controller
+    line: 344
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 1
+  10-device_mesh_lab.controller.Handler.do_GET:
+    name: do_GET
+    module: 10-device_mesh_lab.controller
+    line: 439
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  10-device_mesh_lab.www.app.renderActivityLog:
+    name: renderActivityLog
+    module: 10-device_mesh_lab.www.app
+    line: 384
+    cyclomatic_complexity: 7
+    calls_out: 5
+    calls_in: 3
+  09-docker_uri_flow.orchestrator.flow_runner.wait_for_services:
+    name: wait_for_services
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 173
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.www.app.showJson:
+    name: showJson
+    module: 10-device_mesh_lab.www.app
+    line: 29
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 5
+  10-device_mesh_lab.www.app.inputType:
+    name: inputType
+    module: 10-device_mesh_lab.www.app
+    line: 305
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.required:
+    name: required
+    module: 10-device_mesh_lab.www.app
+    line: 328
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  12-full_e2e_connect_lab.registry-runtime.registry_server.get_json:
+    name: get_json
+    module: 12-full_e2e_connect_lab.registry-runtime.registry_server
+    line: 24
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 2
+  10-device_mesh_lab.www.app.row:
+    name: row
+    module: 10-device_mesh_lab.www.app
+    line: 544
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  13-simple_defaults.js.defaults.field:
+    name: field
+    module: 13-simple_defaults.js.defaults
+    line: 16
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 3
+  06-html_uri_app.backend.Handler.log_message:
+    name: log_message
+    module: 06-html_uri_app.backend
+    line: 142
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  06-html_uri_app.app.refreshLogs:
+    name: refreshLogs
+    module: 06-html_uri_app.app
+    line: 106
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 0
+  13-simple_defaults.js.defaults.fullUri:
+    name: fullUri
+    module: 13-simple_defaults.js.defaults
+    line: 23
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  11-novnc_lan_flow.orchestrator.run_flow.wait_health:
+    name: wait_health
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 206
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 1
+  11-novnc_lan_flow.orchestrator.run_flow.fetch_json:
+    name: fetch_json
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 194
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 3
+  10-device_mesh_lab.www.app.filter:
+    name: filter
+    module: 10-device_mesh_lab.www.app
+    line: 254
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 3
+  06-html_uri_app.app.renderToolList:
+    name: renderToolList
+    module: 06-html_uri_app.app
+    line: 130
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.device_agent.parse_browser_targets:
+    name: parse_browser_targets
+    module: 10-device_mesh_lab.device_agent
+    line: 56
+    cyclomatic_complexity: 19
+    calls_out: 26
+    calls_in: 1
+  13-simple_defaults.python_connector.bindings:
+    name: bindings
+    module: 13-simple_defaults.python_connector
+    line: 26
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  10-device_mesh_lab.www.app.setMenuActive:
+    name: setMenuActive
+    module: 10-device_mesh_lab.www.app
+    line: 55
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 3
+  10-device_mesh_lab.mesh_env.read_json:
+    name: read_json
+    module: 10-device_mesh_lab.mesh_env
+    line: 62
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 3
+  10-device_mesh_lab.mesh_env.auth_headers:
+    name: auth_headers
+    module: 10-device_mesh_lab.mesh_env
+    line: 50
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 2
+  10-device_mesh_lab.controller.json_get:
+    name: json_get
+    module: 10-device_mesh_lab.controller
+    line: 28
+    cyclomatic_complexity: 1
+    calls_out: 6
+    calls_in: 3
+  07-transports.transport_lib.run_inprocess:
+    name: run_inprocess
+    module: 07-transports.transport_lib
+    line: 43
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  10-device_mesh_lab.controller.fallback_flow:
+    name: fallback_flow
+    module: 10-device_mesh_lab.controller
+    line: 200
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 2
+  06-html_uri_app.backend.add_log:
+    name: add_log
+    module: 06-html_uri_app.backend
+    line: 68
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 5
+  10-device_mesh_lab.www.app.renderDevices:
+    name: renderDevices
+    module: 10-device_mesh_lab.www.app
+    line: 157
+    cyclomatic_complexity: 15
+    calls_out: 6
+    calls_in: 1
+  10-device_mesh_lab.www.app.url:
+    name: url
+    module: 10-device_mesh_lab.www.app
+    line: 231
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  09-docker_uri_flow.shell-worker.server.Handler.do_GET:
+    name: do_GET
+    module: 09-docker_uri_flow.shell-worker.server
+    line: 48
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  06-html_uri_app.app.schemaFor:
+    name: schemaFor
+    module: 06-html_uri_app.app
+    line: 58
+    cyclomatic_complexity: 4
+    calls_out: 0
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.Handler.do_GET:
+    name: do_GET
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 286
+    cyclomatic_complexity: 6
+    calls_out: 6
+    calls_in: 0
+  06-html_uri_app.app.inputType:
+    name: inputType
+    module: 06-html_uri_app.app
+    line: 84
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.parse_scalar:
+    name: parse_scalar
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 15
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 5
+  09-docker_uri_flow.python-worker.server.normalize:
+    name: normalize
+    module: 09-docker_uri_flow.python-worker.server
+    line: 25
+    cyclomatic_complexity: 1
+    calls_out: 6
+    calls_in: 1
+  10-device_mesh_lab.device_agent.build_novnc_browser_command:
+    name: build_novnc_browser_command
+    module: 10-device_mesh_lab.device_agent
+    line: 87
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  10-device_mesh_lab.controller.Handler.do_POST:
+    name: do_POST
+    module: 10-device_mesh_lab.controller
+    line: 446
+    cyclomatic_complexity: 12
+    calls_out: 24
+    calls_in: 0
+  13-simple_defaults.js.defaults.connector:
+    name: connector
+    module: 13-simple_defaults.js.defaults
+    line: 21
+    cyclomatic_complexity: 2
+    calls_out: 13
+    calls_in: 0
+  10-device_mesh_lab.device_agent.default_browser_targets:
+    name: default_browser_targets
+    module: 10-device_mesh_lab.device_agent
+    line: 44
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 2
+  10-device_mesh_lab.www.app.step:
+    name: step
+    module: 10-device_mesh_lab.www.app
+    line: 306
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  11-novnc_lan_flow.orchestrator.run_flow.run_step:
+    name: run_step
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 241
+    cyclomatic_complexity: 2
+    calls_out: 8
+    calls_in: 1
+  09-docker_uri_flow.orchestrator.flow_runner.normalize_uri:
+    name: normalize_uri
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 113
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.device_agent.DeviceAgent.log:
+    name: log
+    module: 10-device_mesh_lab.device_agent
+    line: 155
+    cyclomatic_complexity: 2
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.controller.execute_flow:
+    name: execute_flow
+    module: 10-device_mesh_lab.controller
+    line: 384
+    cyclomatic_complexity: 9
+    calls_out: 15
+    calls_in: 2
+  09-docker_uri_flow.orchestrator.flow_runner.registry_has_uri:
+    name: registry_has_uri
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 122
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 1
+  07-transports.transport_lib.run_via:
+    name: run_via
+    module: 07-transports.transport_lib
+    line: 114
+    cyclomatic_complexity: 6
+    calls_out: 16
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.main:
+    name: main
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 212
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 0
+  12-full_e2e_connect_lab.scripts.connector_checks.project_mcp_a2a:
+    name: project_mcp_a2a
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 261
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET:
+    name: do_GET
+    module: 12-full_e2e_connect_lab.registry-runtime.registry_server
+    line: 87
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 0
+  10-device_mesh_lab.www.app.novncEntryFor:
+    name: novncEntryFor
+    module: 10-device_mesh_lab.www.app
+    line: 207
+    cyclomatic_complexity: 5
+    calls_out: 0
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.log:
+    name: log
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 58
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 8
+  10-device_mesh_lab.controller.json_post:
+    name: json_post
+    module: 10-device_mesh_lab.controller
+    line: 34
+    cyclomatic_complexity: 3
+    calls_out: 11
+    calls_in: 1
+  10-device_mesh_lab.www.app.response:
+    name: response
+    module: 10-device_mesh_lab.www.app
+    line: 464
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 10
+  11-novnc_lan_flow.computer.browser_node.webdriver:
+    name: webdriver
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 79
+    cyclomatic_complexity: 7
+    calls_out: 11
+    calls_in: 7
+  10-device_mesh_lab.www.app.renderField:
+    name: renderField
+    module: 10-device_mesh_lab.www.app
+    line: 279
+    cyclomatic_complexity: 15
+    calls_out: 3
+    calls_in: 1
+  06-html_uri_app.app.card:
+    name: card
+    module: 06-html_uri_app.app
+    line: 125
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 0
+  10-device_mesh_lab.www.app.selectRoute:
+    name: selectRoute
+    module: 10-device_mesh_lab.www.app
+    line: 268
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 0
+  09-docker_uri_flow.python-worker.server.dispatch:
+    name: dispatch
+    module: 09-docker_uri_flow.python-worker.server
+    line: 40
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 0
+  11-novnc_lan_flow.computer.browser_node.app_service_call:
+    name: app_service_call
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 206
+    cyclomatic_complexity: 22
+    calls_out: 35
+    calls_in: 1
+  10-device_mesh_lab.www.app.showView:
+    name: showView
+    module: 10-device_mesh_lab.www.app
+    line: 61
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 3
+  09-docker_uri_flow.orchestrator.flow_runner.load_registry:
+    name: load_registry
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 143
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.main:
+    name: main
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 339
+    cyclomatic_complexity: 20
+    calls_out: 30
+    calls_in: 0
+  10-device_mesh_lab.controller.fallback_steps:
+    name: fallback_steps
+    module: 10-device_mesh_lab.controller
+    line: 140
+    cyclomatic_complexity: 33
+    calls_out: 19
+    calls_in: 1
+  06-html_uri_app.backend.read_json:
+    name: read_json
+    module: 06-html_uri_app.backend
+    line: 43
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  10-device_mesh_lab.www.app.runNlFlow:
+    name: runNlFlow
+    module: 10-device_mesh_lab.www.app
+    line: 457
+    cyclomatic_complexity: 6
+    calls_out: 10
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.service_url:
+    name: service_url
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 90
+    cyclomatic_complexity: 5
+    calls_out: 6
+    calls_in: 2
+  06-html_uri_app.app.required:
+    name: required
+    module: 06-html_uri_app.app
+    line: 80
+    cyclomatic_complexity: 8
+    calls_out: 5
+    calls_in: 0
+  11-novnc_lan_flow.computer.browser_node.Handler.log_message:
+    name: log_message
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 280
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 0
+  10-device_mesh_lab.controller.main:
+    name: main
+    module: 10-device_mesh_lab.controller
+    line: 473
+    cyclomatic_complexity: 1
+    calls_out: 10
+    calls_in: 0
+  06-html_uri_app.app.escapeHtml:
+    name: escapeHtml
+    module: 06-html_uri_app.app
+    line: 162
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 8
+  06-html_uri_app.app.renderActions:
+    name: renderActions
+    module: 06-html_uri_app.app
+    line: 66
+    cyclomatic_complexity: 5
+    calls_out: 5
+    calls_in: 1
+  05-generators.go.example.uriCommand:
+    name: uriCommand
+    module: 05-generators.go.example
+    line: 39
+    cyclomatic_complexity: 4
+    calls_out: 4
+    calls_in: 1
+  06-html_uri_app.backend.load_env:
+    name: load_env
+    module: 06-html_uri_app.backend
+    line: 28
+    cyclomatic_complexity: 6
+    calls_out: 10
+    calls_in: 1
+  13-simple_defaults.js.defaults.boolean:
+    name: boolean
+    module: 13-simple_defaults.js.defaults
+    line: 12
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  06-html_uri_app.backend.dispatch:
+    name: dispatch
+    module: 06-html_uri_app.backend
+    line: 98
+    cyclomatic_complexity: 6
+    calls_out: 14
+    calls_in: 0
+  10-device_mesh_lab.device_agent.make_agent_from_env:
+    name: make_agent_from_env
+    module: 10-device_mesh_lab.device_agent
+    line: 581
+    cyclomatic_complexity: 3
+    calls_out: 14
+    calls_in: 1
+  09-docker_uri_flow.orchestrator.flow_runner.get_path:
+    name: get_path
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 73
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  10-device_mesh_lab.www.app.targetFromUri:
+    name: targetFromUri
+    module: 10-device_mesh_lab.www.app
+    line: 94
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  11-novnc_lan_flow.orchestrator.run_flow.main:
+    name: main
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 258
+    cyclomatic_complexity: 7
+    calls_out: 12
+    calls_in: 0
+  10-device_mesh_lab.controller.target_from_uri:
+    name: target_from_uri
+    module: 10-device_mesh_lab.controller
+    line: 50
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 4
+  10-device_mesh_lab.www.app.recordActivity:
+    name: recordActivity
+    module: 10-device_mesh_lab.www.app
+    line: 84
+    cyclomatic_complexity: 1
+    calls_out: 5
+    calls_in: 4
+  11-novnc_lan_flow.computer.browser_node.route_call:
+    name: route_call
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 263
+    cyclomatic_complexity: 9
+    calls_out: 13
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.run:
+    name: run
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 26
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 14
+  12-full_e2e_connect_lab.registry-runtime.registry_server.registry_document:
+    name: registry_document
+    module: 12-full_e2e_connect_lab.registry-runtime.registry_server
+    line: 49
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.controller.nl_flow:
+    name: nl_flow
+    module: 10-device_mesh_lab.controller
+    line: 410
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 1
+  10-device_mesh_lab.www.app.renderNovnc:
+    name: renderNovnc
+    module: 10-device_mesh_lab.www.app
+    line: 222
+    cyclomatic_complexity: 10
+    calls_out: 4
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.current_url:
+    name: current_url
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 148
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 3
+  06-html_uri_app.backend.dispatch_tool:
+    name: dispatch_tool
+    module: 06-html_uri_app.backend
+    line: 122
+    cyclomatic_complexity: 7
+    calls_out: 13
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.Handler.do_POST:
+    name: do_POST
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 298
+    cyclomatic_complexity: 9
+    calls_out: 23
+    calls_in: 0
+  06-html_uri_app.backend.registry:
+    name: registry
+    module: 06-html_uri_app.backend
+    line: 51
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 4
+  10-device_mesh_lab.controller.slug:
+    name: slug
+    module: 10-device_mesh_lab.controller
+    line: 45
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 5
+  07-transports.transport_lib.available_transports:
+    name: available_transports
+    module: 07-transports.transport_lib
+    line: 154
+    cyclomatic_complexity: 4
+    calls_out: 1
+    calls_in: 0
+  05-generators.c.example.main:
+    name: main
+    module: 05-generators.c.example
+    line: 3
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.controller.discover_mesh:
+    name: discover_mesh
+    module: 10-device_mesh_lab.controller
+    line: 99
+    cyclomatic_complexity: 5
+    calls_out: 6
+    calls_in: 3
+  10-device_mesh_lab.www.app.escapeHtml:
+    name: escapeHtml
+    module: 10-device_mesh_lab.www.app
+    line: 33
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 20
+  05-generators.php.example.UriCommand.bindingFromFunction:
+    name: bindingFromFunction
+    module: 05-generators.php.example
+    line: 24
+    cyclomatic_complexity: 2
+    calls_out: 9
+    calls_in: 0
+  09-docker_uri_flow.node-worker.server.server:
+    name: server
+    module: 09-docker_uri_flow.node-worker.server
+    line: 33
+    cyclomatic_complexity: 10
+    calls_out: 4
+    calls_in: 0
+  06-html_uri_app.backend.binding_document:
+    name: binding_document
+    module: 06-html_uri_app.backend
+    line: 47
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 3
+  10-device_mesh_lab.www.app.installable:
+    name: installable
+    module: 10-device_mesh_lab.www.app
+    line: 174
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  09-docker_uri_flow.python-worker.server.summary:
+    name: summary
+    module: 09-docker_uri_flow.python-worker.server
+    line: 31
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  09-docker_uri_flow.python-worker.server.Handler.do_POST:
+    name: do_POST
+    module: 09-docker_uri_flow.python-worker.server
+    line: 61
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 0
+  10-device_mesh_lab.mesh_env.load_env:
+    name: load_env
+    module: 10-device_mesh_lab.mesh_env
+    line: 15
+    cyclomatic_complexity: 9
+    calls_out: 10
+    calls_in: 2
+  08-multi_transport.worker.serve_grpc:
+    name: serve_grpc
+    module: 08-multi_transport.worker
+    line: 72
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 0
+  09-docker_uri_flow.python-worker.server.Handler.do_GET:
+    name: do_GET
+    module: 09-docker_uri_flow.python-worker.server
+    line: 52
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  12-full_e2e_connect_lab.scripts.connector_checks.uri_run:
+    name: uri_run
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 137
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 23
+  11-novnc_lan_flow.computer.browser_node.ensure_session:
+    name: ensure_session
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 113
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 2
+  05-generators.go.example.main:
+    name: main
+    module: 05-generators.go.example
+    line: 70
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 0
+  12-full_e2e_connect_lab.registry-runtime.registry_server.nodes:
+    name: nodes
+    module: 12-full_e2e_connect_lab.registry-runtime.registry_server
+    line: 14
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 1
+  09-docker_uri_flow.shell-worker.server.Handler.do_POST:
+    name: do_POST
+    module: 09-docker_uri_flow.shell-worker.server
+    line: 57
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 0
+  09-docker_uri_flow.node-worker.server.send:
+    name: send
+    module: 09-docker_uri_flow.node-worker.server
+    line: 10
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 7
+  11-novnc_lan_flow.computer.browser_node.main:
+    name: main
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 321
+    cyclomatic_complexity: 1
+    calls_out: 5
+    calls_in: 0
+  10-device_mesh_lab.www.app.appendTimeline:
+    name: appendTimeline
+    module: 10-device_mesh_lab.www.app
+    line: 373
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 2
+  09-docker_uri_flow.node-worker.server.slugify:
+    name: slugify
+    module: 09-docker_uri_flow.node-worker.server
+    line: 25
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  10-device_mesh_lab.www.app.focusArea:
+    name: focusArea
+    module: 10-device_mesh_lab.www.app
+    line: 71
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 0
+  10-device_mesh_lab.controller.route_summary:
+    name: route_summary
+    module: 10-device_mesh_lab.controller
+    line: 126
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 2
+  06-html_uri_app.app.iconFor:
+    name: iconFor
+    module: 06-html_uri_app.app
+    line: 152
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.route_kind:
+    name: route_kind
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 75
+    cyclomatic_complexity: 2
+    calls_out: 0
+    calls_in: 1
+  10-device_mesh_lab.controller.postprocess_flow:
+    name: postprocess_flow
+    module: 10-device_mesh_lab.controller
+    line: 225
+    cyclomatic_complexity: 20
+    calls_out: 12
+    calls_in: 3
+  09-docker_uri_flow.node-worker.server.body:
+    name: body
+    module: 09-docker_uri_flow.node-worker.server
+    line: 43
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  12-full_e2e_connect_lab.scripts.assert_results.main:
+    name: main
+    module: 12-full_e2e_connect_lab.scripts.assert_results
+    line: 15
+    cyclomatic_complexity: 38
+    calls_out: 60
+    calls_in: 0
+  10-device_mesh_lab.www.app.routeByUri:
+    name: routeByUri
+    module: 10-device_mesh_lab.www.app
+    line: 102
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 2
+  10-device_mesh_lab.www.app.novncUrlFor:
+    name: novncUrlFor
+    module: 10-device_mesh_lab.www.app
+    line: 213
+    cyclomatic_complexity: 10
+    calls_out: 1
+    calls_in: 1
+  10-device_mesh_lab.www.app.groups:
+    name: groups
+    module: 10-device_mesh_lab.www.app
+    line: 420
+    cyclomatic_complexity: 6
+    calls_out: 6
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.route_key:
+    name: route_key
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 105
+    cyclomatic_complexity: 5
+    calls_out: 5
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.open_page:
+    name: open_page
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 153
+    cyclomatic_complexity: 3
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.device_agent.DeviceAgent.__init__:
+    name: __init__
+    module: 10-device_mesh_lab.device_agent
+    line: 137
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  10-device_mesh_lab.device_agent.DeviceAgent.handler:
+    name: handler
+    module: 10-device_mesh_lab.device_agent
+    line: 522
+    cyclomatic_complexity: 1
+    calls_out: 32
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.resolve_payload:
+    name: resolve_payload
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 80
+    cyclomatic_complexity: 4
+    calls_out: 4
+    calls_in: 1
+  10-device_mesh_lab.www.app.frontendRows:
+    name: frontendRows
+    module: 10-device_mesh_lab.www.app
+    line: 385
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.previewPayload:
+    name: previewPayload
+    module: 10-device_mesh_lab.www.app
+    line: 364
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.build_registry:
+    name: build_registry
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 88
+    cyclomatic_complexity: 1
+    calls_out: 38
+    calls_in: 2
+  10-device_mesh_lab.www.app.renderPayloadForm:
+    name: renderPayloadForm
+    module: 10-device_mesh_lab.www.app
+    line: 316
+    cyclomatic_complexity: 7
+    calls_out: 11
+    calls_in: 2
+  12-full_e2e_connect_lab.scripts.connector_checks.emit_browser_control_bindings:
+    name: emit_browser_control_bindings
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 78
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.device_agent.DeviceAgent.routes:
+    name: routes
+    module: 10-device_mesh_lab.device_agent
+    line: 192
+    cyclomatic_complexity: 2
+    calls_out: 13
+    calls_in: 0
+  11-novnc_lan_flow.computer.browser_node.wait_for_webdriver:
+    name: wait_for_webdriver
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 100
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.summarize_catalog:
+    name: summarize_catalog
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 316
+    cyclomatic_complexity: 13
+    calls_out: 8
+    calls_in: 1
+  06-html_uri_app.app.classFor:
+    name: classFor
+    module: 06-html_uri_app.app
+    line: 148
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 2
+  07-transports.transport_lib.run_queue:
+    name: run_queue
+    module: 07-transports.transport_lib
+    line: 50
+    cyclomatic_complexity: 1
+    calls_out: 10
+    calls_in: 1
+  06-html_uri_app.app.defaults:
+    name: defaults
+    module: 06-html_uri_app.app
+    line: 81
+    cyclomatic_complexity: 8
+    calls_out: 5
+    calls_in: 0
+  07-transports.transport_lib.grpc_available:
+    name: grpc_available
+    module: 07-transports.transport_lib
+    line: 146
+    cyclomatic_complexity: 2
+    calls_out: 0
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.emit_time_tools_bindings:
+    name: emit_time_tools_bindings
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 68
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.controller.discover_device:
+    name: discover_device
+    module: 10-device_mesh_lab.controller
+    line: 72
+    cyclomatic_complexity: 6
+    calls_out: 9
+    calls_in: 1
+  09-docker_uri_flow.orchestrator.flow_runner.validate_flow_registry:
+    name: validate_flow_registry
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 152
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.controller.build_registry:
+    name: build_registry
+    module: 10-device_mesh_lab.controller
+    line: 113
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 1
+  10-device_mesh_lab.www.app.focusTargetFor:
+    name: focusTargetFor
+    module: 10-device_mesh_lab.www.app
+    line: 43
+    cyclomatic_complexity: 2
+    calls_out: 0
+    calls_in: 1
+  10-device_mesh_lab.www.app.runSelectedRoute:
+    name: runSelectedRoute
+    module: 10-device_mesh_lab.www.app
+    line: 479
+    cyclomatic_complexity: 7
+    calls_out: 11
+    calls_in: 0
+  10-device_mesh_lab.controller.json_from_text:
+    name: json_from_text
+    module: 10-device_mesh_lab.controller
+    line: 257
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 1
+  11-novnc_lan_flow.computer.browser_node.screenshot_page:
+    name: screenshot_page
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 175
+    cyclomatic_complexity: 10
+    calls_out: 26
+    calls_in: 1
+  13-simple_defaults.js.defaults.string:
+    name: string
+    module: 13-simple_defaults.js.defaults
+    line: 4
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.controller.registry_route_count:
+    name: registry_route_count
+    module: 10-device_mesh_lab.controller
+    line: 120
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  06-html_uri_app.app.renderForm:
+    name: renderForm
+    module: 06-html_uri_app.app
+    line: 76
+    cyclomatic_complexity: 10
+    calls_out: 8
+    calls_in: 1
+  13-simple_defaults.js.defaults.integer:
+    name: integer
+    module: 13-simple_defaults.js.defaults
+    line: 8
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.controller.append_step_if_missing:
+    name: append_step_if_missing
+    module: 10-device_mesh_lab.controller
+    line: 211
+    cyclomatic_complexity: 7
+    calls_out: 6
+    calls_in: 3
+  10-device_mesh_lab.www.app.refreshLogs:
+    name: refreshLogs
+    module: 10-device_mesh_lab.www.app
+    line: 412
+    cyclomatic_complexity: 7
+    calls_out: 7
+    calls_in: 2
+  12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes:
+    name: run_connector_routes
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 148
+    cyclomatic_complexity: 7
+    calls_out: 47
+    calls_in: 1
+  10-device_mesh_lab.www.app.li:
+    name: li
+    module: 10-device_mesh_lab.www.app
+    line: 374
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.controller.route_binding:
+    name: route_binding
+    module: 10-device_mesh_lab.controller
+    line: 54
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.test_grpc_transport:
+    name: test_grpc_transport
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 267
+    cyclomatic_complexity: 2
+    calls_out: 14
+    calls_in: 1
+  06-html_uri_app.backend.Handler.do_GET:
+    name: do_GET
+    module: 06-html_uri_app.backend
+    line: 145
+    cyclomatic_complexity: 8
+    calls_out: 21
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.json_get:
+    name: json_get
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 161
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  10-device_mesh_lab.controller.normalize_flow:
+    name: normalize_flow
+    module: 10-device_mesh_lab.controller
+    line: 270
+    cyclomatic_complexity: 20
+    calls_out: 35
+    calls_in: 4
+  06-html_uri_app.backend.Handler.do_POST:
+    name: do_POST
+    module: 06-html_uri_app.backend
+    line: 170
+    cyclomatic_complexity: 4
+    calls_out: 10
+    calls_in: 0
+  10-device_mesh_lab.www.app.data:
+    name: data
+    module: 10-device_mesh_lab.www.app
+    line: 493
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.payloadFromForm:
+    name: payloadFromForm
+    module: 10-device_mesh_lab.www.app
+    line: 355
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 2
+  12-full_e2e_connect_lab.scripts.connector_checks.emit_http_check_bindings:
+    name: emit_http_check_bindings
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 58
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  09-docker_uri_flow.orchestrator.flow_runner.parse_flow:
+    name: parse_flow
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 22
+    cyclomatic_complexity: 24
+    calls_out: 26
+    calls_in: 1
+  11-novnc_lan_flow.orchestrator.run_flow.target_from_uri:
+    name: target_from_uri
+    module: 11-novnc_lan_flow.orchestrator.run_flow
+    line: 189
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 2
+  10-device_mesh_lab.mesh_env.auth_token:
+    name: auth_token
+    module: 10-device_mesh_lab.mesh_env
+    line: 46
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 2
+  09-docker_uri_flow.orchestrator.flow_runner.run_flow:
+    name: run_flow
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 191
+    cyclomatic_complexity: 8
+    calls_out: 16
+    calls_in: 1
+  10-device_mesh_lab.www.app.description:
+    name: description
+    module: 10-device_mesh_lab.www.app
+    line: 283
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.routeBadge:
+    name: routeBadge
+    module: 10-device_mesh_lab.www.app
+    line: 119
+    cyclomatic_complexity: 4
+    calls_out: 1
+    calls_in: 2
+  10-device_mesh_lab.mesh_env.send_json:
+    name: send_json
+    module: 10-device_mesh_lab.mesh_env
+    line: 69
+    cyclomatic_complexity: 1
+    calls_out: 12
+    calls_in: 18
+  10-device_mesh_lab.mesh_env.parse_peers:
+    name: parse_peers
+    module: 10-device_mesh_lab.mesh_env
+    line: 30
+    cyclomatic_complexity: 8
+    calls_out: 14
+    calls_in: 2
+  10-device_mesh_lab.www.app.extractRunResult:
+    name: extractRunResult
+    module: 10-device_mesh_lab.www.app
+    line: 379
+    cyclomatic_complexity: 10
+    calls_out: 0
+    calls_in: 2
+  10-device_mesh_lab.www.app.refreshDevices:
+    name: refreshDevices
+    module: 10-device_mesh_lab.www.app
+    line: 438
+    cyclomatic_complexity: 4
+    calls_out: 11
+    calls_in: 2
+  13-simple_defaults.python_connector.main:
+    name: main
+    module: 13-simple_defaults.python_connector
+    line: 30
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  12-full_e2e_connect_lab.scripts.assert_results.load:
+    name: load
+    module: 12-full_e2e_connect_lab.scripts.assert_results
+    line: 11
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 6
+  10-device_mesh_lab.device_agent.object_schema:
+    name: object_schema
+    module: 10-device_mesh_lab.device_agent
+    line: 23
+    cyclomatic_complexity: 2
+    calls_out: 0
+    calls_in: 12
+  10-device_mesh_lab.www.app.isRouteSafe:
+    name: isRouteSafe
+    module: 10-device_mesh_lab.www.app
+    line: 115
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 2
+  10-device_mesh_lab.www.app.prompt:
+    name: prompt
+    module: 10-device_mesh_lab.www.app
+    line: 458
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.runUri:
+    name: runUri
+    module: 10-device_mesh_lab.www.app
+    line: 106
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 3
+  12-full_e2e_connect_lab.scripts.connector_checks.run_json:
+    name: run_json
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 39
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 5
+  10-device_mesh_lab.controller.is_safe_route:
+    name: is_safe_route
+    module: 10-device_mesh_lab.controller
+    line: 67
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 10
+  11-novnc_lan_flow.computer.browser_node.json_response:
+    name: json_response
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 63
+    cyclomatic_complexity: 1
+    calls_out: 12
+    calls_in: 18
+  09-docker_uri_flow.node-worker.server.readBody:
+    name: readBody
+    module: 09-docker_uri_flow.node-worker.server
+    line: 16
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  10-device_mesh_lab.www.app.status:
+    name: status
+    module: 10-device_mesh_lab.www.app
+    line: 232
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  11-novnc_lan_flow.computer.browser_node.Handler.do_OPTIONS:
+    name: do_OPTIONS
+    module: 11-novnc_lan_flow.computer.browser_node
+    line: 283
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  06-html_uri_app.app.data:
+    name: data
+    module: 06-html_uri_app.app
+    line: 107
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.rows:
+    name: rows
+    module: 10-device_mesh_lab.www.app
+    line: 255
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.device_agent.main:
+    name: main
+    module: 10-device_mesh_lab.device_agent
+    line: 598
+    cyclomatic_complexity: 1
+    calls_out: 6
+    calls_in: 0
+  09-docker_uri_flow.orchestrator.flow_runner.json_post:
+    name: json_post
+    module: 09-docker_uri_flow.orchestrator.flow_runner
+    line: 166
+    cyclomatic_complexity: 1
+    calls_out: 7
+    calls_in: 1
+  10-device_mesh_lab.controller.Handler.do_OPTIONS:
+    name: do_OPTIONS
+    module: 10-device_mesh_lab.controller
+    line: 436
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.requiredSet:
+    name: requiredSet
+    module: 10-device_mesh_lab.www.app
+    line: 131
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  10-device_mesh_lab.www.app.valueToInput:
+    name: valueToInput
+    module: 10-device_mesh_lab.www.app
+    line: 152
+    cyclomatic_complexity: 4
+    calls_out: 1
+    calls_in: 1
+  12-full_e2e_connect_lab.scripts.connector_checks.write_json:
+    name: write_json
+    module: 12-full_e2e_connect_lab.scripts.connector_checks
+    line: 47
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 3
+  10-device_mesh_lab.www.app.schemaFor:
+    name: schemaFor
+    module: 10-device_mesh_lab.www.app
+    line: 127
+    cyclomatic_complexity: 6
+    calls_out: 0
+    calls_in: 1
+  10-device_mesh_lab.www.app.reachable:
+    name: reachable
+    module: 10-device_mesh_lab.www.app
+    line: 158
+    cyclomatic_complexity: 15
+    calls_out: 4
+    calls_in: 0
+  07-transports.transport_lib.start_http_worker:
+    name: start_http_worker
+    module: 07-transports.transport_lib
+    line: 76
+    cyclomatic_complexity: 1
+    calls_out: 24
+    calls_in: 1
+  09-docker_uri_flow.node-worker.server.slug:
+    name: slug
+    module: 09-docker_uri_flow.node-worker.server
+    line: 48
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  10-device_mesh_lab.www.app.defaultValueFor:
+    name: defaultValueFor
+    module: 10-device_mesh_lab.www.app
+    line: 135
+    cyclomatic_complexity: 20
+    calls_out: 2
+    calls_in: 1
+edges:
+- caller: 06-html_uri_app.app.routeResponse
+  callee: 06-html_uri_app.app.renderActions
+  call_type: resolved
+- caller: 06-html_uri_app.app.routeResponse
+  callee: 06-html_uri_app.app.renderForm
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderActions
+  callee: 06-html_uri_app.app.classFor
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderActions
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderActions
+  callee: 06-html_uri_app.app.iconFor
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderForm
+  callee: 06-html_uri_app.app.schemaFor
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderForm
+  callee: 06-html_uri_app.app.payloadDefaults
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderForm
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.required
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.defaults
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.inputType
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.refreshLogs
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.data
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.card
+  callee: 06-html_uri_app.app.renderToolList
+  call_type: resolved
+- caller: 06-html_uri_app.app.renderToolList
+  callee: 06-html_uri_app.app.escapeHtml
+  call_type: resolved
+- caller: 06-html_uri_app.app.iconFor
+  callee: 06-html_uri_app.app.classFor
+  call_type: resolved
+- caller: 09-docker_uri_flow.node-worker.server.server
+  callee: 09-docker_uri_flow.node-worker.server.send
+  call_type: resolved
+- caller: 09-docker_uri_flow.node-worker.server.server
+  callee: 09-docker_uri_flow.node-worker.server.readBody
+  call_type: resolved
+- caller: 09-docker_uri_flow.node-worker.server.server
+  callee: 09-docker_uri_flow.node-worker.server.slugify
+  call_type: resolved
+- caller: 09-docker_uri_flow.node-worker.server.body
+  callee: 09-docker_uri_flow.node-worker.server.send
+  call_type: resolved
+- caller: 09-docker_uri_flow.node-worker.server.slug
+  callee: 09-docker_uri_flow.node-worker.server.send
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.showView
+  callee: 10-device_mesh_lab.www.app.setMenuActive
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.focusArea
+  callee: 10-device_mesh_lab.www.app.showView
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.focusArea
+  callee: 10-device_mesh_lab.www.app.setMenuActive
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.focusArea
+  callee: 10-device_mesh_lab.www.app.focusTargetFor
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.recordActivity
+  callee: 10-device_mesh_lab.www.app.renderActivityLog
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.routeBadge
+  callee: 10-device_mesh_lab.www.app.isRouteSafe
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderDevices
+  callee: 10-device_mesh_lab.www.app.filter
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderDevices
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.reachable
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.installable
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.novncUrlFor
+  callee: 10-device_mesh_lab.www.app.novncEntryFor
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderNovnc
+  callee: 10-device_mesh_lab.www.app.novncUrlFor
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderNovnc
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.url
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.status
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderRoutes
+  callee: 10-device_mesh_lab.www.app.filter
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderRoutes
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderRoutes
+  callee: 10-device_mesh_lab.www.app.routeBadge
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.filter
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.rows
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.selectRoute
+  callee: 10-device_mesh_lab.www.app.renderRoutes
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.selectRoute
+  callee: 10-device_mesh_lab.www.app.renderPayloadForm
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.selectRoute
+  callee: 10-device_mesh_lab.www.app.setMenuActive
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.selectRoute
+  callee: 10-device_mesh_lab.www.app.showJson
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.selectRoute
+  callee: 10-device_mesh_lab.www.app.previewPayload
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderField
+  callee: 10-device_mesh_lab.www.app.defaultValueFor
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderField
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderField
+  callee: 10-device_mesh_lab.www.app.valueToInput
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.description
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.inputType
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.step
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.isRouteSafe
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.schemaFor
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.requiredSet
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.routeBadge
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderPayloadForm
+  callee: 10-device_mesh_lab.www.app.renderField
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.required
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.payloadFromForm
+  callee: 10-device_mesh_lab.www.app.parsePayloadValue
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.previewPayload
+  callee: 10-device_mesh_lab.www.app.payloadFromForm
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.appendTimeline
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.li
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.renderActivityLog
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.frontendRows
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.deviceRows
+  callee: 10-device_mesh_lab.www.app.escapeHtml
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshLogs
+  callee: 10-device_mesh_lab.www.app.renderActivityLog
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshLogs
+  callee: 10-device_mesh_lab.www.app.routeByUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshLogs
+  callee: 10-device_mesh_lab.www.app.runUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshLogs
+  callee: 10-device_mesh_lab.www.app.extractRunResult
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.groups
+  callee: 10-device_mesh_lab.www.app.routeByUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.groups
+  callee: 10-device_mesh_lab.www.app.runUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.groups
+  callee: 10-device_mesh_lab.www.app.extractRunResult
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.data
+  callee: 10-device_mesh_lab.www.app.showJson
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.renderDevices
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.renderNovnc
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.renderRoutes
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.renderPayloadForm
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.showJson
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.refreshDevices
+  callee: 10-device_mesh_lab.www.app.filter
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.recordActivity
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.showJson
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.appendTimeline
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.refreshDevices
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.refreshLogs
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runNlFlow
+  callee: 10-device_mesh_lab.www.app.showView
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.prompt
+  callee: 10-device_mesh_lab.www.app.recordActivity
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.payloadFromForm
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.showJson
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.recordActivity
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.targetFromUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.runUri
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.appendTimeline
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.refreshDevices
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.runSelectedRoute
+  callee: 10-device_mesh_lab.www.app.refreshLogs
+  call_type: resolved
+- caller: 10-device_mesh_lab.www.app.row
+  callee: 10-device_mesh_lab.www.app.recordActivity
+  call_type: resolved
+- caller: 05-generators.go.example.main
+  callee: 05-generators.go.example.uriCommand
+  call_type: resolved
+- caller: 05-generators.php.example.UriCommand.bindingFromFunction
+  callee: 05-generators.php.example.UriCommand.schemaType
+  call_type: resolved
+- caller: 05-generators.c.example.main
+  callee: 05-generators.c.example.puts
+  call_type: resolved
+- caller: 13-simple_defaults.python_connector.main
+  callee: 13-simple_defaults.python_connector.bindings
+  call_type: resolved
+- caller: 13-simple_defaults.python_connector.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 13-simple_defaults.js.defaults.string
+  callee: 13-simple_defaults.js.defaults.field
+  call_type: resolved
+- caller: 13-simple_defaults.js.defaults.integer
+  callee: 13-simple_defaults.js.defaults.field
+  call_type: resolved
+- caller: 13-simple_defaults.js.defaults.boolean
+  callee: 13-simple_defaults.js.defaults.field
+  call_type: resolved
+- caller: 13-simple_defaults.js.defaults.connector
+  callee: 13-simple_defaults.js.defaults.fullUri
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.run_json
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.emit_http_check_bindings
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.emit_time_tools_bindings
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.emit_browser_control_bindings
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.write_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.emit_http_check_bindings
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.emit_time_tools_bindings
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.emit_browser_control_bindings
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.uri_run
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.uri_run
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.project_mcp_a2a
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.test_grpc_transport
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.fetch_catalog
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.write_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.project_mcp_a2a
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.test_grpc_transport
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.summarize_catalog
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.connector_checks.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.parse_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.parse_scalar
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.resolve_payload
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.get_path
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.registry_has_uri
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.route_key
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.registry_has_uri
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.normalize_uri
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.validate_flow_registry
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.registry_route_count
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.validate_flow_registry
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.registry_has_uri
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.wait_for_services
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.service_url
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.wait_for_services
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.json_get
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.validate_flow_registry
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.wait_for_services
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.load_registry
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.resolve_payload
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.json_post
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.main
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.parse_flow
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.main
+  callee: 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  call_type: resolved
+- caller: 09-docker_uri_flow.orchestrator.flow_runner.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.scripts.assert_results.main
+  callee: 12-full_e2e_connect_lab.scripts.assert_results.load
+  call_type: resolved
+- caller: 07-transports.transport_lib.run_via
+  callee: 07-transports.transport_lib.run_inprocess
+  call_type: resolved
+- caller: 07-transports.transport_lib.run_via
+  callee: 07-transports.transport_lib.run_queue
+  call_type: resolved
+- caller: 07-transports.transport_lib.run_via
+  callee: 07-transports.transport_lib.serverless_handler
+  call_type: resolved
+- caller: 07-transports.transport_lib.run_via
+  callee: 07-transports.transport_lib.start_http_worker
+  call_type: resolved
+- caller: 07-transports.transport_lib.available_transports
+  callee: 07-transports.transport_lib.grpc_available
+  call_type: resolved
+- caller: 10-device_mesh_lab.mesh_env.auth_headers
+  callee: 10-device_mesh_lab.mesh_env.auth_token
+  call_type: resolved
+- caller: 10-device_mesh_lab.mesh_env.check_auth
+  callee: 10-device_mesh_lab.mesh_env.auth_token
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.wait_health
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.collect_routes
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.run_step
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.target_from_uri
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.run_step
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.main
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.collect_routes
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.main
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.wait_health
+  call_type: resolved
+- caller: 11-novnc_lan_flow.orchestrator.run_flow.main
+  callee: 11-novnc_lan_flow.orchestrator.run_flow.run_step
+  call_type: resolved
+- caller: 09-docker_uri_flow.shell-worker.server.Handler.do_GET
+  callee: 10-device_mesh_lab.www.app.response
+  call_type: resolved
+- caller: 09-docker_uri_flow.shell-worker.server.Handler.do_POST
+  callee: 09-docker_uri_flow.shell-worker.server.dispatch
+  call_type: resolved
+- caller: 09-docker_uri_flow.shell-worker.server.Handler.do_POST
+  callee: 10-device_mesh_lab.www.app.response
+  call_type: resolved
+- caller: 08-multi_transport.worker.serve_http
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 08-multi_transport.worker.serve_grpc
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.discover
+  callee: 12-full_e2e_connect_lab.registry-runtime.registry_server.nodes
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.discover
+  callee: 12-full_e2e_connect_lab.registry-runtime.registry_server.get_json
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.registry_document
+  callee: 12-full_e2e_connect_lab.registry-runtime.registry_server.discover
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET
+  callee: 09-docker_uri_flow.node-worker.server.send
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET
+  callee: 12-full_e2e_connect_lab.registry-runtime.registry_server.discover
+  call_type: resolved
+- caller: 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET
+  callee: 12-full_e2e_connect_lab.registry-runtime.registry_server.registry_document
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.parse_browser_targets
+  callee: 10-device_mesh_lab.device_agent.default_browser_targets
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.__init__
+  callee: 10-device_mesh_lab.device_agent.default_browser_targets
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.log
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.routes
+  callee: 10-device_mesh_lab.device_agent.object_schema
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc
+  callee: 10-device_mesh_lab.device_agent.build_novnc_browser_command
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.handler
+  callee: 10-device_mesh_lab.mesh_env.send_json
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.DeviceAgent.handler
+  callee: 10-device_mesh_lab.mesh_env.check_auth
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.make_agent_from_env
+  callee: 10-device_mesh_lab.mesh_env.load_env
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.make_agent_from_env
+  callee: 10-device_mesh_lab.device_agent.parse_browser_targets
+  call_type: resolved
+- caller: 10-device_mesh_lab.device_agent.main
+  callee: 10-device_mesh_lab.device_agent.make_agent_from_env
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.json_get
+  callee: 10-device_mesh_lab.mesh_env.auth_headers
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.json_post
+  callee: 10-device_mesh_lab.mesh_env.auth_headers
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.discover_device
+  callee: 10-device_mesh_lab.controller.json_get
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.discover_mesh
+  callee: 10-device_mesh_lab.mesh_env.parse_peers
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.discover_mesh
+  callee: 10-device_mesh_lab.controller.discover_device
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.build_registry
+  callee: 10-device_mesh_lab.controller.route_binding
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.route_summary
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.fallback_steps
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.fallback_flow
+  callee: 10-device_mesh_lab.controller.fallback_steps
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.fallback_flow
+  callee: 10-device_mesh_lab.controller.slug
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.append_step_if_missing
+  callee: 10-device_mesh_lab.controller.slug
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.postprocess_flow
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.postprocess_flow
+  callee: 10-device_mesh_lab.controller.target_from_uri
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.postprocess_flow
+  callee: 10-device_mesh_lab.controller.append_step_if_missing
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.normalize_flow
+  callee: 10-device_mesh_lab.controller.slug
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.llm_messages
+  callee: 10-device_mesh_lab.controller.route_summary
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_with_litellm
+  callee: 10-device_mesh_lab.controller.json_from_text
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_with_litellm
+  callee: 10-device_mesh_lab.controller.normalize_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_with_litellm
+  callee: 10-device_mesh_lab.controller.postprocess_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_with_litellm
+  callee: 10-device_mesh_lab.controller.llm_messages
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_with_litellm
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_flow
+  callee: 10-device_mesh_lab.controller.fallback_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_flow
+  callee: 10-device_mesh_lab.controller.postprocess_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_flow
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_flow
+  callee: 10-device_mesh_lab.controller.generate_with_litellm
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.generate_flow
+  callee: 10-device_mesh_lab.controller.normalize_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.execute_flow
+  callee: 10-device_mesh_lab.controller.target_from_uri
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.execute_flow
+  callee: 10-device_mesh_lab.controller.json_post
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.discover_mesh
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.build_registry
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.generate_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.execute_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.is_safe_route
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.nl_flow
+  callee: 10-device_mesh_lab.controller.registry_route_count
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_OPTIONS
+  callee: 10-device_mesh_lab.mesh_env.send_json
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_GET
+  callee: 10-device_mesh_lab.controller.discover_mesh
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_GET
+  callee: 10-device_mesh_lab.mesh_env.send_json
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_GET
+  callee: 10-device_mesh_lab.controller.route_summary
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.mesh_env.send_json
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.mesh_env.read_json
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.controller.nl_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.controller.discover_mesh
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.controller.normalize_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.Handler.do_POST
+  callee: 10-device_mesh_lab.controller.execute_flow
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.main
+  callee: 10-device_mesh_lab.mesh_env.load_env
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 10-device_mesh_lab.controller.main
+  callee: 10-device_mesh_lab.mesh_env.parse_peers
+  call_type: resolved
+- caller: 09-docker_uri_flow.python-worker.server.dispatch
+  callee: 09-docker_uri_flow.python-worker.server.normalize
+  call_type: resolved
+- caller: 09-docker_uri_flow.python-worker.server.dispatch
+  callee: 09-docker_uri_flow.python-worker.server.summary
+  call_type: resolved
+- caller: 09-docker_uri_flow.python-worker.server.Handler.do_GET
+  callee: 10-device_mesh_lab.www.app.response
+  call_type: resolved
+- caller: 09-docker_uri_flow.python-worker.server.Handler.do_POST
+  callee: 09-docker_uri_flow.shell-worker.server.dispatch
+  call_type: resolved
+- caller: 09-docker_uri_flow.python-worker.server.Handler.do_POST
+  callee: 10-device_mesh_lab.www.app.response
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.wait_for_webdriver
+  callee: 11-novnc_lan_flow.computer.browser_node.webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.ensure_session
+  callee: 11-novnc_lan_flow.computer.browser_node.wait_for_webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.ensure_session
+  callee: 11-novnc_lan_flow.computer.browser_node.webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.current_url
+  callee: 11-novnc_lan_flow.computer.browser_node.webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.open_page
+  callee: 11-novnc_lan_flow.computer.browser_node.ensure_session
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.open_page
+  callee: 11-novnc_lan_flow.computer.browser_node.webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.open_page
+  callee: 11-novnc_lan_flow.computer.browser_node.log
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.open_page
+  callee: 11-novnc_lan_flow.computer.browser_node.current_url
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  callee: 11-novnc_lan_flow.computer.browser_node.ensure_session
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  callee: 11-novnc_lan_flow.computer.browser_node.webdriver
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  callee: 11-novnc_lan_flow.computer.browser_node.log
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.app_service_call
+  callee: 11-novnc_lan_flow.computer.browser_node.log
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.route_call
+  callee: 11-novnc_lan_flow.computer.browser_node.open_page
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.route_call
+  callee: 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.route_call
+  callee: 11-novnc_lan_flow.computer.browser_node.log
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.route_call
+  callee: 11-novnc_lan_flow.computer.browser_node.app_service_call
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.log_message
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.do_OPTIONS
+  callee: 11-novnc_lan_flow.computer.browser_node.json_response
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.do_GET
+  callee: 11-novnc_lan_flow.computer.browser_node.json_response
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.do_GET
+  callee: 11-novnc_lan_flow.computer.browser_node.route_kind
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.do_POST
+  callee: 11-novnc_lan_flow.computer.browser_node.json_response
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.Handler.do_POST
+  callee: 11-novnc_lan_flow.computer.browser_node.route_call
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.main
+  callee: 11-novnc_lan_flow.computer.browser_node.log
+  call_type: resolved
+- caller: 11-novnc_lan_flow.computer.browser_node.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+- caller: 06-html_uri_app.backend.binding_document
+  callee: 06-html_uri_app.backend.read_json
+  call_type: resolved
+- caller: 06-html_uri_app.backend.registry
+  callee: 06-html_uri_app.backend.binding_document
+  call_type: resolved
+- caller: 06-html_uri_app.backend.routes
+  callee: 06-html_uri_app.backend.binding_document
+  call_type: resolved
+- caller: 06-html_uri_app.backend.dispatch
+  callee: 06-html_uri_app.backend.add_log
+  call_type: resolved
+- caller: 06-html_uri_app.backend.dispatch
+  callee: 06-html_uri_app.backend.env_bool
+  call_type: resolved
+- caller: 06-html_uri_app.backend.dispatch_tool
+  callee: 06-html_uri_app.backend.registry
+  call_type: resolved
+- caller: 06-html_uri_app.backend.dispatch_tool
+  callee: 06-html_uri_app.backend.add_log
+  call_type: resolved
+- caller: 06-html_uri_app.backend.dispatch_tool
+  callee: 06-html_uri_app.backend.env_bool
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.log_message
+  callee: 06-html_uri_app.backend.add_log
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.do_GET
+  callee: 11-novnc_lan_flow.computer.browser_node.json_response
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.do_POST
+  callee: 11-novnc_lan_flow.computer.browser_node.json_response
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.do_POST
+  callee: 06-html_uri_app.backend.add_log
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.do_POST
+  callee: 09-docker_uri_flow.shell-worker.server.dispatch
+  call_type: resolved
+- caller: 06-html_uri_app.backend.Handler.do_POST
+  callee: 06-html_uri_app.backend.dispatch_tool
+  call_type: resolved
+- caller: 06-html_uri_app.backend.main
+  callee: 06-html_uri_app.backend.load_env
+  call_type: resolved
+- caller: 06-html_uri_app.backend.main
+  callee: 06-html_uri_app.backend.add_log
+  call_type: resolved
+- caller: 06-html_uri_app.backend.main
+  callee: 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  call_type: resolved
+modules:
+  05-generators.c.example:
+  - 05-generators.c.example.main
+  - 05-generators.c.example.puts
+  05-generators.go.example:
+  - 05-generators.go.example.main
+  - 05-generators.go.example.uriCommand
+  05-generators.php.example:
+  - 05-generators.php.example.UriCommand.bindingFromFunction
+  - 05-generators.php.example.UriCommand.schemaType
+  06-html_uri_app.app:
+  - 06-html_uri_app.app.card
+  - 06-html_uri_app.app.classFor
+  - 06-html_uri_app.app.data
+  - 06-html_uri_app.app.defaults
+  - 06-html_uri_app.app.escapeHtml
+  - 06-html_uri_app.app.iconFor
+  - 06-html_uri_app.app.inputType
+  - 06-html_uri_app.app.payloadDefaults
+  - 06-html_uri_app.app.refreshLogs
+  - 06-html_uri_app.app.renderActions
+  - 06-html_uri_app.app.renderForm
+  - 06-html_uri_app.app.renderToolList
+  - 06-html_uri_app.app.required
+  - 06-html_uri_app.app.routeResponse
+  - 06-html_uri_app.app.schemaFor
+  06-html_uri_app.backend:
+  - 06-html_uri_app.backend.Handler.do_GET
+  - 06-html_uri_app.backend.Handler.do_POST
+  - 06-html_uri_app.backend.Handler.log_message
+  - 06-html_uri_app.backend.add_log
+  - 06-html_uri_app.backend.binding_document
+  - 06-html_uri_app.backend.dispatch
+  - 06-html_uri_app.backend.dispatch_tool
+  - 06-html_uri_app.backend.env_bool
+  - 06-html_uri_app.backend.load_env
+  - 06-html_uri_app.backend.main
+  - 06-html_uri_app.backend.read_json
+  - 06-html_uri_app.backend.registry
+  - 06-html_uri_app.backend.routes
+  07-transports.transport_lib:
+  - 07-transports.transport_lib.available_transports
+  - 07-transports.transport_lib.grpc_available
+  - 07-transports.transport_lib.run_inprocess
+  - 07-transports.transport_lib.run_queue
+  - 07-transports.transport_lib.run_via
+  - 07-transports.transport_lib.serverless_handler
+  - 07-transports.transport_lib.start_http_worker
+  08-multi_transport.worker:
+  - 08-multi_transport.worker.serve_grpc
+  - 08-multi_transport.worker.serve_http
+  09-docker_uri_flow.node-worker.server:
+  - 09-docker_uri_flow.node-worker.server.body
+  - 09-docker_uri_flow.node-worker.server.readBody
+  - 09-docker_uri_flow.node-worker.server.send
+  - 09-docker_uri_flow.node-worker.server.server
+  - 09-docker_uri_flow.node-worker.server.slug
+  - 09-docker_uri_flow.node-worker.server.slugify
+  09-docker_uri_flow.orchestrator.flow_runner:
+  - 09-docker_uri_flow.orchestrator.flow_runner.get_path
+  - 09-docker_uri_flow.orchestrator.flow_runner.json_get
+  - 09-docker_uri_flow.orchestrator.flow_runner.json_post
+  - 09-docker_uri_flow.orchestrator.flow_runner.load_registry
+  - 09-docker_uri_flow.orchestrator.flow_runner.main
+  - 09-docker_uri_flow.orchestrator.flow_runner.normalize_uri
+  - 09-docker_uri_flow.orchestrator.flow_runner.parse_flow
+  - 09-docker_uri_flow.orchestrator.flow_runner.parse_scalar
+  - 09-docker_uri_flow.orchestrator.flow_runner.registry_has_uri
+  - 09-docker_uri_flow.orchestrator.flow_runner.registry_route_count
+  - 09-docker_uri_flow.orchestrator.flow_runner.resolve_payload
+  - 09-docker_uri_flow.orchestrator.flow_runner.route_key
+  - 09-docker_uri_flow.orchestrator.flow_runner.run_flow
+  - 09-docker_uri_flow.orchestrator.flow_runner.service_url
+  - 09-docker_uri_flow.orchestrator.flow_runner.validate_flow_registry
+  - 09-docker_uri_flow.orchestrator.flow_runner.wait_for_services
+  09-docker_uri_flow.python-worker.server:
+  - 09-docker_uri_flow.python-worker.server.Handler.do_GET
+  - 09-docker_uri_flow.python-worker.server.Handler.do_POST
+  - 09-docker_uri_flow.python-worker.server.dispatch
+  - 09-docker_uri_flow.python-worker.server.normalize
+  - 09-docker_uri_flow.python-worker.server.summary
+  09-docker_uri_flow.shell-worker.server:
+  - 09-docker_uri_flow.shell-worker.server.Handler.do_GET
+  - 09-docker_uri_flow.shell-worker.server.Handler.do_POST
+  - 09-docker_uri_flow.shell-worker.server.dispatch
+  10-device_mesh_lab.controller:
+  - 10-device_mesh_lab.controller.Handler.do_GET
+  - 10-device_mesh_lab.controller.Handler.do_OPTIONS
+  - 10-device_mesh_lab.controller.Handler.do_POST
+  - 10-device_mesh_lab.controller.append_step_if_missing
+  - 10-device_mesh_lab.controller.build_registry
+  - 10-device_mesh_lab.controller.discover_device
+  - 10-device_mesh_lab.controller.discover_mesh
+  - 10-device_mesh_lab.controller.execute_flow
+  - 10-device_mesh_lab.controller.fallback_flow
+  - 10-device_mesh_lab.controller.fallback_steps
+  - 10-device_mesh_lab.controller.generate_flow
+  - 10-device_mesh_lab.controller.generate_with_litellm
+  - 10-device_mesh_lab.controller.is_safe_route
+  - 10-device_mesh_lab.controller.json_from_text
+  - 10-device_mesh_lab.controller.json_get
+  - 10-device_mesh_lab.controller.json_post
+  - 10-device_mesh_lab.controller.llm_messages
+  - 10-device_mesh_lab.controller.main
+  - 10-device_mesh_lab.controller.nl_flow
+  - 10-device_mesh_lab.controller.normalize_flow
+  - 10-device_mesh_lab.controller.postprocess_flow
+  - 10-device_mesh_lab.controller.registry_route_count
+  - 10-device_mesh_lab.controller.route_binding
+  - 10-device_mesh_lab.controller.route_summary
+  - 10-device_mesh_lab.controller.slug
+  - 10-device_mesh_lab.controller.target_from_uri
+  10-device_mesh_lab.device_agent:
+  - 10-device_mesh_lab.device_agent.DeviceAgent.__init__
+  - 10-device_mesh_lab.device_agent.DeviceAgent.handler
+  - 10-device_mesh_lab.device_agent.DeviceAgent.log
+  - 10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc
+  - 10-device_mesh_lab.device_agent.DeviceAgent.routes
+  - 10-device_mesh_lab.device_agent.build_novnc_browser_command
+  - 10-device_mesh_lab.device_agent.default_browser_targets
+  - 10-device_mesh_lab.device_agent.main
+  - 10-device_mesh_lab.device_agent.make_agent_from_env
+  - 10-device_mesh_lab.device_agent.object_schema
+  - 10-device_mesh_lab.device_agent.parse_browser_targets
+  10-device_mesh_lab.mesh_env:
+  - 10-device_mesh_lab.mesh_env.auth_headers
+  - 10-device_mesh_lab.mesh_env.auth_token
+  - 10-device_mesh_lab.mesh_env.check_auth
+  - 10-device_mesh_lab.mesh_env.load_env
+  - 10-device_mesh_lab.mesh_env.parse_peers
+  - 10-device_mesh_lab.mesh_env.read_json
+  - 10-device_mesh_lab.mesh_env.send_json
+  10-device_mesh_lab.www.app:
+  - 10-device_mesh_lab.www.app.appendTimeline
+  - 10-device_mesh_lab.www.app.data
+  - 10-device_mesh_lab.www.app.defaultValueFor
+  - 10-device_mesh_lab.www.app.description
+  - 10-device_mesh_lab.www.app.deviceRows
+  - 10-device_mesh_lab.www.app.escapeHtml
+  - 10-device_mesh_lab.www.app.extractRunResult
+  - 10-device_mesh_lab.www.app.filter
+  - 10-device_mesh_lab.www.app.focusArea
+  - 10-device_mesh_lab.www.app.focusTargetFor
+  - 10-device_mesh_lab.www.app.frontendRows
+  - 10-device_mesh_lab.www.app.groups
+  - 10-device_mesh_lab.www.app.inputType
+  - 10-device_mesh_lab.www.app.installable
+  - 10-device_mesh_lab.www.app.isRouteSafe
+  - 10-device_mesh_lab.www.app.li
+  - 10-device_mesh_lab.www.app.novncEntryFor
+  - 10-device_mesh_lab.www.app.novncUrlFor
+  - 10-device_mesh_lab.www.app.parsePayloadValue
+  - 10-device_mesh_lab.www.app.payloadFromForm
+  - 10-device_mesh_lab.www.app.previewPayload
+  - 10-device_mesh_lab.www.app.prompt
+  - 10-device_mesh_lab.www.app.reachable
+  - 10-device_mesh_lab.www.app.recordActivity
+  - 10-device_mesh_lab.www.app.refreshDevices
+  - 10-device_mesh_lab.www.app.refreshLogs
+  - 10-device_mesh_lab.www.app.renderActivityLog
+  - 10-device_mesh_lab.www.app.renderDevices
+  - 10-device_mesh_lab.www.app.renderField
+  - 10-device_mesh_lab.www.app.renderNovnc
+  - 10-device_mesh_lab.www.app.renderPayloadForm
+  - 10-device_mesh_lab.www.app.renderRoutes
+  - 10-device_mesh_lab.www.app.required
+  - 10-device_mesh_lab.www.app.requiredSet
+  - 10-device_mesh_lab.www.app.response
+  - 10-device_mesh_lab.www.app.routeBadge
+  - 10-device_mesh_lab.www.app.routeByUri
+  - 10-device_mesh_lab.www.app.row
+  - 10-device_mesh_lab.www.app.rows
+  - 10-device_mesh_lab.www.app.runNlFlow
+  - 10-device_mesh_lab.www.app.runSelectedRoute
+  - 10-device_mesh_lab.www.app.runUri
+  - 10-device_mesh_lab.www.app.schemaFor
+  - 10-device_mesh_lab.www.app.selectRoute
+  - 10-device_mesh_lab.www.app.setMenuActive
+  - 10-device_mesh_lab.www.app.showJson
+  - 10-device_mesh_lab.www.app.showView
+  - 10-device_mesh_lab.www.app.status
+  - 10-device_mesh_lab.www.app.step
+  - 10-device_mesh_lab.www.app.targetFromUri
+  - 10-device_mesh_lab.www.app.url
+  - 10-device_mesh_lab.www.app.valueToInput
+  11-novnc_lan_flow.computer.browser_node:
+  - 11-novnc_lan_flow.computer.browser_node.Handler.do_GET
+  - 11-novnc_lan_flow.computer.browser_node.Handler.do_OPTIONS
+  - 11-novnc_lan_flow.computer.browser_node.Handler.do_POST
+  - 11-novnc_lan_flow.computer.browser_node.Handler.log_message
+  - 11-novnc_lan_flow.computer.browser_node.app_service_call
+  - 11-novnc_lan_flow.computer.browser_node.current_url
+  - 11-novnc_lan_flow.computer.browser_node.ensure_session
+  - 11-novnc_lan_flow.computer.browser_node.json_response
+  - 11-novnc_lan_flow.computer.browser_node.log
+  - 11-novnc_lan_flow.computer.browser_node.main
+  - 11-novnc_lan_flow.computer.browser_node.open_page
+  - 11-novnc_lan_flow.computer.browser_node.route_call
+  - 11-novnc_lan_flow.computer.browser_node.route_kind
+  - 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  - 11-novnc_lan_flow.computer.browser_node.wait_for_webdriver
+  - 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.orchestrator.run_flow:
+  - 11-novnc_lan_flow.orchestrator.run_flow.collect_routes
+  - 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  - 11-novnc_lan_flow.orchestrator.run_flow.main
+  - 11-novnc_lan_flow.orchestrator.run_flow.run_step
+  - 11-novnc_lan_flow.orchestrator.run_flow.target_from_uri
+  - 11-novnc_lan_flow.orchestrator.run_flow.wait_health
+  12-full_e2e_connect_lab.registry-runtime.registry_server:
+  - 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET
+  - 12-full_e2e_connect_lab.registry-runtime.registry_server.discover
+  - 12-full_e2e_connect_lab.registry-runtime.registry_server.get_json
+  - 12-full_e2e_connect_lab.registry-runtime.registry_server.nodes
+  - 12-full_e2e_connect_lab.registry-runtime.registry_server.registry_document
+  12-full_e2e_connect_lab.scripts.assert_results:
+  - 12-full_e2e_connect_lab.scripts.assert_results.load
+  - 12-full_e2e_connect_lab.scripts.assert_results.main
+  12-full_e2e_connect_lab.scripts.connector_checks:
+  - 12-full_e2e_connect_lab.scripts.connector_checks.build_registry
+  - 12-full_e2e_connect_lab.scripts.connector_checks.emit_browser_control_bindings
+  - 12-full_e2e_connect_lab.scripts.connector_checks.emit_http_check_bindings
+  - 12-full_e2e_connect_lab.scripts.connector_checks.emit_time_tools_bindings
+  - 12-full_e2e_connect_lab.scripts.connector_checks.fetch_catalog
+  - 12-full_e2e_connect_lab.scripts.connector_checks.main
+  - 12-full_e2e_connect_lab.scripts.connector_checks.project_mcp_a2a
+  - 12-full_e2e_connect_lab.scripts.connector_checks.run
+  - 12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes
+  - 12-full_e2e_connect_lab.scripts.connector_checks.run_json
+  - 12-full_e2e_connect_lab.scripts.connector_checks.summarize_catalog
+  - 12-full_e2e_connect_lab.scripts.connector_checks.test_grpc_transport
+  - 12-full_e2e_connect_lab.scripts.connector_checks.uri_run
+  - 12-full_e2e_connect_lab.scripts.connector_checks.write_json
+  12-full_e2e_connect_lab.scripts.run_full_scenario:
+  - 12-full_e2e_connect_lab.scripts.run_full_scenario.print
+  13-simple_defaults.js.defaults:
+  - 13-simple_defaults.js.defaults.boolean
+  - 13-simple_defaults.js.defaults.connector
+  - 13-simple_defaults.js.defaults.field
+  - 13-simple_defaults.js.defaults.fullUri
+  - 13-simple_defaults.js.defaults.integer
+  - 13-simple_defaults.js.defaults.string
+  13-simple_defaults.python_connector:
+  - 13-simple_defaults.python_connector.bindings
+  - 13-simple_defaults.python_connector.main
+entry_points:
+- 02-decorators.example.echo_message
+- 02-decorators.example.shell_echo
+- 02-decorators.example.transcode
+- 05-generators.c.example.main
+- 05-generators.go.example.main
+- 05-generators.js.example.document
+- 05-generators.js.example.greet
+- 05-generators.js.uri-command.bindingDocument
+- 05-generators.js.uri-command.boolean
+- 05-generators.js.uri-command.integer
+- 05-generators.js.uri-command.placeholders
+- 05-generators.js.uri-command.properties
+- 05-generators.js.uri-command.required
+- 05-generators.js.uri-command.string
+- 05-generators.js.uri-command.uriCommand
+- 05-generators.nodejs.generate-bindings.document
+- 05-generators.nodejs.generate-bindings.out
+- 05-generators.nodejs.generate-bindings.sha256
+- 05-generators.php.example.UriCommand.__construct
+- 05-generators.php.example.UriCommand.bindingFromFunction
+- 05-generators.php.example.UriCommand.slug
+- 05-generators.ts.decorators.MathCommands.add
+- 05-generators.ts.decorators.method
+- 05-generators.ts.decorators.placeholders
+- 05-generators.ts.decorators.properties
+- 05-generators.ts.decorators.uriCommand
+- 06-html_uri_app.app.button
+- 06-html_uri_app.app.card
+- 06-html_uri_app.app.data
+- 06-html_uri_app.app.defaults
+- 06-html_uri_app.app.inputType
+- 06-html_uri_app.app.key
+- 06-html_uri_app.app.manifest
+- 06-html_uri_app.app.payloadFromForm
+- 06-html_uri_app.app.properties
+- 06-html_uri_app.app.refreshLogs
+- 06-html_uri_app.app.required
+- 06-html_uri_app.app.result
+- 06-html_uri_app.app.route
+- 06-html_uri_app.app.routeResponse
+- 06-html_uri_app.app.schema
+- 06-html_uri_app.app.value
+- 06-html_uri_app.backend.Handler.do_GET
+- 06-html_uri_app.backend.Handler.do_POST
+- 06-html_uri_app.backend.Handler.log_message
+- 06-html_uri_app.backend.Handler.read_body
+- 06-html_uri_app.backend.Handler.serve_static
+- 06-html_uri_app.backend.dispatch
+- 06-html_uri_app.backend.json_response
+- 06-html_uri_app.backend.main
+- 06-html_uri_app.backend.recent_logs
+- 06-html_uri_app.backend.routes
+- 06-html_uri_app.test.bindings
+- 07-transports.scan_and_run.main
+- 07-transports.transport_lib.available_transports
+- 07-transports.transport_lib.build_registry
+- 07-transports.transport_lib.run_via
+- 08-multi_transport.run_tests.cleanup
+- 08-multi_transport.worker.serve_grpc
+- 08-multi_transport.worker.serve_http
+- 09-docker_uri_flow.node-worker.server.bindings
+- 09-docker_uri_flow.node-worker.server.body
+- 09-docker_uri_flow.node-worker.server.data
+- 09-docker_uri_flow.node-worker.server.fs
+- 09-docker_uri_flow.node-worker.server.http
+- 09-docker_uri_flow.node-worker.server.path
+- 09-docker_uri_flow.node-worker.server.server
+- 09-docker_uri_flow.node-worker.server.slug
+- 09-docker_uri_flow.orchestrator.flow_runner.main
+- 09-docker_uri_flow.python-worker.server.Handler.do_GET
+- 09-docker_uri_flow.python-worker.server.Handler.do_POST
+- 09-docker_uri_flow.python-worker.server.Handler.log_message
+- 09-docker_uri_flow.python-worker.server.dispatch
+- 09-docker_uri_flow.python-worker.server.response
+- 09-docker_uri_flow.run.cleanup
+- 09-docker_uri_flow.run_tests.cleanup
+- 09-docker_uri_flow.shell-worker.server.Handler.do_GET
+- 09-docker_uri_flow.shell-worker.server.Handler.do_POST
+- 09-docker_uri_flow.shell-worker.server.Handler.log_message
+- 09-docker_uri_flow.shell-worker.server.response
+- 10-device_mesh_lab.controller.Handler.__init__
+- 10-device_mesh_lab.controller.Handler.do_GET
+- 10-device_mesh_lab.controller.Handler.do_OPTIONS
+- 10-device_mesh_lab.controller.Handler.do_POST
+- 10-device_mesh_lab.controller.Handler.end_headers
+- 10-device_mesh_lab.controller.main
+- 10-device_mesh_lab.device_agent.DeviceAgent.__init__
+- 10-device_mesh_lab.device_agent.DeviceAgent.append_note
+- 10-device_mesh_lab.device_agent.DeviceAgent.browser_target
+- 10-device_mesh_lab.device_agent.DeviceAgent.device_card
+- 10-device_mesh_lab.device_agent.DeviceAgent.dispatch
+- 10-device_mesh_lab.device_agent.DeviceAgent.handler
+- 10-device_mesh_lab.device_agent.DeviceAgent.installable
+- 10-device_mesh_lab.device_agent.DeviceAgent.open_browser
+- 10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc
+- 10-device_mesh_lab.device_agent.DeviceAgent.open_browser_on_host
+- 10-device_mesh_lab.device_agent.DeviceAgent.processes
+- 10-device_mesh_lab.device_agent.DeviceAgent.routes
+- 10-device_mesh_lab.device_agent.DeviceAgent.safe_command
+- 10-device_mesh_lab.device_agent.DeviceAgent.serve
+- 10-device_mesh_lab.device_agent.main
+- 10-device_mesh_lab.www.app.activityLog
+- 10-device_mesh_lab.www.app.config
+- 10-device_mesh_lab.www.app.data
+- 10-device_mesh_lab.www.app.description
+- 10-device_mesh_lab.www.app.device
+- 10-device_mesh_lab.www.app.deviceRows
+- 10-device_mesh_lab.www.app.devices
+- 10-device_mesh_lab.www.app.devicesEl
+- 10-device_mesh_lab.www.app.entry
+- 10-device_mesh_lab.www.app.focusArea
+- 10-device_mesh_lab.www.app.frontendRows
+- 10-device_mesh_lab.www.app.generatedFlow
+- 10-device_mesh_lab.www.app.groups
+- 10-device_mesh_lab.www.app.host
+- 10-device_mesh_lab.www.app.inputType
+- 10-device_mesh_lab.www.app.installable
+- 10-device_mesh_lab.www.app.li
+- 10-device_mesh_lab.www.app.lower
+- 10-device_mesh_lab.www.app.manual
+- 10-device_mesh_lab.www.app.name
+- 10-device_mesh_lab.www.app.navigationButtons
+- 10-device_mesh_lab.www.app.novncGrid
+- 10-device_mesh_lab.www.app.output
+- 10-device_mesh_lab.www.app.path
+- 10-device_mesh_lab.www.app.payloadForm
+- 10-device_mesh_lab.www.app.pcs
+- 10-device_mesh_lab.www.app.processes
+- 10-device_mesh_lab.www.app.prompt
+- 10-device_mesh_lab.www.app.promptInput
+- 10-device_mesh_lab.www.app.properties
+- 10-device_mesh_lab.www.app.reachable
+- 10-device_mesh_lab.www.app.refreshLogsButton
+- 10-device_mesh_lab.www.app.required
+- 10-device_mesh_lab.www.app.result
+- 10-device_mesh_lab.www.app.route
+- 10-device_mesh_lab.www.app.routeFilter
+- 10-device_mesh_lab.www.app.routesEl
+- 10-device_mesh_lab.www.app.row
+- 10-device_mesh_lab.www.app.rows
+- 10-device_mesh_lab.www.app.runNlFlow
+- 10-device_mesh_lab.www.app.runNlFlowButton
+- 10-device_mesh_lab.www.app.runNlFlowInlineButton
+- 10-device_mesh_lab.www.app.runSelectedButton
+- 10-device_mesh_lab.www.app.runSelectedRoute
+- 10-device_mesh_lab.www.app.safe
+- 10-device_mesh_lab.www.app.schema
+- 10-device_mesh_lab.www.app.selectRoute
+- 10-device_mesh_lab.www.app.selectedCommand
+- 10-device_mesh_lab.www.app.selectedRoute
+- 10-device_mesh_lab.www.app.status
+- 10-device_mesh_lab.www.app.step
+- 10-device_mesh_lab.www.app.target
+- 10-device_mesh_lab.www.app.timeline
+- 10-device_mesh_lab.www.app.trimmed
+- 10-device_mesh_lab.www.app.url
+- 10-device_mesh_lab.www.app.value
+- 10-device_mesh_lab.www.app.viewPanes
+- 10-device_mesh_lab.www.app.viewTabs
+- 10-device_mesh_lab.www.runtime-config.host
+- 11-novnc_lan_flow.computer.browser_node.Handler.do_GET
+- 11-novnc_lan_flow.computer.browser_node.Handler.do_OPTIONS
+- 11-novnc_lan_flow.computer.browser_node.Handler.do_POST
+- 11-novnc_lan_flow.computer.browser_node.Handler.log_message
+- 11-novnc_lan_flow.computer.browser_node.main
+- 11-novnc_lan_flow.orchestrator.run_flow.main
+- 11-novnc_lan_flow.scripts.smoke.cleanup
+- 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.do_GET
+- 12-full_e2e_connect_lab.registry-runtime.registry_server.Handler.log_message
+- 12-full_e2e_connect_lab.registry-runtime.registry_server.send
+- 12-full_e2e_connect_lab.scripts.assert_results.main
+- 12-full_e2e_connect_lab.scripts.connector_checks.main
+- 12-full_e2e_connect_lab.scripts.public_smoke.print
+- 12-full_e2e_connect_lab.scripts.run_full_scenario.exec_pc
+- 12-full_e2e_connect_lab.scripts.run_full_scenario.install_node
+- 12-full_e2e_connect_lab.scripts.run_full_scenario.wait_http_from_host
+- 13-simple_defaults.js.defaults.boolean
+- 13-simple_defaults.js.defaults.connector
+- 13-simple_defaults.js.defaults.integer
+- 13-simple_defaults.js.defaults.placeholders
+- 13-simple_defaults.js.defaults.properties
+- 13-simple_defaults.js.defaults.required
+- 13-simple_defaults.js.defaults.string
+- 13-simple_defaults.js.defaults.uri
+- 13-simple_defaults.js.example.demo
+- 13-simple_defaults.python_connector.main
+- 13-simple_defaults.python_connector.upper
+- run_tests.pick_python
+- scripts.build_site.first_title_desc
+- scripts.build_site.md
+- scripts.build_site.page
