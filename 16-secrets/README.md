@@ -32,8 +32,10 @@ urirun run 'sdemo://local/auth/command/call' reg.json --execute \
   --allow 'sdemo://*' --secret-allow 'getv://DEMO_TOKEN'   # without --secret-allow: denied
 ```
 
-`secret://keyring/<svc>/<acct>` (OS credential store), `secret://dotenv/<path>#NAME`
-and `getv://NAME` are supported; `vault`/`oauth`/`browser` are reserved. A remote
+Providers: `getv://NAME` & `secret://env/NAME`, `secret://dotenv/<path>#NAME`,
+`secret://keyring/<svc>/<acct>` (OS store), `secret://vault/<mount>/<path>#<field>`
+(Vault KV v2), `secret://oauth/<provider>/<account>` (cached token + refresh).
+`secret://browser/...` deliberately refuses (infostealer pattern; export to keyring instead). A remote
 `urirun node serve` resolves **no** secrets unless started with `--allow-secrets`.
 
 ## Test
