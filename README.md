@@ -30,6 +30,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 13 | [`13-simple_defaults/`](13-simple_defaults/) | convention-based connector defaults in Python and JS | ✅ python/js validate |
 | 15 | [`15-declarative-http/`](15-declarative-http/) | declarative HTTP/REST connectors from a TOML spec (httpbin + KSeF 2.0), templated url/headers/body | ✅ host run |
 | 16 | [`16-secrets/`](16-secrets/) | `secret://` / `getv://` — credentials by reference, execute-only, deny-by-default, redacted, no leak | ✅ `pytest` |
+| 17 | [`17-flows/`](17-flows/) | usage scenarios as flows in txt / bash / YAML; `run_flow.py` runner with policy + result chaining | ✅ `pytest` |
 | 14 | [`14-llm-uri-agent/`](14-llm-uri-agent/) | LLM-over-URI agent loop: registry as action space, drive Chrome + tools by URI under policy | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
