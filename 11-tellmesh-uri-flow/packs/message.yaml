@@ -1,0 +1,13 @@
+id: urimessage
+version: 1
+scheme: message
+description: Simple alert/message dispatch mock for lab and node.
+uri_patterns:
+  - pattern: message://local/alert/command/send
+    kind: command
+    operation: message.alert.send
+    side_effects: true
+    approval: required
+handlers:
+  python:
+    message.alert.send: python://urimessage.handlers:alert_send

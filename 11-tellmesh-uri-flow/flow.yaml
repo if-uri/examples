@@ -1,0 +1,37 @@
+task:
+  id: tellmesh-screen-understand-alert
+  description: >
+    See the screen, read it, reason about it, and alert — a uri2flow-style DAG
+    composed entirely of tellmesh capability-pack URIs adopted into urirun.
+
+steps:
+  - id: read_text
+    uri: ocr://host/image/latest/query/text
+    operation: ocr.text
+    kind: query
+
+  - id: detect_ui
+    uri: vql://host/ui/latest/query/detect
+    operation: vql.detect
+    kind: query
+
+  - id: analyze
+    uri: llm://host/vision/query/analyze
+    operation: llm.vision.analyze
+    kind: query
+    depends_on:
+      - read_text
+      - detect_ui
+    payload:
+      text_from: read_text.text
+      elements_from: detect_ui.elements
+
+  - id: alert
+    uri: message://local/alert/command/send
+    operation: message.alert.send
+    kind: command
+    depends_on:
+      - analyze
+    payload:
+      to: ops
+      summary_from: analyze.summary

@@ -1,0 +1,19 @@
+id: urivql
+version: 1
+scheme: vql
+description: Visual query language — UI detect/compare for urisys-node.
+uri_patterns:
+  - pattern: vql://{host}/ui/latest/query/detect
+    kind: query
+    operation: vql.ui.detect
+    side_effects: false
+    approval: not_required
+  - pattern: vql://{host}/ui/latest/query/compare
+    kind: query
+    operation: vql.ui.compare
+    side_effects: false
+    approval: not_required
+handlers:
+  python:
+    vql.ui.detect: python://urivql.handlers:ui_detect
+    vql.ui.compare: python://urivql.handlers:ui_compare
