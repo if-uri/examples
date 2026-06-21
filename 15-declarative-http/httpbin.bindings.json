@@ -1,0 +1,94 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "httpbin://default/get/query/run": {
+      "uri": "httpbin://default/get/query/run",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "default": "https://httpbin.org"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "path": "/get"
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "httpbin",
+        "label": "GET /get"
+      }
+    },
+    "httpbin://default/status/query/code": {
+      "uri": "httpbin://default/status/query/code",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "default": "https://httpbin.org"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "code": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "code"
+          ]
+        },
+        "path": "/status/{code}"
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "httpbin",
+        "label": "GET a status code"
+      }
+    },
+    "httpbin://default/echo/command/post": {
+      "uri": "httpbin://default/echo/command/post",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "default": "https://httpbin.org"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "path": "/post",
+        "headers": {
+          "X-Demo": "ifuri-{name}"
+        },
+        "body": {
+          "hello": "{name}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "httpbin",
+        "label": "POST a templated body"
+      }
+    }
+  }
+}

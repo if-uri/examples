@@ -1,0 +1,57 @@
+# KSeF 2.0 expressed declaratively (excerpt). The full openapi.json -> routes is the
+# importer; auth (challenge->XAdES/token->poll->redeem) + AES/RSA crypto stay as the
+# one helper the spec references. Everything else is config.
+connector = "ksef"
+scheme = "ksef"
+
+[environments]
+test = "https://api-test.ksef.mf.gov.pl/api/v2"
+demo = "https://api-demo.ksef.mf.gov.pl/api/v2"   # verify host in ksef-docs
+prod = "https://api.ksef.mf.gov.pl/api/v2"
+
+# auth/crypto live behind a helper profile (imperative escape hatch); see KSeF spec §3-4
+# auth.profile = "ksef-xades"  ;  crypto = "urirun.connectors.ksef.crypto"
+
+[[routes]]
+uri = "ksef://{env}/auth/challenge"
+method = "POST"
+path = "/auth/challenge"
+label = "Request auth challenge"
+
+[[routes]]
+uri = "ksef://{env}/session/online/{ref}/send"
+method = "POST"
+path = "/sessions/online/{ref}/invoices"
+label = "Send invoice (FA(3), encrypted)"
+required = ["ref"]
+[routes.input]
+ref = { type = "string" }
+invoiceHash = { type = "string" }
+encryptedInvoiceContent = { type = "string" }
+[routes.headers]
+Authorization = "Bearer {token}"
+[routes.body]
+invoiceHash = "{invoiceHash}"
+encryptedInvoiceContent = "{encryptedInvoiceContent}"
+
+[[routes]]
+uri = "ksef://{env}/session/{ref}/invoices"
+method = "GET"
+path = "/sessions/{ref}/invoices"
+label = "Accepted invoices (ksefNumber)"
+required = ["ref"]
+[routes.input]
+ref = { type = "string" }
+[routes.headers]
+Authorization = "Bearer {token}"
+
+[[routes]]
+uri = "ksef://{env}/invoice/{ksefNumber}"
+method = "GET"
+path = "/invoices/{ksefNumber}"
+label = "Download invoice"
+required = ["ksefNumber"]
+[routes.input]
+ksefNumber = { type = "string" }
+[routes.headers]
+Authorization = "Bearer {token}"

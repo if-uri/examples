@@ -1,0 +1,230 @@
+{
+  "generatedAt": "2026-06-21T19:38:01.848727+00:00",
+  "index": {
+    "67b5e87125701b4195bc7be20979b1a646c093cf75701403db9461530f3569a4": {
+      "route": [
+        "httpbin",
+        "status",
+        "query"
+      ],
+      "routeEntry": {
+        "adapter": "fetch",
+        "config": {
+          "environments": {
+            "default": "https://httpbin.org"
+          },
+          "inputSchema": {
+            "additionalProperties": true,
+            "properties": {
+              "code": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "type": "object"
+          },
+          "method": "GET",
+          "path": "/status/{code}"
+        },
+        "kind": "fetch",
+        "meta": {
+          "connector": "httpbin",
+          "label": "GET a status code"
+        },
+        "policy": {
+          "allowExecute": true
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "default",
+      "uri": "httpbin://default/status/query/code"
+    },
+    "76401f4f1a32dc2337eabf3c9ba8e8aa1689fe8fb9f08e84905c4b4e2ac55393": {
+      "route": [
+        "httpbin",
+        "get",
+        "query"
+      ],
+      "routeEntry": {
+        "adapter": "fetch",
+        "config": {
+          "environments": {
+            "default": "https://httpbin.org"
+          },
+          "inputSchema": {
+            "additionalProperties": true,
+            "properties": {},
+            "type": "object"
+          },
+          "method": "GET",
+          "path": "/get"
+        },
+        "kind": "fetch",
+        "meta": {
+          "connector": "httpbin",
+          "label": "GET /get"
+        },
+        "policy": {
+          "allowExecute": true
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "default",
+      "uri": "httpbin://default/get/query/run"
+    },
+    "cb3b366193079b1544d46df9f05933f534cc3f08dd546ad941329a08588fab39": {
+      "route": [
+        "httpbin",
+        "echo",
+        "command"
+      ],
+      "routeEntry": {
+        "adapter": "fetch",
+        "config": {
+          "body": {
+            "hello": "{name}"
+          },
+          "environments": {
+            "default": "https://httpbin.org"
+          },
+          "headers": {
+            "X-Demo": "ifuri-{name}"
+          },
+          "inputSchema": {
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "method": "POST",
+          "path": "/post"
+        },
+        "kind": "fetch",
+        "meta": {
+          "connector": "httpbin",
+          "label": "POST a templated body"
+        },
+        "policy": {
+          "allowExecute": true
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "default",
+      "uri": "httpbin://default/echo/command/post"
+    }
+  },
+  "routeCount": 3,
+  "routes": {
+    "httpbin": {
+      "echo": {
+        "command": {
+          "adapter": "fetch",
+          "config": {
+            "body": {
+              "hello": "{name}"
+            },
+            "environments": {
+              "default": "https://httpbin.org"
+            },
+            "headers": {
+              "X-Demo": "ifuri-{name}"
+            },
+            "inputSchema": {
+              "additionalProperties": true,
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "method": "POST",
+            "path": "/post"
+          },
+          "kind": "fetch",
+          "meta": {
+            "connector": "httpbin",
+            "label": "POST a templated body"
+          },
+          "policy": {
+            "allowExecute": true
+          }
+        }
+      },
+      "get": {
+        "query": {
+          "adapter": "fetch",
+          "config": {
+            "environments": {
+              "default": "https://httpbin.org"
+            },
+            "inputSchema": {
+              "additionalProperties": true,
+              "properties": {},
+              "type": "object"
+            },
+            "method": "GET",
+            "path": "/get"
+          },
+          "kind": "fetch",
+          "meta": {
+            "connector": "httpbin",
+            "label": "GET /get"
+          },
+          "policy": {
+            "allowExecute": true
+          }
+        }
+      },
+      "status": {
+        "query": {
+          "adapter": "fetch",
+          "config": {
+            "environments": {
+              "default": "https://httpbin.org"
+            },
+            "inputSchema": {
+              "additionalProperties": true,
+              "properties": {
+                "code": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "code"
+              ],
+              "type": "object"
+            },
+            "method": "GET",
+            "path": "/status/{code}"
+          },
+          "kind": "fetch",
+          "meta": {
+            "connector": "httpbin",
+            "label": "GET a status code"
+          },
+          "policy": {
+            "allowExecute": true
+          }
+        }
+      }
+    }
+  },
+  "sources": [
+    {
+      "type": "manifest"
+    }
+  ],
+  "version": "urirun.registry.v1"
+}

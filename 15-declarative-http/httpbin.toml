@@ -1,0 +1,33 @@
+# A whole connector with zero code — just config. Backed by urirun's fetch adapter.
+connector = "httpbin"
+scheme = "httpbin"
+
+[environments]
+default = "https://httpbin.org"
+
+[[routes]]
+uri = "httpbin://default/get/query/run"
+method = "GET"
+path = "/get"
+label = "GET /get"
+
+[[routes]]
+uri = "httpbin://default/status/query/code"
+method = "GET"
+path = "/status/{code}"
+label = "GET a status code"
+required = ["code"]
+[routes.input]
+code = { type = "integer" }
+
+[[routes]]
+uri = "httpbin://default/echo/command/post"
+method = "POST"
+path = "/post"
+label = "POST a templated body"
+[routes.input]
+name = { type = "string" }
+[routes.headers]
+"X-Demo" = "ifuri-{name}"
+[routes.body]
+hello = "{name}"

@@ -28,6 +28,8 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 11 | [`11-novnc_lan_flow/`](11-novnc_lan_flow/) | multi-computer noVNC LAN workflow | ✅ Docker/noVNC `make test-full` |
 | 12 | [`12-full_e2e_connect_lab/`](12-full_e2e_connect_lab/) | get/connect/ifuri public smoke + pc1/pc2 Docker E2E + connector/MCP/A2A checks | ✅ public smoke; full flow needs Docker |
 | 13 | [`13-simple_defaults/`](13-simple_defaults/) | convention-based connector defaults in Python and JS | ✅ python/js validate |
+| 15 | [`15-declarative-http/`](15-declarative-http/) | declarative HTTP/REST connectors from a TOML spec (httpbin + KSeF 2.0), templated url/headers/body | ✅ host run |
+| 16 | [`16-secrets/`](16-secrets/) | `secret://` / `getv://` — credentials by reference, execute-only, deny-by-default, redacted, no leak | ✅ `pytest` |
 | 14 | [`14-llm-uri-agent/`](14-llm-uri-agent/) | LLM-over-URI agent loop: registry as action space, drive Chrome + tools by URI under policy | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM

@@ -14,6 +14,16 @@ Every worker exposes:
 - `GET /routes` - its v2 bindings
 - `POST /run` - execute one URI resource
 
+> **`shell-worker` uses the built-in node server.** Its URIs are plain
+> `argv-template` bindings, so it ships *no server code*: the Dockerfile just
+> `pip install`s urirun and runs `urirun node serve --registry registry.json`.
+> urirun's node provides `/health`, `/routes`, `/run` (plus `/mcp/tools`,
+> `/a2a/card`, `/errors`). The `python-worker` / `node-worker` keep a small
+> hand-written server only because their resources are in-process functions, not
+> shell/argv commands. To turn any worker into a zero-server-code node: make its
+> bindings `argv-template`/`shell`/`fetch` with `policy.allowExecute`, then
+> `urirun node serve`.
+
 The Dockerfiles include `io.tellmesh.urirun.manifest=/app/bindings.json`,
 so the image declares where its URI package manifest lives.
 

@@ -41,6 +41,21 @@ Example output:
 - **`agent.py`** — `load_registry()` → `action_space()` → `plan()` → `run_step()`.
   `plan()` is deterministic so the demo runs in CI.
 
+## Built into urirun
+
+This loop now ships as a runtime command — point it at any compiled registry:
+
+```bash
+tools.py bindings > b.json && urirun compile b.json --out reg.json
+urirun agent space reg.json                                   # the action space
+urirun agent run reg.json --goal "check https://example.com" \
+  --planner agent:plan --allow-commands                       # run a pluggable planner
+```
+
+`--planner module:function` takes `(goal, action_space)` and returns the
+`[{uri, payload}]` steps — wire it to an LLM. `agent.py` here is the long-form
+equivalent.
+
 ## Swap in a real LLM
 
 Replace `plan(goal, routes)` with a model call: send the **goal** plus the

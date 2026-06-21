@@ -165,8 +165,9 @@ Proposed next, in priority order:
    are "call an HTTP API with auth + map response". A declarative `http` adapter
    (url template + auth ref + response jq) would let those connectors be config,
    not code.
-5. **Secret references** — a `secret://` indirection (`{token}` → `secret://env/KSEF_TOKEN`)
-   so connectors declare *which* secret they need without ever embedding it.
+5. **Secret references** — ✅ **shipped**: `secret://` / `getv://` carry a *reference*,
+   resolved lazily in `--execute` behind a deny-by-default policy and injected at the
+   executor boundary, redacted (`****`) everywhere else. `urirun run --secret-allow GLOB`.
 
 These keep the core small while making the long tail of integrations
 **configuration, not code** — the main lever for "many use cases, simply".

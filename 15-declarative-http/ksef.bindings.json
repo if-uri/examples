@@ -1,0 +1,437 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "ksef://test/auth/challenge": {
+      "uri": "ksef://test/auth/challenge",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "path": "/auth/challenge"
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Request auth challenge"
+      }
+    },
+    "ksef://demo/auth/challenge": {
+      "uri": "ksef://demo/auth/challenge",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "path": "/auth/challenge"
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Request auth challenge"
+      }
+    },
+    "ksef://prod/auth/challenge": {
+      "uri": "ksef://prod/auth/challenge",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "path": "/auth/challenge"
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Request auth challenge"
+      }
+    },
+    "ksef://test/session/online/{ref}/send": {
+      "uri": "ksef://test/session/online/{ref}/send",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            },
+            "invoiceHash": {
+              "type": "string"
+            },
+            "encryptedInvoiceContent": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/online/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "invoiceHash": "{invoiceHash}",
+          "encryptedInvoiceContent": "{encryptedInvoiceContent}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Send invoice (FA(3), encrypted)"
+      }
+    },
+    "ksef://demo/session/online/{ref}/send": {
+      "uri": "ksef://demo/session/online/{ref}/send",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            },
+            "invoiceHash": {
+              "type": "string"
+            },
+            "encryptedInvoiceContent": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/online/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "invoiceHash": "{invoiceHash}",
+          "encryptedInvoiceContent": "{encryptedInvoiceContent}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Send invoice (FA(3), encrypted)"
+      }
+    },
+    "ksef://prod/session/online/{ref}/send": {
+      "uri": "ksef://prod/session/online/{ref}/send",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "POST",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            },
+            "invoiceHash": {
+              "type": "string"
+            },
+            "encryptedInvoiceContent": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/online/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "invoiceHash": "{invoiceHash}",
+          "encryptedInvoiceContent": "{encryptedInvoiceContent}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Send invoice (FA(3), encrypted)"
+      }
+    },
+    "ksef://test/session/{ref}/invoices": {
+      "uri": "ksef://test/session/{ref}/invoices",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Accepted invoices (ksefNumber)"
+      }
+    },
+    "ksef://demo/session/{ref}/invoices": {
+      "uri": "ksef://demo/session/{ref}/invoices",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Accepted invoices (ksefNumber)"
+      }
+    },
+    "ksef://prod/session/{ref}/invoices": {
+      "uri": "ksef://prod/session/{ref}/invoices",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ]
+        },
+        "path": "/sessions/{ref}/invoices",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Accepted invoices (ksefNumber)"
+      }
+    },
+    "ksef://test/invoice/{ksefNumber}": {
+      "uri": "ksef://test/invoice/{ksefNumber}",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ksefNumber": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ksefNumber"
+          ]
+        },
+        "path": "/invoices/{ksefNumber}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Download invoice"
+      }
+    },
+    "ksef://demo/invoice/{ksefNumber}": {
+      "uri": "ksef://demo/invoice/{ksefNumber}",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ksefNumber": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ksefNumber"
+          ]
+        },
+        "path": "/invoices/{ksefNumber}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Download invoice"
+      }
+    },
+    "ksef://prod/invoice/{ksefNumber}": {
+      "uri": "ksef://prod/invoice/{ksefNumber}",
+      "kind": "fetch",
+      "adapter": "fetch",
+      "config": {
+        "method": "GET",
+        "environments": {
+          "test": "https://api-test.ksef.mf.gov.pl/api/v2",
+          "demo": "https://api-demo.ksef.mf.gov.pl/api/v2",
+          "prod": "https://api.ksef.mf.gov.pl/api/v2"
+        },
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ksefNumber": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ksefNumber"
+          ]
+        },
+        "path": "/invoices/{ksefNumber}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "connector": "ksef",
+        "label": "Download invoice"
+      }
+    }
+  }
+}
