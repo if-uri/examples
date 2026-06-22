@@ -1,0 +1,9 @@
+name: wypisz-5-najciezszych-procesow-biurowych
+description: "wypisz 5 najciezszych procesow biurowych"
+steps:
+  - uri: proc://laptop/process/query/list
+    payload: {"limit": 5}
+    why: "Pobieram listę 5 procesów, które zużywają najwięcej zasobów (są 'najcięższe')."
+  - uri: log://laptop/session/command/write
+    payload: {"text": "$ref:0.output"}
+    why: "Wypisuję pobraną listę procesów do logu sesji."

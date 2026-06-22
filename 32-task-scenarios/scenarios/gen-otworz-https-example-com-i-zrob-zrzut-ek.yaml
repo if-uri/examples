@@ -1,0 +1,8 @@
+name: otworz-https-example-com-i-zrob-zrzut-ek
+description: "otworz https://example.com i zrob zrzut ekranu"
+steps:
+  - uri: env://laptop/runtime/query/health
+    why: "check node health"
+  - uri: log://laptop/session/command/write
+    payload: {"text": "otworz https://example.com i zrob zrzut "}
+    why: "log a note"

@@ -1,0 +1,10 @@
+name: pokaz-date-systemowa-nazwe-jadra-i-spraw
+description: "pokaz date systemowa, nazwe jadra i sprawdz czy jest python3"
+steps:
+  - uri: shell://laptop/command/date
+    why: "Pobranie aktualnej daty systemowej."
+  - uri: shell://laptop/command/uname
+    why: "Pobranie nazwy jądra systemu."
+  - uri: shell://laptop/command/which
+    payload: {"binary": "python3"}
+    why: "Sprawdzenie czy python3 jest zainstalowany w systemie."

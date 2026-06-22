@@ -165,6 +165,7 @@ def main() -> int:
     if node.has_events:
         threading.Thread(target=rs.watch_thread, args=(node.base, stop, events), daemon=True).start()
         time.sleep(0.5)
+    run_start = time.time()  # only count events from THIS run (the SSE stream replays history)
 
     trace, results = [], []
     for i, step in enumerate(steps):
@@ -181,6 +182,8 @@ def main() -> int:
     stop.set()
 
     node_log = node.recent_log(limit=max(8, len(steps) * 3)) if hasattr(node, "recent_log") else []
+    # the SSE stream now yields only new events (no replay without a cursor), so `events`
+    # already holds just this run's — no fragile cross-machine timestamp filtering needed.
     report = {"name": name, "goal": goal, "node": node.name, "url": node.base, "planner": planner,
               "yaml": yaml_text, "trace": trace, "events": events, "node_log": node_log,
               "ok": sum(1 for t in trace if t["ok"]), "total": len(trace),

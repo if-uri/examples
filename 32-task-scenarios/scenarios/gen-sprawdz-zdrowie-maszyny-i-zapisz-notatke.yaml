@@ -1,8 +1,8 @@
 name: sprawdz-zdrowie-maszyny-i-zapisz-notatke
-description: "sprawdz zdrowie maszyny i zapisz notatke 'NL OK'"
+description: "sprawdz zdrowie maszyny i zapisz notatke audytowa"
 steps:
   - uri: env://laptop/runtime/query/health
-    why: "Sprawdzam zdrowie maszyny."
+    why: "Pobieram aktualny stan zdrowia maszyny."
   - uri: log://laptop/session/command/write
-    payload: {"text": "NL OK"}
-    why: "Zapisuję notatkę 'NL OK'."
+    payload: {"text": "Audyt zdrowia maszyny: $ref:0.status"}
+    why: "Zapisuję notatkę audytową z wynikiem sprawdzenia zdrowia."
