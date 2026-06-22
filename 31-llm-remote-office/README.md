@@ -77,6 +77,37 @@ NODE_URL=http://192.168.188.201:8765 ./office_cli.sh "list the top processes" --
   that plans JSON fine (like example 27) but cannot do MCP tool-calling — point
   `URIRUN_OFFICE_MODEL` at a stronger model if you want richer plans.
 
+## Reach the node from OUTSIDE the LAN — `mesh.urirun.com` relay
+
+The host commands above point `NODE_URL` at `http://192.168.188.201:8765`, which
+only works when host and node share a LAN. When the node sits behind NAT/firewall
+(or its SSH is closed and `/deploy` is off — `GET /health` shows `"deploy":false`),
+reach it through the [`mesh-urirun-com`](../../mesh-urirun-com) relay
+(`mesh.urirun.com`): a tiny store-and-forward broker where **both sides make only
+outbound HTTPS** — no inbound ports, no port-forwarding, no VPN/RDP.
+
+```bash
+# ON the node (192.168.188.201) — bridge the local node to the relay (outbound only).
+# MESH_NODE is the relay queue name; the URIs you call must match what the node serves
+# (its routes target NODE_NAME, here `lenovo`).
+MESH_RELAY=https://mesh.urirun.com MESH_NODE=lenovo MESH_TOKEN=$SECRET \
+  LOCAL_NODE=http://127.0.0.1:8765 ../../mesh-urirun-com/clients/mesh-node.sh
+
+# ON the host (anywhere on the internet) — drive it through the relay:
+MESH_RELAY=https://mesh.urirun.com MESH_TOKEN=$SECRET \
+  ../../mesh-urirun-com/clients/mesh-run.sh lenovo 'screen://lenovo/monitor/0/query/frame' '{}'
+```
+
+Why this matters here: the bridge only needs the node's **local `/run`** (already
+served) plus outbound HTTPS — so it works even with `deploy:false` and closed SSH,
+**bypassing the `uri-copy-id`/`/deploy` enrollment entirely**. The node's own
+`--allow` still gates every job; the relay never executes anything.
+
+> The NL→LLM office loop (`office_cli.sh`/`office_agent.py`) currently expects a
+> synchronous `NODE_URL` `/run`; the relay is enqueue+poll, so over the relay you
+> drive via `mesh-run.sh`. Making `office_cli` target the relay transparently (a
+> service-map adapter) is the natural next step.
+
 ## Provision the node FROM the host (no SSH) — `POST /deploy`
 
 You don't have to log into the node to change what it serves. urirun nodes expose a
