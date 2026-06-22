@@ -7,6 +7,7 @@ from typing import Any
 
 
 def complete(prompt: str = "", model: str = "mock-llm", host: str = "host") -> dict[str, Any]:
+    prompt = prompt or ""
     # A real LLM would summarize; we extract the salient fields deterministically so
     # the flow is testable. The point is that `prompt` carries the OCR step's text.
     total = re.search(r"TOTAL DUE:\s*([\d.]+\s*\w+)", prompt)

@@ -58,15 +58,13 @@ with connector:     browser://chrome/page/query/dom            ┐
                     browser://desktop/page/command/screenshot  ┘
 ```
 
-The connector ships `argv-template` routes whose argv invokes its own
-out-of-process executor (`python3 -m urirun_connector_browser_control._exec
-<subcommand> ...`), which prints the route's JSON result — so the agent drives it
-**as an external tool**, with no in-process import of the connector at call time
-(this is also why the routes survive being compiled into a registry).
+The connector's routes run **out-of-process** (it ships `local-function-subprocess`
+handlers via the shared `python -m urirun.exec` runner), so they're registry-portable
+and the agent drives them **as external tools** — no in-process import of the
+connector at call time, and the routes survive being compiled into a registry.
 `agent.browser_control_bindings()` loads the connector straight from the checkout
 (adds the package dir to `sys.path`/`PYTHONPATH`, no install needed) only to read
-those bindings, then rewrites `argv[0]` to the current interpreter so they run in
-this venv. `load_registry()` then drops the inline `browser://`
+those bindings. `load_registry()` then drops the inline `browser://`
 stub and merges in the connector's routes; the planner prefers the connector-only
 `page/query/text` route, and `run_step` unwraps the handler result from the run
 envelope (`result.value`). The run banner reports which backend is active:
