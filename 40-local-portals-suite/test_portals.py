@@ -8,6 +8,7 @@ import urllib.request
 from pathlib import Path
 
 import portal_autonomy
+import domain_loop
 import portal_server
 
 
@@ -74,3 +75,32 @@ def test_payload_for_shop_extracts_quantity():
     payload = portal_autonomy.payload_for_goal("shop", "zamów produkt \"Plan testowy\" qty 3")
     assert payload["product"] == "Plan testowy"
     assert payload["qty"] == 3
+
+
+def test_domain_loop_parses_local_domain_and_iterations():
+    parsed = domain_loop.parse_loop_prompt('support.local 4 razy zgłoszenie "Worker down"')
+    assert parsed["domain"] == "support.local"
+    assert parsed["portal"] == "support"
+    assert parsed["iterations"] == 4
+    assert "Worker down" in parsed["action"]
+
+
+def test_domain_loop_rejects_unknown_domain():
+    try:
+        domain_loop.parse_loop_prompt('example.com 2 razy zrób test')
+    except ValueError as exc:
+        assert "local domain" in str(exc)
+    else:
+        raise AssertionError("non-local domain should be rejected")
+
+
+def test_domain_loop_iteration_payload_is_unique():
+    payload = domain_loop.iteration_payload("crm", 'utwórz lead "Acme"', 2, 3)
+    assert payload["customer"] == "Acme #2"
+    assert "Loop iteration 2/3" in payload["note"]
+
+
+def test_domain_loop_keeps_loop_word_inside_quoted_content():
+    parsed = domain_loop.parse_loop_prompt('docs.local 2 razy dokument "Raport pętli"')
+    payload = domain_loop.iteration_payload(parsed["portal"], parsed["action"], 1, parsed["iterations"])
+    assert payload["title"] == "Raport pętli #1"

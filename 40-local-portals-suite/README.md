@@ -33,6 +33,26 @@ Run all four:
 ./run_all.sh
 ```
 
+## Domain Loop Prompt
+
+For loop testing, put the local domain directly in the prompt:
+
+```bash
+./run_loop.sh 'support.local 3 razy zgłoszenie "Nie działa worker"'
+```
+
+Other domains:
+
+```bash
+./run_loop.sh 'crm.local 5 razy utwórz lead "Acme Loop"'
+./run_loop.sh 'shop.local 2 razy zamów produkt "URI Test Subscription" qty 3'
+./run_loop.sh 'docs.local 4 razy dokument "Notatka z pętli autonomicznej"'
+```
+
+The loop is bounded. By default it runs 3 iterations when the prompt does not include
+a count, and it caps the requested count at 10. Domains must be one of the known local
+fixtures: `crm.local`, `support.local`, `shop.local`, `docs.local`.
+
 ## What It Uses
 
 The wrapper uses built-in urirun pieces:
@@ -55,8 +75,10 @@ real local Chrome session over CDP, submits, then verifies through `/api/records
 
 - `portal_server.py` — local multi-portal HTTP server.
 - `portal_autonomy.py` — NL planner + URI handlers.
+- `domain_loop.py` — local-domain prompt parser + bounded autonomous loop over urirun `run_plan`.
 - `bindings.json` — typed `portal://...` command routes.
 - `run_prompt.sh` — one-prompt runner.
+- `run_loop.sh` — one-prompt bounded loop runner for `*.local` domains.
 - `run_all.sh` — smoke test for all local portals.
 - `.env.example` — credentials and default payloads.
 - `test_portals.py` — offline tests.
