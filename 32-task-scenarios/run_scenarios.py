@@ -71,7 +71,12 @@ def _mini_yaml(text: str) -> dict:
 try:
     from urirun.node.client import NodeClient
 except ModuleNotFoundError:
+    # An installed urirun that predates NodeClient leaves `urirun` bound in sys.modules,
+    # so just inserting the in-repo path isn't enough — purge the cached package first so
+    # the re-import resolves the monorepo source (which has urirun.node.client).
     sys.path.insert(0, str(HERE.parent.parent / "urirun" / "adapters" / "python"))
+    for _m in [k for k in list(sys.modules) if k == "urirun" or k.startswith("urirun.")]:
+        del sys.modules[_m]
     from urirun.node.client import NodeClient
 
 
