@@ -79,12 +79,18 @@ def build_prompt(goal: str, space: list[dict], *, prior_yaml: str | None = None,
 
 # --- execute the flow under policy, stop + report on the first failure ------
 
-def run_flow(flow: dict, registry: dict, *, allow: list[str]) -> tuple[bool, dict | None, dict]:
+def _local_runner(uri: str, registry: dict, payload: dict, allow: list[str]) -> dict:
+    """Run a step in-process under an allow policy (single-registry case)."""
+    return urirun.run(uri, registry, payload, mode="execute", policy=urirun.policy(allow=allow))
+
+
+def run_flow(flow: dict, registry: dict, *, allow: list[str], runner=None) -> tuple[bool, dict | None, dict]:
+    """Execute each step via ``runner`` (default: in-process). A mesh driver passes
+    a runner that forwards each step to the remote node over HTTP."""
+    runner = runner or _local_runner
     results: dict = {}
-    policy = urirun.policy(allow=allow)
     for step in flow.get("steps") or []:
-        env = urirun.run(step["uri"], registry, step.get("payload") or {},
-                         mode="execute", policy=policy)
+        env = runner(step["uri"], registry, step.get("payload") or {}, allow)
         data = urirun.result_data(env)
         ok = bool(env.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
         results[step.get("id", step["uri"])] = data
@@ -100,7 +106,8 @@ def run_flow(flow: dict, registry: dict, *, allow: list[str]) -> tuple[bool, dic
 # --- the generate → run → repair loop --------------------------------------
 
 def generate_run_repair(goal: str, registry: dict, llm_registry: dict, *, model: str,
-                        base_url: str, allow: list[str], max_attempts: int = 3, ask=ask_llm) -> dict:
+                        base_url: str, allow: list[str], max_attempts: int = 3, ask=ask_llm,
+                        runner=None) -> dict:
     space = urirun.action_space(registry)
     prior_yaml: str | None = None
     failure: dict | None = None
@@ -116,7 +123,7 @@ def generate_run_repair(goal: str, registry: dict, llm_registry: dict, *, model:
             failure = {"id": "(parse)", "uri": "-", "detail": f"invalid YAML: {exc}"}
             continue
         print(f"  attempt {attempt}: running {len(flow.get('steps') or [])} step(s)")
-        ok, failure, results = run_flow(flow, registry, allow=allow)
+        ok, failure, results = run_flow(flow, registry, allow=allow, runner=runner)
         if ok:
             return {"ok": True, "attempts": attempt, "flow": flow, "results": results}
         print(f"    -> failed at '{failure['id']}'; feeding the error back to the model")

@@ -23,20 +23,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _ensure_urirun() -> None:
-    """Let `import urirun` work even when it isn't installed in the active
-    interpreter, by falling back to the adapter checkout beside this repo. This
-    keeps `pytest`/`python3 agent.py` runnable from any environment (e.g. a base
-    conda) without first activating the examples venv."""
+    """Let `import urirun` work even when it isn't installed — OR when an old urirun
+    is installed (e.g. a base conda with 0.3.x) — by falling back to the adapter
+    checkout beside this repo. The example needs the v2 public API (`compile_registry`),
+    so a stale install is treated the same as a missing one. Keeps `pytest` /
+    `python3 agent.py` runnable from any environment without activating a venv."""
     try:
-        import urirun  # noqa: F401
+        import urirun
+        if hasattr(urirun, "compile_registry"):
+            return  # installed urirun is recent enough
     except ModuleNotFoundError:
-        candidate = os.path.normpath(os.path.join(HERE, "..", "..", "urirun", "adapters", "python"))
-        if os.path.isdir(candidate) and candidate not in sys.path:
-            sys.path.insert(0, candidate)
-            # propagate to child processes (the browser connector cli imports urirun too)
-            os.environ["PYTHONPATH"] = os.pathsep.join(
-                p for p in (candidate, os.environ.get("PYTHONPATH", "")) if p
-            )
+        pass
+    candidate = os.path.normpath(os.path.join(HERE, "..", "..", "urirun", "adapters", "python"))
+    if not os.path.isdir(candidate):
+        return  # no source checkout to fall back to; surface the original error later
+    sys.path.insert(0, candidate)
+    # propagate to child processes (the connector CLIs import urirun too)
+    os.environ["PYTHONPATH"] = os.pathsep.join(
+        p for p in (candidate, os.environ.get("PYTHONPATH", "")) if p
+    )
+    # drop a stale already-imported urirun so the checkout wins on the next import
+    for name in [m for m in list(sys.modules) if m == "urirun" or m.startswith("urirun.")]:
+        del sys.modules[name]
 
 
 _ensure_urirun()
