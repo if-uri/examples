@@ -38,6 +38,18 @@ login/payment actions such as publishing posts, sending messages, commenting, li
 following, entering passwords, or buying. Use it to inspect the screen/page, capture
 evidence, and prepare drafts for a human to approve.
 
+For local development and fake/staging surfaces, the runner has a dev override:
+
+```bash
+python3 unattended_browser.py --unattended --dev-allow-write-actions \
+  --url http://localhost:8080/fake-linkedin \
+  "opublikuj testowy post w lokalnym fake LinkedIn"
+```
+
+The override only applies to allowlisted non-public hosts (`localhost`, `.test`,
+`.local`, `.internal`, `.lan`, plus repeated `--dev-allow-host`). It intentionally
+does not override public social sites such as `linkedin.com`.
+
 Self-contained local proof (spins a local node, deploys the CDP handler, drives a
 local Chrome) — needs a Chrome/Chromium on this machine:
 

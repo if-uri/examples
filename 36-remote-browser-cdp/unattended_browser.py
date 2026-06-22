@@ -16,6 +16,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "urirun" / "adapters" / "python"))
@@ -24,6 +25,8 @@ from urirun.node.client import NodeClient
 
 DEFAULT_NODE_URL = os.environ.get("NODE_URL", "http://192.168.188.201:8766")
 DEFAULT_NODE = os.environ.get("NODE", "laptop")
+DEFAULT_DEV_HOSTS = ("localhost", "127.0.0.1", "::1", ".local", ".test", ".internal", ".lan")
+PUBLIC_SOCIAL_HOSTS = ("linkedin.com", "www.linkedin.com")
 
 BLOCKED_PATTERNS = [
     r"\bpost\b", r"\bpublish\b", r"\bsend\b", r"\bmessage\b", r"\bcomment\b",
@@ -36,12 +39,51 @@ BLOCKED_PATTERNS = [
 ]
 
 
-def policy_for_goal(goal: str) -> dict[str, Any]:
+def _host_matches(host: str, allowed: list[str] | tuple[str, ...]) -> bool:
+    host = host.lower().strip("[]")
+    for item in allowed:
+        item = item.lower().strip()
+        if not item:
+            continue
+        if item.startswith(".") and host.endswith(item):
+            return True
+        if host == item:
+            return True
+    return False
+
+
+def _target_host(url: str | None) -> str:
+    return (urlparse(url or "").hostname or "").lower()
+
+
+def policy_for_goal(
+    goal: str,
+    target_url: str | None = None,
+    *,
+    dev_allow_write_actions: bool = False,
+    dev_allowed_hosts: list[str] | tuple[str, ...] = DEFAULT_DEV_HOSTS,
+) -> dict[str, Any]:
     hits = [pat for pat in BLOCKED_PATTERNS if re.search(pat, goal, flags=re.I)]
+    host = _target_host(target_url)
+    public_social = bool(host and _host_matches(host, PUBLIC_SOCIAL_HOSTS))
+    dev_allowed = bool(host and _host_matches(host, dev_allowed_hosts))
+    if hits and dev_allow_write_actions and dev_allowed and not public_social:
+        return {
+            "ok": True,
+            "mode": "dev-unattended-with-write-actions",
+            "blockedPatterns": [],
+            "detectedWritePatterns": hits,
+            "targetHost": host,
+            "devAllowedHosts": list(dev_allowed_hosts),
+            "reason": "dev override enabled for an allowlisted non-public host",
+        }
     return {
         "ok": not hits,
         "mode": "read-only-unattended",
         "blockedPatterns": hits,
+        "detectedWritePatterns": hits,
+        "targetHost": host,
+        "devAllowedHosts": list(dev_allowed_hosts),
         "reason": None if not hits else "unattended mode refuses external write/social/login actions",
     }
 
@@ -129,13 +171,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--node", default=DEFAULT_NODE)
     parser.add_argument("--url", help="optional page to navigate/read; inferred from goal when omitted")
     parser.add_argument("--unattended", action="store_true", help="run without prompts, read-only only")
+    parser.add_argument("--dev-allow-write-actions", action="store_true",
+                        help="allow write/social/password-like actions only on allowlisted dev hosts, never public social sites")
+    parser.add_argument("--dev-allow-host", action="append", default=[],
+                        help="extra dev host allowed for --dev-allow-write-actions; exact host or suffix like .test")
     args = parser.parse_args(argv)
 
     goal = " ".join(args.goal)
-    policy = policy_for_goal(goal)
     client = NodeClient(args.node_url)
     routes = route_uris(client)
     url = infer_url(goal, args.url)
+    dev_hosts = [*DEFAULT_DEV_HOSTS, *args.dev_allow_host]
+    policy = policy_for_goal(goal, url, dev_allow_write_actions=args.dev_allow_write_actions,
+                             dev_allowed_hosts=dev_hosts)
     physical = observe_physical_screen(client, args.node, routes, contains="LinkedIn" if "linkedin" in goal.lower() else "")
     result = {
         "ok": True,
