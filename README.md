@@ -40,6 +40,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 15 | [`15-llm-yaml-repair/`](15-llm-yaml-repair/) | NL → LLM builds a YAML flow → execute → on failure feed the error back → corrected flow (self-repair) | ✅ `pytest` |
 | 32 | [`32-host-ask-over-relay/`](32-host-ask-over-relay/) | drive a NAT'd node from natural language end-to-end through the `mesh.urirun.com` relay (discover + plan + execute) | ✅ `run.sh` |
 | 33 | [`33-office-automation-mcp/`](33-office-automation-mcp/) | 6 office tasks from NL over an MCP tool surface (windows/browser/email/files/calendar) — ≥10-step flows, each **verified** | ✅ `pytest` |
+| 34 | [`34-all-connectors-flow/`](34-all-connectors-flow/) | install AND use every connector via two YAML flows (`pkg://` install step + a route per connector); 7 ran · 8 config-gated · 0 broken | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
