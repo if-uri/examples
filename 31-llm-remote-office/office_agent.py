@@ -39,6 +39,10 @@ DEFAULT_NODE = "http://192.168.188.201:8765"
 PLACEHOLDERS = {"{target}": None, "{session}": None, "{host}": None,
                 "{monitor}": "0", "{image_id}": "latest"}
 
+# The schemes that make "office work" (browse/type/click/screenshot/document) possible.
+# A node serving only base routes (env/log/proc/shell) can't do any of it.
+OFFICE_SCHEMES = {"browser", "him", "kvm", "urioffice", "screen"}
+
 
 # --------------------------------------------------------------------------- env
 def load_env(path: str | None = None) -> None:
@@ -251,6 +255,17 @@ def main() -> int:
     hlog(f"goal      : {args.goal}")
     hlog(f"planner   : {planner}  (model={os.environ.get('URIRUN_OFFICE_MODEL') or os.environ.get('LLM_MODEL') or 'n/a'})")
     hlog(f"plan      : {len(plan)} step(s)")
+
+    # If the node exposes no office capabilities, the model can only fall back to base
+    # routes — say so loudly rather than letting it look like a planning failure.
+    present = {s["uri"].split("://", 1)[0] for s in space}
+    missing = OFFICE_SCHEMES - present
+    if missing == OFFICE_SCHEMES:
+        hlog(f"\n  ⚠ node '{node.name}' exposes only {len(space)} base routes "
+             f"({', '.join(sorted(present))}) — no office actions "
+             f"({', '.join(sorted(OFFICE_SCHEMES))}).")
+        hlog(f"  ⚠ run  ./node_serve.sh  on the node ({args.node}) to enable them, "
+             f"then re-run this command.")
     node.log(f"[host] new task: {args.goal!r} ({len(plan)} steps, planner={planner})")
 
     results: list[dict] = []
