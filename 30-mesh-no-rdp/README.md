@@ -24,21 +24,38 @@ curl -fsSL https://get.urirun.com/node.sh | bash -s -- --name officepc --service
 # on the controlling machine (the "host"):
 curl -fsSL https://get.urirun.com/host.sh | bash -s -- --name studio \
      --add-node officepc=http://192.168.1.20:8765
+HC=~/.urirun-host/mesh.json     # host.sh stores the mesh config here — always pass it
 
-# control it (no RDP) — only the routes the node exposed, each policy-gated:
-urirun host nodes                  # see registered nodes + their routes
+# control it (no RDP). ALWAYS pass --config, or host commands look in ./.urirun and show (none):
+urirun host nodes  --config "$HC"     # registered nodes
+urirun host routes --config "$HC"     # the exact URIs each node exposes
+curl -s http://192.168.1.20:8765/routes | python3 -m json.tool   # ask the node directly
+
+# call a route the default node actually serves (env/proc/shell/log), namespaced under
+# the node's --name. `node.sh --name officepc` -> routes live under `…://officepc/…`:
 curl -s -X POST http://192.168.1.20:8765/run -H 'Content-Type: application/json' \
-     -d '{"uri":"sh://officepc/command/run","payload":{"cmd":"uptime"}}'
+     -d '{"uri":"shell://officepc/command/uname","payload":{}}'
+curl -s -X POST http://192.168.1.20:8765/run -H 'Content-Type: application/json' \
+     -d '{"uri":"env://officepc/runtime/query/health","payload":{}}'
 
 # shut down on each machine:
 systemctl --user disable --now urirun-node     # node (installed with --service)
 # or just stop the process if started in the foreground
 ```
 
-The node's security boundary is its **`--allow` globs + each route's input schema**.
-A controller can only call exposed routes, and only with permitted arguments — e.g. the
-demo's `sh://…/command/run` accepts an `enum` of whitelisted commands, so `rm -rf /` is
-rejected before it ever runs.
+> **Two gotchas that bite first-timers**
+> 1. `urirun host nodes` with no `--config` reads `./.urirun/mesh.json` and prints `(none)`.
+>    The mesh `host.sh` created is at `~/.urirun-host/mesh.json` — pass `--config "$HC"`.
+> 2. A node's routes are namespaced under **its own `--name`** (defaulting to the machine's
+>    *hostname*), **not** the alias you used in `--add-node alias=URL`. If you ran `node.sh`
+>    without `--name`, run `curl http://NODE:8765/routes` to see the real scheme/name, e.g.
+>    `shell://lenovo/command/uname`. The default node has **no** `sh://…/command/run` route —
+>    that scheme belongs to this example's own `mesh_local.sh` registry below.
+
+The node's security boundary is its **`--allow` globs + each route's input schema**. A
+controller can only call exposed routes, and only with permitted arguments — e.g.
+`shell://…/command/which` takes a `binary` param, and the local-demo's `sh://…/command/run`
+accepts an `enum` of whitelisted commands, so `rm -rf /` is rejected before it ever runs.
 
 ## Run the whole thing locally (two nodes + a host)
 
