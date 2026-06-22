@@ -70,15 +70,17 @@ Adoption is a real contract check, not a rubber stamp:
   so the grammar check stays demonstrated.
 - **non-connector manifests are skipped** — `tellmesh/manifest.yaml` is a
   monorepo-dropin descriptor (`package`/`layout`/`adds`), not a capability pack, so it
-  yields 0 routes and is reported as `skip (not a connector manifest)`.
+  contributes 0 routes and the tree walk passes over it.
 - **handlers stay declarative** — a route's `python://pkg:func` handler is recorded as
-  the `local-function` adapter; **dry-run** resolves and validates the route without
-  importing the tellmesh package, so the whole tree verifies even if not every pack is
-  installed. `--execute` is what actually imports and calls the handler.
+  the `local-function` adapter with a re-importable `python: {module, export}` descriptor.
+  **dry-run** resolves and validates the route without importing the tellmesh package, so
+  the whole tree verifies even if not every pack is installed; **`--execute`** hydrates the
+  descriptor and calls the handler in-process — see example 25 for a multi-step flow that
+  executes adopted packs end to end.
 
 ## Files
 
-- `adopt.sh` — adopt every tellmesh manifest, validate, merge-compile, dispatch-smoke.
+- `adopt.sh` — one `adopt-pack <dir>` over the tree → merged bindings + registry, validated.
 - `manifests/` — bundled so the example/test run without tellmesh: `uriocr.manifest.yaml`
   (a real pack, adopts cleanly) and `flat-uri-bad.manifest.yaml` (synthetic, the
   rejected flat-URI shape).
