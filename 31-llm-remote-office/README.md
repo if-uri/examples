@@ -143,6 +143,21 @@ urirun host deploy lenovo --bindings node-office.bindings.json \
 > the office handlers, the tellmesh runtime present). After that, every update —
 > new bindings, new allow policy, new handler code — is host-driven over HTTP.
 
+### Managing many nodes
+
+```bash
+urirun node list                       # every running node on THIS machine (any port)
+urirun node list --host 192.168.188.201 --ports 8765-8820   # probe a remote range
+urirun node stop --port 8766           # stop one instance (repeatable)
+urirun node stop --all                 # stop every running node on this machine
+uri-copy-id 192.168.188.201            # enroll your key on one node
+urirun host copy-id --all              # …or on every node in the mesh config
+```
+
+`node.sh`'s free-port fallback (8765 busy → next port) is why duplicates appear;
+`node list` finds them all, `node stop` clears them. (systemd `--user` services respawn
+on kill — disable those with `systemctl --user disable --now urirun-node`.)
+
 ## Both-sides logging (the point of the setup)
 
 Every run is recorded twice, and the host reads the node's log back so you can confirm
