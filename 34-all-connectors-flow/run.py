@@ -48,20 +48,9 @@ def write_flow(path: str, task: str, allow: list[str], steps: list[dict]) -> dic
 
 
 def run_flow(registry: dict, steps: list[dict]) -> list[dict]:
-    out = []
-    for s in steps:
-        uri, payload = s["uri"], s.get("payload", {})
-        scheme = uri.split("://", 1)[0]
-        env = urirun.run(uri, registry, payload, mode="execute", policy=urirun.policy(allow=[f"{scheme}://*"]))
-        data = urirun.result_data(env)
-        if isinstance(data, dict) and "stdout" in data:
-            try:
-                data = json.loads(data["stdout"])
-            except (ValueError, TypeError):
-                pass
-        ok = bool(env.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
-        out.append({"id": s.get("id"), "uri": uri, "ok": ok, "data": data})
-    return out
+    # urirun.run_steps does the per-step run + per-scheme policy + result unwrap
+    # (incl. argv stdout JSON) that this example used to spell out by hand.
+    return urirun.run_steps(steps, registry, execute=True, stop_on_error=False)
 
 
 def merged_registry() -> tuple[dict, dict]:

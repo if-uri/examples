@@ -53,17 +53,9 @@ def mcp_tools(registry: dict) -> list[dict]:
 
 
 def run_step(registry: dict, uri: str, payload: dict) -> dict:
-    scheme = uri.split("://", 1)[0]
-    env = urirun.run(uri, registry, payload, mode="execute", policy=urirun.policy(allow=[f"{scheme}://*"]))
-    data = urirun.result_data(env)
-    # argv-template routes return {stdout: "<json>"} — unwrap the tool's own JSON
-    if isinstance(data, dict) and "stdout" in data:
-        try:
-            data = json.loads(data["stdout"])
-        except (ValueError, TypeError):
-            pass
-    ok = bool(env.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
-    return {"ok": ok, "data": data}
+    # urirun.run_steps does the per-scheme policy + run + result unwrap (incl. the
+    # argv stdout JSON) this example used to do by hand.
+    return urirun.run_steps([{"uri": uri, "payload": payload}], registry, execute=True)[0]
 
 
 def llm_planner(tools: list[dict], model: str, base_url: str, provider: str):
