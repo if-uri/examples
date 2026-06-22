@@ -19,6 +19,16 @@ python3 agent.py "check and read https://example.com" --allow-commands
 python3 agent.py "..." --json     # machine-readable trace
 ```
 
+### Ready-to-run YAML flow
+
+The plan this agent produces is also committed as a runnable flow of real URIs —
+run it directly, no planner/LLM:
+
+```bash
+python3 agent.py --flow flows/web-recon.yaml --allow-commands
+# time:// -> httpcheck:// -> browser:// -> log://   (see flows/web-recon.yaml)
+```
+
 Example output:
 
 ```
