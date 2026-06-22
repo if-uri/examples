@@ -4,7 +4,7 @@
     "name": "node-a",
     "registry": "/home/tom/github/if-uri/examples/30-mesh-no-rdp/generated/node-a.registry.json",
     "host": "127.0.0.1",
-    "port": 48947,
+    "port": 48687,
     "execute": true
   }
 }

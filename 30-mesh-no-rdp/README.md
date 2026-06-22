@@ -65,8 +65,9 @@ It simulates two computers as local nodes and a controller, end to end:
   cannot do anything the node didn't publish.
 - **Structured, not pixels** — every call returns JSON you can pipe, test, and chain
   (see examples 25–29 for flows and agents over exactly these routes).
-- **NAT-friendly relay** — for hosts on the open internet (not the same LAN), example 31
-  routes the same `/run` calls through a PHP relay at `mesh.urirun.com`.
+- **NAT-friendly relay** — for hosts on the open internet (not the same LAN), the
+  `mesh-urirun-com` repo (`mesh.urirun.com`) routes the same `/run` calls through a small
+  PHP relay so both sides only need outbound HTTP — no inbound ports, no port-forwarding.
 
 ## Files
 
