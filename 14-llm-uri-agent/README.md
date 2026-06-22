@@ -41,6 +41,49 @@ Example output:
 - **`agent.py`** — `load_registry()` → `action_space()` → `plan()` → `run_step()`.
   `plan()` is deterministic so the demo runs in CI.
 
+## Reusing the real `browser-control` connector
+
+The browser route doesn't have to be the `tools.py` stub. When the sibling package
+[`urirun-connector-browser-control`](../../urirun-connector-browser-control) is
+checked out next to this repo, `agent.py` **reuses it** for the whole `browser://`
+surface — the same registry, but backed by the packaged connector instead of the
+demo stub:
+
+```text
+without connector:  browser://chrome/page/query/dom            (tools.py stub)
+with connector:     browser://chrome/page/query/dom            ┐
+                    browser://chrome/page/query/text           │ urirun-connector-
+                    browser://chrome/page/command/screenshot   │ browser-control
+                    browser://desktop/page/command/open        │
+                    browser://desktop/page/command/screenshot  ┘
+```
+
+The connector exposes its routes as in-process `local-function` handlers (no argv,
+and the live ref is stripped from the serializable bindings), so the agent drives
+it **as an external tool over its derived CLI**.
+`agent.browser_control_bindings()` loads the connector straight from the checkout
+(adds the package dir to `sys.path`/`PYTHONPATH`, no install needed) and, for each
+route, synthesizes an `argv-template` binding that calls
+`python -m urirun_connector_browser_control.core <subcommand> --flags` — subcommand
+= `meta.cliAlias` or the last URI segment, flags from the schema, `--execute`
+appended for `external` routes. `load_registry()` then drops the inline `browser://`
+stub and merges in the connector's routes; the planner prefers the connector-only
+`page/query/text` route, and `run_step` unwraps the handler result from the run
+envelope (`result.value`). The run banner reports which backend is active:
+
+```bash
+python3 agent.py "check and read https://example.com"
+# action space: 8 routes  (browser: urirun-connector-browser-control)
+#   ✓ browser://chrome/page/query/text   read the page
+#       -> {"connector": "browser-control", "ok": true, ...}
+```
+
+If the connector isn't present the agent silently falls back to the `tools.py`
+stub (`browser: tools.py (inline stub)`), so the example still runs standalone.
+This is the point of the URI + registry substrate: a connector is *plugged into*
+the agent's action space without changing the loop — see
+[`../18-connector-transport`](../18-connector-transport/).
+
 ## Built into urirun
 
 This loop now ships as a runtime command — point it at any compiled registry:

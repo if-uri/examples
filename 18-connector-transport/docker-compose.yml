@@ -1,0 +1,36 @@
+# Connect a urirun connector to ANY runtime over ANY transport.
+#
+#   domain-monitor connector  ->  urirun_bindings()  ->  compiled registry
+#     ->  served over HTTP by `urirun node serve`  (the transport)
+#     ->  driven by a client that does NOT have the connector installed
+#         (only the URI + HTTP contract).
+name: urirun-connector-transport
+services:
+  target:                       # the site being monitored
+    image: nginx:alpine
+    networks: [mesh]
+
+  node:                         # runtime: serves the connector over HTTP
+    image: python:3.13-slim
+    working_dir: /app
+    volumes:
+      - ../../urirun/adapters/python:/src/urirun:ro      # local urirun (has node serve --allow)
+      - ../../urirun-connector-domain-monitor:/src/connector:ro
+      - ./node:/app:ro
+    command: ["bash", "serve.sh"]
+    networks: [mesh]
+    ports: ["8765:8765"]
+
+  client:                       # NO connector installed — talks HTTP only
+    image: python:3.13-slim
+    working_dir: /app
+    volumes:
+      - ../../urirun/adapters/python:/src/urirun:ro
+      - ./client:/app:ro
+    command: ["bash", "call.sh"]
+    depends_on: [node, target]
+    networks: [mesh]
+
+networks:
+  mesh:
+    driver: bridge

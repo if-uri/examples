@@ -19,16 +19,99 @@ import os
 import subprocess
 import sys
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def _ensure_urirun() -> None:
+    """Let `import urirun` work even when it isn't installed in the active
+    interpreter, by falling back to the adapter checkout beside this repo. This
+    keeps `pytest`/`python3 agent.py` runnable from any environment (e.g. a base
+    conda) without first activating the examples venv."""
+    try:
+        import urirun  # noqa: F401
+    except ModuleNotFoundError:
+        candidate = os.path.normpath(os.path.join(HERE, "..", "..", "urirun", "adapters", "python"))
+        if os.path.isdir(candidate) and candidate not in sys.path:
+            sys.path.insert(0, candidate)
+            # propagate to child processes (the browser connector cli imports urirun too)
+            os.environ["PYTHONPATH"] = os.pathsep.join(
+                p for p in (candidate, os.environ.get("PYTHONPATH", "")) if p
+            )
+
+
+_ensure_urirun()
+
 import urirun
 from urirun.runtime import _runtime
 
-HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = [sys.executable, os.path.join(HERE, "tools.py")]
+
+# The real browser connector lives beside this repo as a sibling package. When it
+# is present we reuse it instead of tools.py's inline browser:// route — the same
+# action space, but backed by a packaged connector (headless Chrome dom/text/
+# screenshot + desktop open) rather than a demo stub.
+BROWSER_CONNECTOR_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "urirun-connector-browser-control"))
+
+
+BROWSER_CONNECTOR_MODULE = "urirun_connector_browser_control.core"
+
+
+def browser_control_bindings() -> dict | None:
+    """Reuse the `urirun-connector-browser-control` package when available.
+
+    The connector now exposes its routes as in-process ``local-function`` handlers
+    (no argv, and the live ref is stripped from the serializable bindings). So the
+    agent drives it as an **external tool over its derived CLI**: for each route we
+    synthesize an ``argv-template`` binding that calls
+    ``python -m urirun_connector_browser_control.core <subcommand> --flags`` —
+    subcommand = ``meta.cliAlias`` or the last URI segment, flags from the schema.
+    ``external`` routes get ``--execute`` appended so the step actually runs once
+    the agent's policy has decided to run it (queries freely, commands when allowed).
+
+    The connector dir is added to ``sys.path``/``PYTHONPATH`` so it imports here and
+    in the spawned subprocess — no install needed. Returns None when the connector
+    can't be loaded, in which case the agent falls back to tools.py's inline route.
+    """
+    if os.path.isdir(BROWSER_CONNECTOR_DIR):
+        if BROWSER_CONNECTOR_DIR not in sys.path:
+            sys.path.insert(0, BROWSER_CONNECTOR_DIR)
+        os.environ["PYTHONPATH"] = os.pathsep.join(
+            p for p in (BROWSER_CONNECTOR_DIR, os.environ.get("PYTHONPATH", "")) if p
+        )
+    try:
+        import urirun_connector_browser_control as browser_control
+    except Exception:  # noqa: BLE001 - connector is optional; fall back to the stub
+        return None
+    doc = browser_control.urirun_bindings()
+    rebuilt: dict = {}
+    for uri, binding in (doc.get("bindings") or {}).items():
+        meta = binding.get("meta") or {}
+        subcommand = meta.get("cliAlias") or uri.rsplit("/", 1)[-1]
+        argv = [sys.executable, "-m", BROWSER_CONNECTOR_MODULE, subcommand]
+        for prop in ((binding.get("inputSchema") or {}).get("properties") or {}):
+            argv += [f"--{prop}", f"{{{prop}}}"]
+        if meta.get("external"):
+            argv.append("--execute")
+        rebuilt[uri] = {**binding, "adapter": "argv-template", "kind": "command", "argv": argv}
+    doc["bindings"] = rebuilt
+    return doc
 
 
 def load_registry() -> dict:
     raw = subprocess.run(TOOLS + ["bindings"], capture_output=True, text=True, check=True).stdout
-    return urirun.compile_registry(json.loads(raw))
+    doc = json.loads(raw)
+    connector = browser_control_bindings()
+    if connector and connector.get("bindings"):
+        # the packaged connector owns the browser:// surface; drop tools.py's stub
+        doc["bindings"] = {k: v for k, v in doc["bindings"].items() if not k.startswith("browser://")}
+        doc["bindings"].update(connector["bindings"])
+    return urirun.compile_registry(doc)
+
+
+def browser_backend(registry: dict) -> str:
+    """Which connector serves the browser:// routes in this registry."""
+    uris = {r["uri"] for r in urirun.list_routes(registry)}
+    return "urirun-connector-browser-control" if "browser://desktop/page/command/open" in uris else "tools.py (inline stub)"
 
 
 def action_space(registry: dict) -> list[dict]:
@@ -52,11 +135,25 @@ def plan(goal: str, routes: list[dict]) -> list[dict]:
         steps.append({"uri": "time://host/clock/query/now", "payload": {}, "why": "stamp the run"})
     if "httpcheck://host/url/query/status" in have:
         steps.append({"uri": "httpcheck://host/url/query/status", "payload": {"url": url}, "why": "is the site up?"})
-    if "browser://chrome/page/query/dom" in have:
-        steps.append({"uri": "browser://chrome/page/query/dom", "payload": {"url": url, "max": 300}, "why": "read the page"})
+    # the real connector adds a cleaner page/query/text route; prefer it when present
+    read_uri = next((u for u in ("browser://chrome/page/query/text", "browser://chrome/page/query/dom") if u in have), None)
+    if read_uri:
+        steps.append({"uri": read_uri, "payload": {"url": url, "max": 300}, "why": "read the page"})
     if "log://host/run/command/write" in have:
         steps.append({"uri": "log://host/run/command/write", "payload": {"event": "agent-run", "detail": url}, "why": "record the run"})
     return steps
+
+
+def _result_data(data):
+    """Unwrap a connector's handler result from the run envelope.
+
+    Handler (``local-function``) routes return their value under
+    ``result.value``; argv routes that print a plain result dict are returned
+    as-is. (This is the consumer-side accessor the SDK still lacks as
+    ``urirun.result_data``.)"""
+    if isinstance(data, dict) and isinstance(data.get("result"), dict) and "value" in data["result"]:
+        return data["result"]["value"]
+    return data
 
 
 def run_step(registry: dict, step: dict, *, allow_commands: bool) -> dict:
@@ -73,6 +170,7 @@ def run_step(registry: dict, step: dict, *, allow_commands: bool) -> dict:
             data = json.loads(stdout) if stdout else exec_out
         except json.JSONDecodeError:
             data = {"stdout": stdout}
+        data = _result_data(data)
         ok = bool(result.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
         return {"ran": True, "ok": ok, "data": data}
     return {"ran": False, "skipped": "command not permitted (pass --allow-commands)", "uri": uri}
@@ -94,12 +192,12 @@ def main(argv: list[str] | None = None) -> int:
         outcome = run_step(registry, step, allow_commands=args.allow_commands)
         trace.append({**step, **outcome})
 
-    report = {"goal": args.goal, "actionSpace": routes, "steps": trace,
+    report = {"goal": args.goal, "browser": browser_backend(registry), "actionSpace": routes, "steps": trace,
               "ok": all(s.get("ok", True) for s in trace if s.get("ran"))}
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))
     else:
-        print(f"goal: {args.goal}\naction space: {len(routes)} routes")
+        print(f"goal: {args.goal}\naction space: {len(routes)} routes  (browser: {report['browser']})")
         for s in trace:
             mark = "·" if not s.get("ran") else ("✓" if s.get("ok") else "✗")
             print(f"  {mark} {s['uri']:42} {s.get('why','')}")

@@ -4,11 +4,10 @@ ifneq ($(VENV_BIN),)
 export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
 
-.PHONY: help serve test
+.PHONY: help run test
 help: ## Show commands
 	@grep -E "^[a-zA-Z_-]+:.*?## .*$$" $(MAKEFILE_LIST) | awk "BEGIN{FS=\":.*?## \"}{printf \"  %-6s %s\\n\",\$$1,\$$2}"
-serve: ## Serve the directory over HTTP
-	python3 -m http.server 0
-
-test: ## Run the example test
-	echo make-test
+run: ## Run the secrets-by-reference demo
+	python3 secret_demo.py
+test: ## Run the secret example test
+	python3 -m pytest test_secret_example.py -q

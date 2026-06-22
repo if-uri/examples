@@ -4,11 +4,11 @@ ifneq ($(VENV_BIN),)
 export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
 
-.PHONY: help serve test
+.PHONY: help run test
 help: ## Show commands
 	@grep -E "^[a-zA-Z_-]+:.*?## .*$$" $(MAKEFILE_LIST) | awk "BEGIN{FS=\":.*?## \"}{printf \"  %-6s %s\\n\",\$$1,\$$2}"
-serve: ## Serve the directory over HTTP
-	python3 -m http.server 0
-
-test: ## Run the example test
-	echo make-test
+run: ## Start the mesh dashboard + controller
+	python3 controller.py
+test: ## Run the device-agent policy + GUI smoke tests
+	python3 tests/device_agent_policy.py
+	python3 tests/gui_smoke.py

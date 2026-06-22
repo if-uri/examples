@@ -79,7 +79,11 @@ def _chrome_bin() -> str | None:
 
 def browser_dom(url: str, max_chars: int = 600) -> dict:
     """Read page text via headless Chrome (CDP-less one-shot). Falls back to a dry
-    plan when no Chrome binary is present, so the demo runs anywhere."""
+    plan when no Chrome binary is present, so the demo runs anywhere.
+
+    This is the inline stub. When the `urirun-connector-browser-control` package is
+    available, agent.py reuses that real connector for the browser:// routes instead
+    (see agent.browser_control_bindings)."""
     chrome = _chrome_bin()
     if not chrome:
         return {"ok": True, "dryRun": True, "url": url, "tool": "chrome --headless --dump-dom",

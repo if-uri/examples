@@ -7,8 +7,7 @@ endif
 .PHONY: help serve test
 help: ## Show commands
 	@grep -E "^[a-zA-Z_-]+:.*?## .*$$" $(MAKEFILE_LIST) | awk "BEGIN{FS=\":.*?## \"}{printf \"  %-6s %s\\n\",\$$1,\$$2}"
-serve: ## Serve the directory over HTTP
-	python3 -m http.server 0
-
-test: ## Run the example test
-	echo make-test
+serve: ## Start the HTML URI app backend
+	bash run.sh
+test: ## Run the frontend/contract test
+	node test.mjs

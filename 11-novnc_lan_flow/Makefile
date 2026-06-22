@@ -1,3 +1,9 @@
+# Prefer the examples venv (../venv) so targets run without activating it first.
+VENV_BIN := $(wildcard ../venv/bin)
+ifneq ($(VENV_BIN),)
+export PATH := $(abspath $(VENV_BIN)):$(PATH)
+endif
+
 .PHONY: up up-full flow flow-full test test-full down logs clean help
 
 up:

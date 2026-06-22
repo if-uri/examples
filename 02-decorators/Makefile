@@ -4,11 +4,10 @@ ifneq ($(VENV_BIN),)
 export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
 
-.PHONY: help serve test
+.PHONY: help run test
 help: ## Show commands
 	@grep -E "^[a-zA-Z_-]+:.*?## .*$$" $(MAKEFILE_LIST) | awk "BEGIN{FS=\":.*?## \"}{printf \"  %-6s %s\\n\",\$$1,\$$2}"
-serve: ## Serve the directory over HTTP
-	python3 -m http.server 0
-
-test: ## Run the example test
-	echo make-test
+run: ## Generate bindings + dry-run from the decorators
+	python3 example.py
+test: ## Same as run — it self-checks
+	python3 example.py

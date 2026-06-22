@@ -4,11 +4,11 @@ ifneq ($(VENV_BIN),)
 export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
 
-.PHONY: help serve test
+.PHONY: help run test down
 help: ## Show commands
 	@grep -E "^[a-zA-Z_-]+:.*?## .*$$" $(MAKEFILE_LIST) | awk "BEGIN{FS=\":.*?## \"}{printf \"  %-6s %s\\n\",\$$1,\$$2}"
-serve: ## Serve the directory over HTTP
-	python3 -m http.server 0
-
-test: ## Run the example test
-	echo make-test
+run: ## Run the connector-over-HTTP demo (docker compose)
+	docker compose up --abort-on-container-exit --exit-code-from client
+test: run ## Same as run — the client asserts the contract
+down: ## Tear down the demo stack
+	docker compose down -v --remove-orphans

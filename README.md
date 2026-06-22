@@ -31,6 +31,10 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 15 | [`15-declarative-http/`](15-declarative-http/) | declarative HTTP/REST connectors from a TOML spec (httpbin + KSeF 2.0), templated url/headers/body | ✅ host run |
 | 16 | [`16-secrets/`](16-secrets/) | `secret://` / `getv://` — credentials by reference, execute-only, deny-by-default, redacted, no leak | ✅ `pytest` |
 | 17 | [`17-flows/`](17-flows/) | usage scenarios as flows in txt / bash / YAML; `run_flow.py` runner with policy + result chaining | ✅ `pytest` |
+| 18 | [`18-connector-transport/`](18-connector-transport/) | docker-compose: serve any connector (domain-monitor) over HTTP via `urirun node serve`; a client with no connector drives it over the URI contract | ✅ `docker compose up` |
+| 19 | [`19-all-connectors/`](19-all-connectors/) | check all 17 connectors (Python/PHP/Go/JS) through one contract: bindings→validate→compile→run | ✅ `pytest` |
+| 20 | [`20-runtime-transport-matrix/`](20-runtime-transport-matrix/) | the thesis: connectors in Go/PHP/JS/Python × transports inprocess/queue(MQTT)/HTTP/MCP — identical output | ✅ `pytest` |
+| 21 | [`21-generate-from-binding/`](21-generate-from-binding/) | generate protobuf/gRPC + OpenAPI + a typed client from one URI binding spec (typed `inputSchema`) | ✅ `pytest` |
 | 14 | [`14-llm-uri-agent/`](14-llm-uri-agent/) | LLM-over-URI agent loop: registry as action space, drive Chrome + tools by URI under policy | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
