@@ -137,12 +137,30 @@ def __getattr__(name: str) -> Callable:
     triggers an import; only an actual call does."""
     route = _BY_EXPORT.get(name)
     if route is None:
-        raise AttributeError(name)
+        # Real attribute miss -> AttributeError; but an `h_*` export the pushed bindings
+        # reference, absent here, means the tellmesh manifests aren't on THIS node. Return
+        # a handler that reports that cleanly rather than raising (which would, on some
+        # urirun builds, kill the request mid-flight).
+        if not name.startswith("h_"):
+            raise AttributeError(name)
+
+        def missing(**payload: Any) -> Any:
+            return {"ok": False, "error": "tellmesh manifests not found on this node",
+                    "export": name, "tellmesh_dir": str(TELLMESH_DIR),
+                    "hint": "set TELLMESH_DIR to a full tellmesh checkout (pack manifests + uricontrol/)"}
+
+        return missing
     mod_name, _, func_name = route["ref"].partition(":")
 
     def handler(**payload: Any) -> Any:
         _ensure_paths()
-        fn = getattr(importlib.import_module(mod_name), func_name)
+        try:
+            fn = getattr(importlib.import_module(mod_name), func_name)
+        except Exception as exc:  # noqa: BLE001 — return a legible error, never crash the request
+            return {"ok": False, "error": f"{type(exc).__name__}: {exc}",
+                    "operation": route["operation"], "tellmesh_dir": str(TELLMESH_DIR),
+                    "hint": "tellmesh packs not importable on this node — set TELLMESH_DIR "
+                            "to a full tellmesh checkout (with uricontrol/) or pip install them"}
         return fn(payload, CONTEXT)
 
     globals()[name] = handler  # cache so urirun's re-import path finds it directly
