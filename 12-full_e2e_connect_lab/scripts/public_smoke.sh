@@ -35,6 +35,8 @@ bash -n "$tmp/node.sh"
 
 curl -fsSL 'https://connect.ifuri.com/install?connectors=planfile' -o "$tmp/connect-install.sh"
 bash -n "$tmp/connect-install.sh"
-grep -q 'planfile>=0.1.103' "$tmp/connect-install.sh"
+# The hub installs the planfile connector (pip version pin or git pip-spec —
+# accept either so a connector version bump on the live hub doesn't break smoke).
+grep -qE "urirun-connector-planfile|planfile>=" "$tmp/connect-install.sh"
 
 echo "public smoke OK"
