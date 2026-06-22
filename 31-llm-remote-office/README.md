@@ -103,10 +103,25 @@ served) plus outbound HTTPS — so it works even with `deploy:false` and closed 
 **bypassing the `uri-copy-id`/`/deploy` enrollment entirely**. The node's own
 `--allow` still gates every job; the relay never executes anything.
 
-> The NL→LLM office loop (`office_cli.sh`/`office_agent.py`) currently expects a
-> synchronous `NODE_URL` `/run`; the relay is enqueue+poll, so over the relay you
-> drive via `mesh-run.sh`. Making `office_cli` target the relay transparently (a
-> service-map adapter) is the natural next step.
+### Run the NL→LLM office loop THROUGH the relay (transparent)
+
+`office_agent.py` POSTs `{uri, payload}` to `NODE_URL/run`. `mesh-urirun-com`'s
+`mesh-proxy.py` is a local `/run` endpoint that tunnels to the relay — so just
+point `NODE_URL` at it and the whole loop runs over `mesh.urirun.com`, no other
+change:
+
+```bash
+# host: start the transparent proxy (enqueue+poll the relay behind a local /run)
+MESH_RELAY=https://mesh.urirun.com MESH_TOKEN=$SECRET \
+  python3 ../../mesh-urirun-com/clients/mesh-proxy.py --node lenovo --port 8090 &
+
+# now the natural-language office loop drives the remote node through the relay:
+NODE_URL=http://127.0.0.1:8090 ./office_cli.sh "list the top processes" --yes
+```
+
+The same proxy serves `urirun host ask` / `flow://` via `URI_SERVICE_MAP`
+(`{"lenovo":"http://127.0.0.1:8090"}`) — see the
+[relay README](../../mesh-urirun-com#transparent-drive-it-from-uriruns-own-runtime).
 
 ## Provision the node FROM the host (no SSH) — `POST /deploy`
 
