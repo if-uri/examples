@@ -43,6 +43,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 34 | [`34-all-connectors-flow/`](34-all-connectors-flow/) | install AND use every connector via two YAML flows (`pkg://` install step + a route per connector); 7 ran · 8 config-gated · 0 broken | ✅ `pytest` |
 | 35 | [`35-deploy-lenovo-surface/`](35-deploy-lenovo-surface/) | deploy a browser/office/tools surface onto a remote node over POST /deploy (no SSH); real headless-Chrome control from the host | ✅ live on a node |
 | 36 | [`36-remote-browser-cdp/`](36-remote-browser-cdp/) | control a remote browser over Chrome DevTools Protocol (`browser://<node>/cdp/*`) — launch/navigate/eval-JS/screenshot/tabs; Wayland-safe, no input tools | ✅ `e2e.sh` (local) + live on a node |
+| 37 | [`37-closed-loop-automation/`](37-closed-loop-automation/) | three closed-loop automation patterns (self-repair · goal-verify · agent) — NL→YAML flow→execute→feedback→re-plan, pluggable LLM/heuristic/stub planner | ✅ `pytest` (offline) + live on a node |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
