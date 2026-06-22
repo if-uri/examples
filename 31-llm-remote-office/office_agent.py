@@ -27,6 +27,7 @@ import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -74,6 +75,7 @@ class Node:
         self.routes = _get(self.base + "/routes").get("routes", [])
 
     def concretize(self, uri: str) -> str:
+        uri = urllib.parse.unquote(uri)  # /routes percent-encodes braces: %7Bmonitor%7D
         for ph, default in PLACEHOLDERS.items():
             uri = uri.replace(ph, default if default is not None else self.name)
         return uri

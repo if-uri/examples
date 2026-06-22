@@ -48,10 +48,31 @@ def _ensure_imports() -> None:
                 p for p in (cand, os.environ.get("PYTHONPATH", "")) if p)
 
 
+def _load_dotenv() -> None:
+    """Load examples/.env (KEY=VALUE) into the environment without overriding
+    anything already set — so `LLM_MODEL` / `OPENROUTER_API_KEY` come from there.
+    The file is gitignored; never print or commit its contents."""
+    path = os.path.normpath(os.path.join(HERE, "..", ".env"))
+    if not os.path.isfile(path):
+        return
+    for line in open(path, encoding="utf-8"):
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, val = line.split("=", 1)
+        key = key.strip()
+        val = val.split(" #", 1)[0].strip().strip('"').strip("'")  # drop inline comments/quotes
+        if key and key not in os.environ:
+            os.environ[key] = val
+
+
 _ensure_imports()
+_load_dotenv()
 
 import urirun
 from urirun_flow import Flow, FlowError
+
+DEFAULT_LLM_MODEL = os.environ.get("LLM_MODEL") or os.environ.get("URIRUN_LLM_MODEL") or "llama3"
 
 TOOLS = [sys.executable, os.path.join(HERE, "tools.py")]
 
@@ -250,7 +271,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tries", type=int, default=3)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--llm", action="store_true", help="use a real model via llm:// (default: deterministic stub)")
-    parser.add_argument("--model", default="llama3", help="LLM model id (e.g. gemma4:e4b, openrouter/anthropic/claude-3.5-sonnet)")
+    parser.add_argument("--model", default=DEFAULT_LLM_MODEL,
+                        help="LLM model id (default from examples/.env LLM_MODEL: %(default)s)")
     parser.add_argument("--base-url", default="http://localhost:11434", help="Ollama backend (ignored for litellm models)")
     parser.add_argument("--provider", default="", help="force litellm/ollama")
     args = parser.parse_args(argv)

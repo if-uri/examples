@@ -38,10 +38,34 @@ def load_mesh_config(path: str | None) -> tuple[dict, str]:
         return json.load(handle), path
 
 
-def mesh_runner(uri, registry, payload, _allow):
-    """Forward one step to the remote node that owns its target (the node's own
-    --allow is the gate; the host-side allow is unused for forwarded routes)."""
-    return v2_service.call(uri, payload, registry=registry, mode="execute")
+def make_mesh_runner(mode: str = "execute"):
+    """A step runner that forwards to the remote node owning the target. In
+    ``dry-run`` the node is never touched — ``v2_service.call`` still validates the
+    payload against the node's published schema, so a bad LLM flow is caught (and
+    repaired) before anything executes. The node's own --allow is the real gate."""
+    def runner(uri, registry, payload, _allow):
+        return v2_service.call(uri, payload, registry=registry, mode=mode)
+    return runner
+
+
+def _load_env_file(path: str) -> None:
+    """Minimal .env loader (KEY=VALUE) so OPENROUTER_API_KEY / LLM_MODEL are set."""
+    try:
+        for line in open(path, encoding="utf-8"):
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+    except OSError:
+        pass
+
+
+def litellm_ask(_llm_registry, prompt: str, *, model: str, base_url: str) -> str:
+    """Generate via litellm — works natively with OpenRouter/OpenAI/Anthropic/Ollama
+    (model prefix + matching *_API_KEY), unlike the Ollama-only llm:// connector."""
+    from litellm import completion
+    resp = completion(model=model, messages=[{"role": "user", "content": prompt}], temperature=0)
+    return resp["choices"][0]["message"]["content"]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -52,7 +76,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", default=os.getenv("URIRUN_LLM_MODEL", "llama3"))
     ap.add_argument("--base-url", default=os.getenv("URIRUN_LLM_BASE_URL", "http://localhost:11434"))
     ap.add_argument("--max-attempts", type=int, default=3)
+    ap.add_argument("--dry-run", action="store_true",
+                    help="generate + validate the flow against the node's schemas, but do not execute on the node")
+    ap.add_argument("--litellm", action="store_true",
+                    help="generate with litellm (OpenRouter/OpenAI/…) instead of the Ollama llm:// connector")
+    ap.add_argument("--env-file", help="load KEY=VALUE (e.g. OPENROUTER_API_KEY, LLM_MODEL) before generating")
     args = ap.parse_args(argv)
+
+    if args.env_file:
+        _load_env_file(args.env_file)
+        args.model = os.getenv("LLM_MODEL", args.model)
 
     config, path = load_mesh_config(args.config)
     print(f"mesh: {path}")
@@ -72,14 +105,21 @@ def main(argv: list[str] | None = None) -> int:
     allow = [f"{s}://*" for s in schemes]
     print(f"nodes: {sorted({r.get('node') for r in routes})} · routes: {len(routes)} · schemes: {schemes}")
 
-    # 2) the LLM that writes the flow runs locally (the host's own llm:// connector)
-    import urirun_connector_llm.core as llm
-    llm_registry = llm.conn.registry()
+    # 2) pick the LLM that writes the flow
+    if args.litellm:
+        ask, llm_registry = litellm_ask, {}
+        print(f"llm: litellm model={args.model}")
+    else:
+        import urirun_connector_llm.core as llm
+        ask, llm_registry = repair_flow.ask_llm, llm.conn.registry()
+        print(f"llm: llm:// model={args.model} base_url={args.base_url}")
 
-    # 3) generate → forward to node → repair on failure
+    # 3) generate → forward to node (or dry-run/validate) → repair on failure
+    mode = "dry-run" if args.dry_run else "execute"
+    print(f"mode: {mode}")
     report = repair_flow.generate_run_repair(
         args.goal, registry, llm_registry, model=args.model, base_url=args.base_url,
-        allow=allow, max_attempts=args.max_attempts, runner=mesh_runner,
+        allow=allow, max_attempts=args.max_attempts, ask=ask, runner=make_mesh_runner(mode),
     )
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if report["ok"] else 1

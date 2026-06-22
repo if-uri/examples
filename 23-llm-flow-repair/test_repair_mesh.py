@@ -96,7 +96,8 @@ def test_mesh_generate_forward_repair():
 
         report = repair_flow.generate_run_repair(
             "echo hi on the node", registry, llm_registry={}, model="fake", base_url="fake",
-            allow=["demo://*"], max_attempts=3, ask=_fake_llm(), runner=repair_flow_mesh.mesh_runner,
+            allow=["demo://*"], max_attempts=3, ask=_fake_llm(),
+            runner=repair_flow_mesh.make_mesh_runner("execute"),
         )
 
         assert report["ok"] is True
