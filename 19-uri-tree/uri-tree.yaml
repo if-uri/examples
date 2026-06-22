@@ -6,37 +6,37 @@ uri_tree:
     description: Plan, group and execute daily tasks through task:// and planfile://
       URI commands.
     schemes:
-      task:
-        host:
-          tickets:
-            query:
-              list:
-                uri: task://host/tickets/query/list
-          ticket:
-            query:
-              next:
-                uri: task://host/ticket/query/next
-              show:
-                uri: task://host/ticket/query/show
-            command:
-              create:
-                uri: task://host/ticket/command/create
-              start:
-                uri: task://host/ticket/command/start
-              complete:
-                uri: task://host/ticket/command/complete
-              fail:
-                uri: task://host/ticket/command/fail
-              block:
-                uri: task://host/ticket/command/block
-              ready:
-                uri: task://host/ticket/command/ready
       planfile:
         host:
           dsl:
             command:
               run:
                 uri: planfile://host/dsl/command/run
+      task:
+        host:
+          ticket:
+            command:
+              block:
+                uri: task://host/ticket/command/block
+              complete:
+                uri: task://host/ticket/command/complete
+              create:
+                uri: task://host/ticket/command/create
+              fail:
+                uri: task://host/ticket/command/fail
+              ready:
+                uri: task://host/ticket/command/ready
+              start:
+                uri: task://host/ticket/command/start
+            query:
+              next:
+                uri: task://host/ticket/query/next
+              show:
+                uri: task://host/ticket/query/show
+          tickets:
+            query:
+              list:
+                uri: task://host/tickets/query/list
   sqlite_context_store:
     status: available
     verified: true
@@ -44,28 +44,6 @@ uri_tree:
     description: Local data, artifacts, checks and logs over data://, artifact://,
       check:// and log://.
     schemes:
-      data:
-        host:
-          datasets:
-            query:
-              list:
-                uri: data://host/datasets/query/list
-          dataset:
-            command:
-              create:
-                uri: data://host/dataset/command/create
-          record:
-            command:
-              upsert:
-                uri: data://host/record/command/upsert
-          records:
-            query:
-              search:
-                uri: data://host/records/query/search
-          sql:
-            query:
-              read-only:
-                uri: data://host/sql/query/read-only
       artifact:
         host:
           artifact:
@@ -86,6 +64,28 @@ uri_tree:
             query:
               recent:
                 uri: check://host/checks/query/recent
+      data:
+        host:
+          dataset:
+            command:
+              create:
+                uri: data://host/dataset/command/create
+          datasets:
+            query:
+              list:
+                uri: data://host/datasets/query/list
+          record:
+            command:
+              upsert:
+                uri: data://host/record/command/upsert
+          records:
+            query:
+              search:
+                uri: data://host/records/query/search
+          sql:
+            query:
+              read-only:
+                uri: data://host/sql/query/read-only
       log:
         host:
           daily:
@@ -103,24 +103,22 @@ uri_tree:
     description: HTTP, DNS reads, screenshots, logs and daily domain checks through
       URI commands.
     schemes:
-      monitor:
-        host:
-          http:
-            query:
-              status:
-                uri: monitor://host/http/query/status
-          dns:
-            query:
-              current:
-                uri: monitor://host/dns/query/current
-              expected:
-                uri: monitor://host/dns/query/expected
       browser:
         host:
           page:
             command:
               screenshot:
                 uri: browser://host/page/command/screenshot
+      flow:
+        host:
+          daily:
+            command:
+              run:
+                uri: flow://host/daily/command/run
+          domain:
+            command:
+              check:
+                uri: flow://host/domain/command/check
       log:
         host:
           daily:
@@ -131,16 +129,18 @@ uri_tree:
             query:
               recent:
                 uri: log://host/logs/query/recent
-      flow:
+      monitor:
         host:
-          domain:
-            command:
-              check:
-                uri: flow://host/domain/command/check
-          daily:
-            command:
-              run:
-                uri: flow://host/daily/command/run
+          dns:
+            query:
+              current:
+                uri: monitor://host/dns/query/current
+              expected:
+                uri: monitor://host/dns/query/expected
+          http:
+            query:
+              status:
+                uri: monitor://host/http/query/status
   http_check:
     status: available
     verified: true
@@ -175,18 +175,18 @@ uri_tree:
       dns:
         host:
           records:
+            command:
+              apply:
+                uri: dns://host/records/command/apply
+              backup:
+                uri: dns://host/records/command/backup
+              plan:
+                uri: dns://host/records/command/plan
             query:
               current:
                 uri: dns://host/records/query/current
               expected:
                 uri: dns://host/records/query/expected
-            command:
-              plan:
-                uri: dns://host/records/command/plan
-              backup:
-                uri: dns://host/records/command/backup
-              apply:
-                uri: dns://host/records/command/apply
   grpc_transport:
     status: available
     verified: true

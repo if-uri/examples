@@ -28,13 +28,23 @@ def catalog() -> list[dict]:
     return c if isinstance(c, list) else list(c.values())
 
 
-def nest(node: dict, uri: str) -> None:
-    scheme, rest = uri.split("://", 1)
-    parts = rest.split("/")               # [host, resource, kind, op, …]
-    cur = node.setdefault(scheme, {})
-    for seg in parts[:-1]:
-        cur = cur.setdefault(seg, {})
-    cur[parts[-1]] = {"uri": uri}
+def schemes_tree(uris: list[str]) -> dict:
+    """The scheme->host->path->{uri} tree. Dogfoods urirun's built-in
+    `urirun.runtime.tree.uri_tree` when urirun is installed, with a local fallback
+    so the example also runs standalone."""
+    try:
+        from urirun.runtime.tree import uri_tree
+        return uri_tree(uris)
+    except ImportError:
+        tree: dict = {}
+        for uri in sorted(set(uris)):
+            scheme, rest = uri.split("://", 1)
+            parts = rest.split("/")
+            node = tree.setdefault(scheme, {})
+            for seg in parts[:-1]:
+                node = node.setdefault(seg, {})
+            node[parts[-1]] = {"uri": uri}
+        return tree
 
 
 def build(ids: list[str]) -> dict:
@@ -50,10 +60,8 @@ def build(ids: list[str]) -> dict:
             "verified": c.get("provenance") == "verified",
             "category": c.get("category"),
             "description": c.get("summary") or c.get("description", "")[:120],
-            "schemes": {},
+            "schemes": schemes_tree(c.get("routes", [])),
         }
-        for uri in c.get("routes", []):
-            nest(entry["schemes"], uri)
         tree[slug(c.get("name", cid))] = entry
     return {"uri_tree": tree}
 
