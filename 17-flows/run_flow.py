@@ -34,27 +34,38 @@ def load(path: str) -> dict:
 
 
 def run_flow(flow: dict, base_dir: Path, *, execute: bool, allow, secret_allow) -> dict:
+    # #6: resolve the registry ONCE and share ONE warm worker pool across every
+    # step, so a flow that hits the same connector N times pays the connector's
+    # import once (not one `python -m urirun.exec` cold start per step).
     registry = v2.load_registry_arg(str(base_dir / flow["registry"]))
     policy = urirun.policy(allow=list(allow or flow.get("allow") or []),
                            secret_allow=list(secret_allow or flow.get("secretAllow") or []))
+    from urirun.runtime.worker import ConnectorPools
+
+    pools = ConnectorPools()
+    executors = mesh._pool_executors(pools)
     results: dict = {}
     timeline = []
-    for step in flow["steps"]:
-        missing = [d for d in step.get("depends_on", []) if d not in results]
-        if missing:
-            raise SystemExit(f"{step['id']} missing dependencies: {missing}")
-        payload = mesh.resolve_step_payload(step.get("payload") or {}, results)
-        env = urirun.run(step["uri"], registry, payload,
-                         mode="execute" if execute else "dry-run", policy=policy)
-        results[step["id"]] = env
-        ok = bool(env.get("ok"))
-        timeline.append({"id": step["id"], "uri": step["uri"], "ok": ok})
-        mark = "✓" if ok else "✗"
-        print(f"  {mark} {step['id']:<18} {step['uri']}")
-        if not ok:
-            reason = (env.get("decision") or {}).get("reason") or env.get("error") or "step failed"
-            print(f"      stopped: {reason}")
-            break
+    try:
+        for step in flow["steps"]:
+            missing = [d for d in step.get("depends_on", []) if d not in results]
+            if missing:
+                raise SystemExit(f"{step['id']} missing dependencies: {missing}")
+            payload = mesh.resolve_step_payload(step.get("payload") or {}, results)
+            env = urirun.run(step["uri"], registry, payload,
+                             mode="execute" if execute else "dry-run", policy=policy,
+                             executors=executors)
+            results[step["id"]] = env
+            ok = bool(env.get("ok"))
+            timeline.append({"id": step["id"], "uri": step["uri"], "ok": ok})
+            mark = "✓" if ok else "✗"
+            print(f"  {mark} {step['id']:<18} {step['uri']}")
+            if not ok:
+                reason = (env.get("decision") or {}).get("reason") or env.get("error") or "step failed"
+                print(f"      stopped: {reason}")
+                break
+    finally:
+        pools.close()
     return {"ok": all(t["ok"] for t in timeline), "timeline": timeline, "results": results}
 
 

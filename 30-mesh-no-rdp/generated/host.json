@@ -1,0 +1,17 @@
+{
+  "version": "urirun.mesh.v1",
+  "host": {
+    "name": "controller",
+    "llmModel": ""
+  },
+  "nodes": [
+    {
+      "name": "node-a",
+      "url": "http://127.0.0.1:48947"
+    },
+    {
+      "name": "node-b",
+      "url": "http://127.0.0.1:39613"
+    }
+  ]
+}

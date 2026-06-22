@@ -68,21 +68,28 @@ client (`daemon.call`) is **pure stdlib** — it never imports urirun, so a requ
 just interpreter startup + a socket round-trip.
 **Measured: 515 → 35.9 ms/call (≈14×).** `urirun/runtime/daemon.py`.
 
-### 6. Flow / batch reuse
-Flows (example 17) re-resolve the registry per step. Reuse one discovered registry + one
-worker pool across all steps of a flow.
+### 6. Flow / batch reuse — ✅ DONE
+The flow runner (example 17) already loads the registry once; now it also shares **one
+warm worker pool across every step** (`ConnectorPools` + `mesh._pool_executors`, passed
+as `executors=` to each `urirun.run`). A `HandlerPool` keeps one
+`python -m urirun.runtime.worker --handler` process alive that imports each handler ref
+**once** and calls it in-process — the pooled twin of `python -m urirun.exec`. So a flow
+hitting the same connector N times pays its import once instead of one subprocess cold
+start per step.
+**Measured: 8 steps on one connector 1659 → 8 ms (≈216×).** `urirun/runtime/worker.py`
+(`HandlerPool`, `ConnectorPools.run_route` for `local-function-subprocess`),
+`examples/17-flows/run_flow.py`.
 
 ---
 
 ## Status
 
-**1, 2, 3, 4, 5 done** (above; 1/2/3/5 measured, 4 is the connector default now).
+**1–6 all done** (above; 1/2/3/5/6 measured, 4 is the connector default now).
 Combined effect on a single
 `time://` call: a fresh `urirun run` went 339→246 ms in import alone (#1) and never
 re-imports the whole runtime for `list`/`registry://` (#2); a served node's `/run`
-went 245→5.9 ms (#3); and the daemon path is 515→36 ms (#5). 6 (one registry + one
-pool across a flow's steps) now mostly falls out of 1 + 3 — apply it inside the flow
-runner if a flow's per-step latency ever matters.
+went 245→5.9 ms (#3); the daemon path is 515→36 ms (#5); and a flow sharing one warm
+pool across steps runs 8 same-connector steps in 8 ms instead of 1659 ms (#6).
 
 ## Summary table (measured, this machine)
 
@@ -92,6 +99,7 @@ runner if a flow's per-step latency ever matters.
 | #2 registry cache (warm) | 30 ms | 10 ms | 3× |
 | #3 warm worker in `node serve` (/run) | 245 ms | 5.9 ms | 42× |
 | #5 daemon + stdlib client | 515 ms | 36 ms | 14× |
+| #6 flow shares one warm pool (8 steps) | 1659 ms | 8 ms | 216× |
 
 > Measurement scripts: `examples/20-runtime-transport-matrix/`,
 > `examples/22-warm-worker/bench.py`.

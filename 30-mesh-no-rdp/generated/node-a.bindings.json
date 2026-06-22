@@ -1,0 +1,47 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "sys://node-a/runtime/query/info": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {}},
+      "argv": ["python3", "-c", "import json,platform,socket,os; print(json.dumps({'host':socket.gethostname(),'platform':platform.platform(),'cwd':os.getcwd()}))"],
+      "policy": {"allowExecute": true, "maxArgs": 8},
+      "meta": {"label": "Node runtime info"}
+    },
+    "sh://node-a/command/run": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["cmd"],
+        "properties": {"cmd": {"type": "string", "enum": ["uname -a", "uptime", "id", "date", "df -h /"]}}
+      },
+      "argv": ["bash", "-lc", "{cmd}"],
+      "policy": {"allowExecute": true, "maxArgs": 8},
+      "meta": {"label": "Run a whitelisted shell command (enum-restricted)"}
+    },
+    "log://node-a/session/command/write": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text"],
+        "properties": {"text": {"type": "string", "minLength": 1}}
+      },
+      "argv": ["python3", "-c", "import json,pathlib,sys,time; p=pathlib.Path('/tmp/urirun-node-a.log'); p.open('a').write(json.dumps({'at':time.time(),'text':sys.argv[1]})+chr(10)); print(json.dumps({'wrote':sys.argv[1]}))", "{text}"],
+      "policy": {"allowExecute": true, "maxArgs": 8},
+      "meta": {"label": "Append a log line on the node"}
+    },
+    "log://node-a/session/query/recent": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {"limit": {"type": "integer", "default": 5}}},
+      "argv": ["python3", "-c", "import json,pathlib,sys; p=pathlib.Path('/tmp/urirun-node-a.log'); print(json.dumps({'lines': p.read_text().splitlines()[-int(sys.argv[1]):] if p.exists() else []}))", "{limit}"],
+      "policy": {"allowExecute": true, "maxArgs": 8},
+      "meta": {"label": "Read recent node log lines"}
+    }
+  }
+}

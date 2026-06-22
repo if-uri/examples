@@ -1,0 +1,316 @@
+{
+  "generatedAt": "2026-06-22T11:37:37.621395+00:00",
+  "index": {
+    "b4e1dddd358fa23200eabdb10aaef0b8639c809bbfd5c522e93006180d63e32a": {
+      "route": [
+        "sys",
+        "runtime",
+        "query"
+      ],
+      "routeEntry": {
+        "adapter": "argv-template",
+        "config": {
+          "argv": [
+            "python3",
+            "-c",
+            "import json,platform,socket,os; print(json.dumps({'host':socket.gethostname(),'platform':platform.platform(),'cwd':os.getcwd()}))"
+          ],
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "kind": "command",
+        "meta": {
+          "label": "Node runtime info"
+        },
+        "policy": {
+          "allowExecute": true,
+          "maxArgs": 8
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "node-b",
+      "uri": "sys://node-b/runtime/query/info"
+    },
+    "cfa62f386926520a8818b51391a52bd038f75a133f042bcd856ea0016d392eee": {
+      "route": [
+        "log",
+        "session",
+        "command"
+      ],
+      "routeEntry": {
+        "adapter": "argv-template",
+        "config": {
+          "argv": [
+            "python3",
+            "-c",
+            "import json,pathlib,sys,time; p=pathlib.Path('/tmp/urirun-node-b.log'); p.open('a').write(json.dumps({'at':time.time(),'text':sys.argv[1]})+chr(10)); print(json.dumps({'wrote':sys.argv[1]}))",
+            "{text}"
+          ],
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "type": "object"
+          }
+        },
+        "kind": "command",
+        "meta": {
+          "label": "Append a log line on the node"
+        },
+        "policy": {
+          "allowExecute": true,
+          "maxArgs": 8
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "node-b",
+      "uri": "log://node-b/session/command/write"
+    },
+    "d9d66b13e71f01cae3c6e77936a739e325c5814feee6b910b9810f230a7da930": {
+      "route": [
+        "log",
+        "session",
+        "query"
+      ],
+      "routeEntry": {
+        "adapter": "argv-template",
+        "config": {
+          "argv": [
+            "python3",
+            "-c",
+            "import json,pathlib,sys; p=pathlib.Path('/tmp/urirun-node-b.log'); print(json.dumps({'lines': p.read_text().splitlines()[-int(sys.argv[1]):] if p.exists() else []}))",
+            "{limit}"
+          ],
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "default": 5,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "kind": "command",
+        "meta": {
+          "label": "Read recent node log lines"
+        },
+        "policy": {
+          "allowExecute": true,
+          "maxArgs": 8
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "node-b",
+      "uri": "log://node-b/session/query/recent"
+    },
+    "f07d3cfccf3d9a6663a0643cde6e90d2050ed4732378c80958393355b9b69544": {
+      "route": [
+        "sh",
+        "command",
+        "run"
+      ],
+      "routeEntry": {
+        "adapter": "argv-template",
+        "config": {
+          "argv": [
+            "bash",
+            "-lc",
+            "{cmd}"
+          ],
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "cmd": {
+                "enum": [
+                  "uname -a",
+                  "uptime",
+                  "id",
+                  "date",
+                  "df -h /"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "cmd"
+            ],
+            "type": "object"
+          }
+        },
+        "kind": "command",
+        "meta": {
+          "label": "Run a whitelisted shell command (enum-restricted)"
+        },
+        "policy": {
+          "allowExecute": true,
+          "maxArgs": 8
+        }
+      },
+      "source": {
+        "type": "manifest"
+      },
+      "target": "node-b",
+      "uri": "sh://node-b/command/run"
+    }
+  },
+  "routeCount": 4,
+  "routes": {
+    "log": {
+      "session": {
+        "command": {
+          "adapter": "argv-template",
+          "config": {
+            "argv": [
+              "python3",
+              "-c",
+              "import json,pathlib,sys,time; p=pathlib.Path('/tmp/urirun-node-b.log'); p.open('a').write(json.dumps({'at':time.time(),'text':sys.argv[1]})+chr(10)); print(json.dumps({'wrote':sys.argv[1]}))",
+              "{text}"
+            ],
+            "inputSchema": {
+              "additionalProperties": false,
+              "properties": {
+                "text": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "text"
+              ],
+              "type": "object"
+            }
+          },
+          "kind": "command",
+          "meta": {
+            "label": "Append a log line on the node"
+          },
+          "policy": {
+            "allowExecute": true,
+            "maxArgs": 8
+          }
+        },
+        "query": {
+          "adapter": "argv-template",
+          "config": {
+            "argv": [
+              "python3",
+              "-c",
+              "import json,pathlib,sys; p=pathlib.Path('/tmp/urirun-node-b.log'); print(json.dumps({'lines': p.read_text().splitlines()[-int(sys.argv[1]):] if p.exists() else []}))",
+              "{limit}"
+            ],
+            "inputSchema": {
+              "additionalProperties": false,
+              "properties": {
+                "limit": {
+                  "default": 5,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "kind": "command",
+          "meta": {
+            "label": "Read recent node log lines"
+          },
+          "policy": {
+            "allowExecute": true,
+            "maxArgs": 8
+          }
+        }
+      }
+    },
+    "sh": {
+      "command": {
+        "run": {
+          "adapter": "argv-template",
+          "config": {
+            "argv": [
+              "bash",
+              "-lc",
+              "{cmd}"
+            ],
+            "inputSchema": {
+              "additionalProperties": false,
+              "properties": {
+                "cmd": {
+                  "enum": [
+                    "uname -a",
+                    "uptime",
+                    "id",
+                    "date",
+                    "df -h /"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cmd"
+              ],
+              "type": "object"
+            }
+          },
+          "kind": "command",
+          "meta": {
+            "label": "Run a whitelisted shell command (enum-restricted)"
+          },
+          "policy": {
+            "allowExecute": true,
+            "maxArgs": 8
+          }
+        }
+      }
+    },
+    "sys": {
+      "runtime": {
+        "query": {
+          "adapter": "argv-template",
+          "config": {
+            "argv": [
+              "python3",
+              "-c",
+              "import json,platform,socket,os; print(json.dumps({'host':socket.gethostname(),'platform':platform.platform(),'cwd':os.getcwd()}))"
+            ],
+            "inputSchema": {
+              "additionalProperties": false,
+              "properties": {},
+              "type": "object"
+            }
+          },
+          "kind": "command",
+          "meta": {
+            "label": "Node runtime info"
+          },
+          "policy": {
+            "allowExecute": true,
+            "maxArgs": 8
+          }
+        }
+      }
+    }
+  },
+  "sources": [
+    {
+      "type": "manifest"
+    }
+  ],
+  "version": "urirun.registry.v1"
+}
