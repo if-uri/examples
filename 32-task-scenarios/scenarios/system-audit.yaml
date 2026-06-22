@@ -1,0 +1,11 @@
+name: system-audit
+description: Works on ANY node (even the default 7-route node) — health, processes, a log note.
+steps:
+  - uri: env://{host}/runtime/query/health
+    why: confirm the node is up and read its platform
+  - uri: proc://{host}/process/query/list
+    payload: {limit: 5}
+    why: list the busiest processes
+  - uri: log://{host}/session/command/write
+    payload: {text: "scenario system-audit ran"}
+    why: leave an audit note in the node's own log (visible on both sides)

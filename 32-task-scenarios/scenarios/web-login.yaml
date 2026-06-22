@@ -1,0 +1,21 @@
+name: web-login
+description: Log into a website and capture the result (needs the office node — browser/him).
+steps:
+  - uri: browser://{host}/page/command/open
+    payload: {url: "https://example.com/login"}
+    why: open the login page
+  - uri: him://{host}/keyboard/command/type-text
+    payload: {text: "jan@firma.pl"}
+    why: type the e-mail into the focused field
+  - uri: him://{host}/keyboard/command/key
+    payload: {key: "tab"}
+    why: move to the password field
+  - uri: him://{host}/keyboard/command/type-text
+    payload: {text: "tajneHaslo"}
+    why: type the password
+  - uri: browser://{host}/form/command/submit
+    payload: {form_id: "login", fields: {session_key: "jan@firma.pl", session_password: "tajneHaslo"}}
+    why: submit the login form
+  - uri: browser://{host}/page/command/screenshot
+    payload: {}
+    why: capture the page after login

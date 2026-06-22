@@ -1,0 +1,14 @@
+name: office-doc
+description: Open a document, render text into it, export to PDF (urioffice).
+steps:
+  - uri: urioffice://{host}/query/status
+    why: check the office backend (mock / libreoffice)
+  - uri: urioffice://{host}/document/command/open
+    payload: {path: "/tmp/raport.txt", title: "Raport 07/2026"}
+    why: open (or create) the document
+  - uri: urioffice://{host}/writer/command/render
+    payload: {text: "Faktura 07/2026 — zatwierdzona", title: "raport", format: "pdf"}
+    why: render text into the document
+  - uri: urioffice://{host}/document/command/export-pdf
+    payload: {path: "/tmp/raport.pdf"}
+    why: export to PDF

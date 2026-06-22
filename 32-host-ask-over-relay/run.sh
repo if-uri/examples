@@ -26,6 +26,15 @@ python3 -c "import urirun.runtime.v2" >/dev/null 2>&1 || { echo "SKIP: a current
 U() { python3 -m urirun.runtime.v2 "$@"; }
 free_port() { python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 
+# USE_LLM=1 plans with a real model (LLM_MODEL + key from examples/.env); default
+# is the deterministic heuristic (--no-llm) so the example runs in CI without a key.
+LLM_FLAG="--no-llm"; PLAN_MODE="heuristic (--no-llm)"
+if [ "${USE_LLM:-0}" = "1" ]; then
+  [ -f "$HERE/../.env" ] && { set -a; . "$HERE/../.env" 2>/dev/null || true; set +a; }
+  [ -n "${URIRUN_LLM_MODEL:-${LLM_MODEL:-}}" ] && { LLM_FLAG=""; PLAN_MODE="LLM (${URIRUN_LLM_MODEL:-$LLM_MODEL})"; } \
+    || echo "  (USE_LLM=1 but no LLM_MODEL/OPENROUTER key — staying on heuristic)"
+fi
+
 NODE=office; TOKEN=meshsecret123
 NP="$(free_port)"; RP="$(free_port)"; PP="$(free_port)"
 RELAY="http://127.0.0.1:$RP"
@@ -64,15 +73,19 @@ cat > "$TMP/.urirun/mesh.json" <<JSON
 {"name":"relay-host","nodes":[{"name":"$NODE","url":"http://127.0.0.1:$PP"}]}
 JSON
 
-echo "== 4) NL -> urirun host ask -> plan -> execute, all over the relay =="
-out="$(cd "$TMP" && U host ask --config .urirun/mesh.json --no-llm --node "$NODE" "show me the current date" --execute 2>"$TMP/ask.err" || true)"
+echo "== 4) NL -> urirun host ask -> plan -> execute, all over the relay  [plan: $PLAN_MODE] =="
+out="$(cd "$TMP" && U host ask --config .urirun/mesh.json $LLM_FLAG --node "$NODE" "check the node health and show me the current date" --execute 2>"$TMP/ask.err" || true)"
+echo "  planner:    $(jq -c '.generator' <<<"$out" 2>/dev/null || echo '?')"
 echo "  flow steps: $(jq -c '[.flow.steps[].uri]' <<<"$out" 2>/dev/null || echo '?')"
 echo "  timeline:   $(jq -c '[.timeline[]|{uri,ok}]' <<<"$out" 2>/dev/null || echo '?')"
 
 echo "== 5) assertions =="
 jq -e '.ok == true' <<<"$out" >/dev/null || { echo "FAIL: host ask not ok"; echo "$out" | head -40; cat "$TMP/ask.err"; exit 1; }
-jq -e '[.flow.steps[].uri] | any(. == "shell://'"$NODE"'/command/date")' <<<"$out" >/dev/null \
-  || { echo "FAIL: the date route was not planned"; echo "$out"; exit 1; }
+jq -e '(.flow.steps | length) >= 1' <<<"$out" >/dev/null || { echo "FAIL: no steps planned"; echo "$out"; exit 1; }
 echo "$out" | grep -q 'mesh-relay' || { echo "FAIL: results did not round-trip through the relay"; exit 1; }
+if [ "$LLM_FLAG" = "--no-llm" ]; then
+  jq -e '[.flow.steps[].uri] | any(. == "shell://'"$NODE"'/command/date")' <<<"$out" >/dev/null \
+    || { echo "FAIL: the date route was not planned (heuristic)"; echo "$out"; exit 1; }
+fi
 
-echo "PASS: drove a NAT'd node from natural language end-to-end through the relay (discover + plan + execute via mesh-proxy)"
+echo "PASS: drove a NAT'd node from natural language end-to-end through the relay (discover + plan [$PLAN_MODE] + execute via mesh-proxy)"
