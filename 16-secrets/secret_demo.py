@@ -19,7 +19,6 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import urirun
 from urirun.connectors import declarative
-from urirun.runtime import _runtime
 
 EXPECTED = "sk-SECRET-do-not-leak-1234"
 
@@ -59,7 +58,7 @@ def build(base_url: str):
 
 
 def run(registry, *, mode, secret_allow):
-    policy = _runtime.build_policy(None, ["sdemo://*"], None, secret_allow)
+    policy = urirun.policy(allow=["sdemo://*"], secret_allow=secret_allow)
     return urirun.run("sdemo://local/auth/command/call", registry, {}, mode=mode, policy=policy)
 
 

@@ -1,0 +1,193 @@
+{
+  "bindings": {
+    "him://{host}/keyboard/command/hotkey": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.keyboard.hotkey",
+        "operation": "him.keyboard.hotkey",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:keyboard_hotkey",
+      "source": {
+        "handler": "python://urihim.handlers:keyboard_hotkey",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/keyboard/command/hotkey"
+    },
+    "him://{host}/keyboard/command/key": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.keyboard.key",
+        "operation": "him.keyboard.key",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:keyboard_key",
+      "source": {
+        "handler": "python://urihim.handlers:keyboard_key",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/keyboard/command/key"
+    },
+    "him://{host}/keyboard/command/type": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.keyboard.type",
+        "operation": "him.keyboard.type",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:keyboard_type",
+      "source": {
+        "handler": "python://urihim.handlers:keyboard_type",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/keyboard/command/type"
+    },
+    "him://{host}/keyboard/command/type-text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.keyboard.type_text",
+        "operation": "him.keyboard.type_text",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:keyboard_type",
+      "source": {
+        "handler": "python://urihim.handlers:keyboard_type",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/keyboard/command/type-text"
+    },
+    "him://{host}/mouse/command/click": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.mouse.click",
+        "operation": "him.mouse.click",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:mouse_click",
+      "source": {
+        "handler": "python://urihim.handlers:mouse_click",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/mouse/command/click"
+    },
+    "him://{host}/mouse/command/move": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.mouse.move",
+        "operation": "him.mouse.move",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:mouse_move",
+      "source": {
+        "handler": "python://urihim.handlers:mouse_move",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/mouse/command/move"
+    },
+    "him://{host}/mouse/command/scroll": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.mouse.scroll",
+        "operation": "him.mouse.scroll",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urihim.handlers:mouse_scroll",
+      "source": {
+        "handler": "python://urihim.handlers:mouse_scroll",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/mouse/command/scroll"
+    },
+    "him://{host}/mouse/query/status": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "him.mouse.status",
+        "operation": "him.mouse.status",
+        "scheme": "him",
+        "standard": "pack 'urihim' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urihim.handlers:mouse_status",
+      "source": {
+        "handler": "python://urihim.handlers:mouse_status",
+        "pack": "urihim",
+        "scheme": "him",
+        "type": "pack-manifest"
+      },
+      "uri": "him://{host}/mouse/query/status"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

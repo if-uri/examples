@@ -1,0 +1,113 @@
+{
+  "bindings": {
+    "kvm://{host}/display/query/info": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.display.info",
+        "operation": "kvm.display.info",
+        "scheme": "kvm",
+        "standard": "pack 'urikvm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urikvm.handlers:display_info",
+      "source": {
+        "handler": "python://urikvm.handlers:display_info",
+        "pack": "urikvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/display/query/info"
+    },
+    "kvm://{host}/monitor/query/list": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.monitor.list",
+        "operation": "kvm.monitor.list",
+        "scheme": "kvm",
+        "standard": "pack 'urikvm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urikvm.handlers:monitor_list",
+      "source": {
+        "handler": "python://urikvm.handlers:monitor_list",
+        "pack": "urikvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/monitor/query/list"
+    },
+    "kvm://{host}/monitor/{monitor}/query/screenshot": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.monitor.screenshot",
+        "operation": "kvm.monitor.screenshot",
+        "scheme": "kvm",
+        "standard": "pack 'urikvm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urikvm.handlers:screenshot",
+      "source": {
+        "handler": "python://urikvm.handlers:screenshot",
+        "pack": "urikvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/monitor/{monitor}/query/screenshot"
+    },
+    "kvm://{host}/task/command/click-text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.task.click_text",
+        "operation": "kvm.task.click_text",
+        "scheme": "kvm",
+        "standard": "pack 'urikvm' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urikvm.handlers:click_text",
+      "source": {
+        "handler": "python://urikvm.handlers:click_text",
+        "pack": "urikvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/task/command/click-text"
+    },
+    "kvm://{host}/task/command/type-text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.task.type_text",
+        "operation": "kvm.task.type_text",
+        "scheme": "kvm",
+        "standard": "pack 'urikvm' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urikvm.handlers:type_text",
+      "source": {
+        "handler": "python://urikvm.handlers:type_text",
+        "pack": "urikvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/task/command/type-text"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

@@ -42,7 +42,6 @@ def _ensure_urirun() -> None:
 _ensure_urirun()
 
 import urirun
-from urirun.runtime import _runtime
 
 TOOLS = [sys.executable, os.path.join(HERE, "tools.py")]
 
@@ -132,34 +131,19 @@ def plan(goal: str, routes: list[dict]) -> list[dict]:
     return steps
 
 
-def _result_data(data):
-    """Unwrap a connector's handler result from the run envelope.
-
-    Handler (``local-function``) routes return their value under
-    ``result.value``; argv routes that print a plain result dict are returned
-    as-is. (This is the consumer-side accessor the SDK still lacks as
-    ``urirun.result_data``.)"""
-    if isinstance(data, dict) and isinstance(data.get("result"), dict) and "value" in data["result"]:
-        return data["result"]["value"]
-    return data
-
-
 def run_step(registry: dict, step: dict, *, allow_commands: bool) -> dict:
     uri = step["uri"]
     is_query = "/query/" in uri
     scheme = uri.split("://", 1)[0]
-    policy = _runtime.build_policy(None, [f"{scheme}://*"], None)
     # query routes are read-only and run freely; command routes need permission
     if is_query or allow_commands:
-        result = urirun.run(uri, registry, step["payload"], mode="execute", policy=policy)
-        exec_out = result.get("result") if isinstance(result.get("result"), dict) else {}
-        stdout = exec_out.get("stdout") if isinstance(exec_out, dict) else None
-        try:
-            data = json.loads(stdout) if stdout else exec_out
-        except json.JSONDecodeError:
-            data = {"stdout": stdout}
-        data = _result_data(data)
-        ok = bool(result.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
+        # public API: urirun.policy() builds the allow policy, urirun.result_data()
+        # unwraps the connector payload from the run envelope (local-function value,
+        # argv stdout JSON or fetch result) — no urirun.runtime._runtime needed.
+        env = urirun.run(uri, registry, step["payload"], mode="execute",
+                         policy=urirun.policy(allow=[f"{scheme}://*"]))
+        data = urirun.result_data(env)
+        ok = bool(env.get("ok")) and (data.get("ok", True) if isinstance(data, dict) else True)
         return {"ran": True, "ok": ok, "data": data}
     return {"ran": False, "skipped": "command not permitted (pass --allow-commands)", "uri": uri}
 

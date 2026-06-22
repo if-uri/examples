@@ -1,0 +1,45 @@
+{
+  "bindings": {
+    "ocr://{host}/image/latest/query/text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "ocr.latest.text",
+        "operation": "ocr.latest.text",
+        "scheme": "ocr",
+        "standard": "pack 'uriocr' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uriocr.handlers:latest_text",
+      "source": {
+        "handler": "python://uriocr.handlers:latest_text",
+        "pack": "uriocr",
+        "scheme": "ocr",
+        "type": "pack-manifest"
+      },
+      "uri": "ocr://{host}/image/latest/query/text"
+    },
+    "ocr://{host}/image/{image_id}/query/text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "ocr.image.text",
+        "operation": "ocr.image.text",
+        "scheme": "ocr",
+        "standard": "pack 'uriocr' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uriocr.handlers:image_text",
+      "source": {
+        "handler": "python://uriocr.handlers:image_text",
+        "pack": "uriocr",
+        "scheme": "ocr",
+        "type": "pack-manifest"
+      },
+      "uri": "ocr://{host}/image/{image_id}/query/text"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

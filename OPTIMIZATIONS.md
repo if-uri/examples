@@ -30,29 +30,37 @@ is a fresh Python process (~28 ms interpreter cold start on top).
 
 ## Ranked optimizations
 
-### 1. Lazy, scheme-indexed discovery  (biggest, cleanest)
-Today: import all 17 connectors (~13 ms) to resolve one URI. Build a persisted
-`scheme → entry-point` index (`.urirun/scheme-index.json`), refreshed on
-`urirun install`; then `urirun run 'time://…'` imports **only** `time-tools`.
-**Win:** ~13 ms → ~1 ms for the import step; scales as more connectors are installed.
-Needs a cache because the scheme isn't in entry-point metadata without importing.
+### 1. Lazy, scheme-indexed discovery — ✅ DONE
+Was: import all connectors (~13 ms; 339 ms in a fresh process) to resolve one URI.
+Now: a persisted `scheme → entry-point` index (`.urirun/scheme-index.json`,
+fingerprint-invalidated) so `urirun run 'time://…'` imports **only** `time-tools`.
+**Measured: ~93 ms saved per `urirun run`** in a fresh process (339 → 246 ms import).
+`urirun/runtime/discovery.py`, wired into `_resolve_list_registry` for `run`.
 
-### 2. Compiled-registry cache
-Cache the discovered+compiled registry keyed by the installed-package set; invalidate
-on `install`. Removes the remaining ~12 ms scan+compile per call. Pairs with #1.
+### 2. Compiled-registry cache — ✅ DONE
+The whole-runtime registry (`list` / `registry://`) is compiled once and cached to
+`.urirun/discovered-registry.json`, keyed by the installed-set fingerprint.
+**Measured: 30 → 10 ms warm; in a fresh process it loads JSON instead of importing
+every connector.** `discovery.full_registry`, used by `list` and `registry://`.
 
-### 3. Warm-worker inside `node serve`  (highest absolute win)
-Measured: a served node still cold-starts argv-template connectors per `/run` (237 ms).
-Wire the `WorkerPool` (already built, `urirun.runtime.worker`) into `node serve` so each
-connector keeps a warm process. **Win:** 237 ms → ~4 ms per `/run` for interpreted
-connectors under load.
+### 3. Warm-worker inside `node serve` — ✅ DONE
+A served node used to cold-start argv-template connectors per `/run` (245 ms).
+`node serve --pool` keeps a warm worker per connector (`ConnectorPools`, a custom
+executor so v2.run's validate → gate → execute is unchanged).
+**Measured end-to-end over HTTP: 245 → 5.9 ms/request (42×).**
 
-### 4. Hydrate `local-function` from the entry point at run time
-`local-function` routes can't run via `urirun run` on a compiled registry (the callable
-is lost on serialize). Re-import the ref from its entry point at dispatch. Then a pure
-Python connector can be `local-function` (**~0 ms**, no spawn) instead of `argv-template`
-(220 ms). This is the right default for hot pure-Python connectors — and matches the
-direction the connectors are already moving.
+### 4. Hydrate `local-function` — ⏭ MOOT
+The connectors converged on `argv-template` (now `python -m <pkg>._exec`), not
+`local-function`, so there is nothing to hydrate. The hot-path answer instead is the
+warm-worker pool (#3): same isolation as a spawn, but the cold start is paid once.
+
+### 5. Local `urirun` daemon — ✅ DONE
+Every CLI `urirun run` is a fresh process (~515 ms: interpreter + urirun import +
+connector spawn). `python -m urirun.runtime.daemon serve` holds the cached registry
+(#2) + a warm worker pool (#3) and answers `{uri, payload}` over a Unix socket. The
+client (`daemon.call`) is **pure stdlib** — it never imports urirun, so a request is
+just interpreter startup + a socket round-trip.
+**Measured: 515 → 35.9 ms/call (≈14×).** `urirun/runtime/daemon.py`.
 
 ### 5. A local `urirun` daemon (or reuse `node serve`)
 Every CLI `urirun run` pays the ~28 ms interpreter cold start. For high-frequency CLI
@@ -65,12 +73,23 @@ worker pool across all steps of a flow.
 
 ---
 
-## Priority
+## Status
 
-1 + 2 together make every `urirun run` ~10× cheaper to start (~25 ms → ~2 ms) and are
-low-risk. 3 is the biggest absolute win for serving under load and reuses code already
-written. 4 changes the default execution model for pure-Python connectors from 220 ms to
-0 ms. 5 and 6 matter only for very high call rates.
+**1, 2, 3, 5 done and measured** (above); 4 moot. Combined effect on a single
+`time://` call: a fresh `urirun run` went 339→246 ms in import alone (#1) and never
+re-imports the whole runtime for `list`/`registry://` (#2); a served node's `/run`
+went 245→5.9 ms (#3); and the daemon path is 515→36 ms (#5). 6 (one registry + one
+pool across a flow's steps) now mostly falls out of 1 + 3 — apply it inside the flow
+runner if a flow's per-step latency ever matters.
+
+## Summary table (measured, this machine)
+
+| optimization | before | after | factor |
+| --- | --: | --: | --: |
+| #1 lazy discovery (fresh-proc import) | 339 ms | 246 ms | 1.4× |
+| #2 registry cache (warm) | 30 ms | 10 ms | 3× |
+| #3 warm worker in `node serve` (/run) | 245 ms | 5.9 ms | 42× |
+| #5 daemon + stdlib client | 515 ms | 36 ms | 14× |
 
 > Measurement scripts: `examples/20-runtime-transport-matrix/`,
 > `examples/22-warm-worker/bench.py`.

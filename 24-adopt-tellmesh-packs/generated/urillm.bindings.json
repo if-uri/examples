@@ -1,0 +1,109 @@
+{
+  "bindings": {
+    "llm://{host}/chat/command/completion": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "llm.chat.completion",
+        "operation": "llm.chat.completion",
+        "scheme": "llm",
+        "standard": "pack 'urillm' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urillm.handlers:chat_completion",
+      "source": {
+        "handler": "python://urillm.handlers:chat_completion",
+        "pack": "urillm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "uri": "llm://{host}/chat/command/completion"
+    },
+    "llm://{host}/chat/query/completion": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "llm.chat.completion",
+        "operation": "llm.chat.completion",
+        "scheme": "llm",
+        "standard": "pack 'urillm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urillm.handlers:chat_completion",
+      "source": {
+        "handler": "python://urillm.handlers:chat_completion",
+        "pack": "urillm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "uri": "llm://{host}/chat/query/completion"
+    },
+    "llm://{host}/text/query/decide": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "llm.text.decide",
+        "operation": "llm.text.decide",
+        "scheme": "llm",
+        "standard": "pack 'urillm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urillm.handlers:text_decide",
+      "source": {
+        "handler": "python://urillm.handlers:text_decide",
+        "pack": "urillm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "uri": "llm://{host}/text/query/decide"
+    },
+    "llm://{host}/text/query/plan": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "llm.text.plan",
+        "operation": "llm.text.plan",
+        "scheme": "llm",
+        "standard": "pack 'urillm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urillm.handlers:text_plan",
+      "source": {
+        "handler": "python://urillm.handlers:text_plan",
+        "pack": "urillm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "uri": "llm://{host}/text/query/plan"
+    },
+    "llm://{host}/vision/query/analyze": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "llm.vision.analyze",
+        "operation": "llm.vision.analyze",
+        "scheme": "llm",
+        "standard": "pack 'urillm' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urillm.handlers:vision_analyze",
+      "source": {
+        "handler": "python://urillm.handlers:vision_analyze",
+        "pack": "urillm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "uri": "llm://{host}/vision/query/analyze"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

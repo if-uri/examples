@@ -1,0 +1,73 @@
+{
+  "bindings": {
+    "screen://{target}/capture/command/loop": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "screen.capture_loop",
+        "operation": "screen.capture_loop",
+        "scheme": "screen",
+        "standard": "pack 'uriscreen' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uriscreen.handlers:capture_loop",
+      "source": {
+        "handler": "python://uriscreen.handlers:capture_loop",
+        "pack": "uriscreen",
+        "scheme": "screen",
+        "type": "pack-manifest"
+      },
+      "uri": "screen://{target}/capture/command/loop"
+    },
+    "screen://{target}/monitor/{monitor}/command/capture": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "screen.capture",
+        "operation": "screen.capture",
+        "scheme": "screen",
+        "standard": "pack 'uriscreen' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uriscreen.handlers:capture",
+      "source": {
+        "handler": "python://uriscreen.handlers:capture",
+        "pack": "uriscreen",
+        "scheme": "screen",
+        "type": "pack-manifest"
+      },
+      "uri": "screen://{target}/monitor/{monitor}/command/capture"
+    },
+    "screen://{target}/monitor/{monitor}/query/frame": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "screen.frame",
+        "operation": "screen.frame",
+        "scheme": "screen",
+        "standard": "pack 'uriscreen' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uriscreen.handlers:frame",
+      "source": {
+        "handler": "python://uriscreen.handlers:frame",
+        "pack": "uriscreen",
+        "scheme": "screen",
+        "type": "pack-manifest"
+      },
+      "uri": "screen://{target}/monitor/{monitor}/query/frame"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

@@ -1,0 +1,22 @@
+# A real tellmesh-style capability manifest (copied from ../tellmesh/uriocr).
+# `urirun adopt-pack` maps scheme + uri_patterns + handlers 1:1 onto v2 bindings,
+# so the package becomes a URI connector with NO code change.
+id: uriocr
+version: 1
+scheme: ocr
+description: OCR text extraction from latest screenshot or image id (mock/tesseract).
+uri_patterns:
+  - pattern: ocr://{host}/image/latest/query/text
+    kind: query
+    operation: ocr.latest.text
+    side_effects: false
+    approval: not_required
+  - pattern: ocr://{host}/image/{image_id}/query/text
+    kind: query
+    operation: ocr.image.text
+    side_effects: false
+    approval: not_required
+handlers:
+  python:
+    ocr.latest.text: python://uriocr.handlers:latest_text
+    ocr.image.text: python://uriocr.handlers:image_text

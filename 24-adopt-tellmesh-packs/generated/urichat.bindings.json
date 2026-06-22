@@ -1,0 +1,53 @@
+{
+  "bindings": {
+    "chat://local/message/command/send": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "chat.message.send",
+        "operation": "chat.message.send",
+        "scheme": "chat",
+        "standard": "pack 'urichat' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urichat.handlers:message_send",
+      "source": {
+        "handler": "python://urichat.handlers:message_send",
+        "pack": "urichat",
+        "scheme": "chat",
+        "type": "pack-manifest"
+      },
+      "uri": "chat://local/message/command/send"
+    },
+    "chat://local/uri/command/execute": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "chat.uri.execute",
+        "operation": "chat.uri.execute",
+        "scheme": "chat",
+        "standard": "pack 'urichat' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urichat.handlers:uri_execute",
+      "source": {
+        "handler": "python://urichat.handlers:uri_execute",
+        "pack": "urichat",
+        "scheme": "chat",
+        "type": "pack-manifest"
+      },
+      "uri": "chat://local/uri/command/execute"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

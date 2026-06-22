@@ -1,0 +1,73 @@
+{
+  "bindings": {
+    "stt://local/audio/command/transcribe": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "stt.audio.transcribe",
+        "operation": "stt.audio.transcribe",
+        "scheme": "stt",
+        "standard": "pack 'uristt' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uristt.handlers:audio_transcribe",
+      "source": {
+        "handler": "python://uristt.handlers:audio_transcribe",
+        "pack": "uristt",
+        "scheme": "stt",
+        "type": "pack-manifest"
+      },
+      "uri": "stt://local/audio/command/transcribe"
+    },
+    "stt://local/session/{session}/command/start": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "stt.session.start",
+        "operation": "stt.session.start",
+        "scheme": "stt",
+        "standard": "pack 'uristt' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uristt.handlers:session_start",
+      "source": {
+        "handler": "python://uristt.handlers:session_start",
+        "pack": "uristt",
+        "scheme": "stt",
+        "type": "pack-manifest"
+      },
+      "uri": "stt://local/session/{session}/command/start"
+    },
+    "stt://local/session/{session}/query/transcript": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "stt.session.transcript",
+        "operation": "stt.session.transcript",
+        "scheme": "stt",
+        "standard": "pack 'uristt' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uristt.handlers:session_transcript",
+      "source": {
+        "handler": "python://uristt.handlers:session_transcript",
+        "pack": "uristt",
+        "scheme": "stt",
+        "type": "pack-manifest"
+      },
+      "uri": "stt://local/session/{session}/query/transcript"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

@@ -1,0 +1,117 @@
+{
+  "bindings": {
+    "urimail://{account}/inbox/query/unread": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "mail.inbox.unread",
+        "operation": "mail.inbox.unread",
+        "scheme": "urimail",
+        "standard": "pack 'urimail' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urimail.handlers:inbox_unread",
+      "source": {
+        "handler": "python://urimail.handlers:inbox_unread",
+        "pack": "urimail",
+        "scheme": "urimail",
+        "type": "pack-manifest"
+      },
+      "uri": "urimail://{account}/inbox/query/unread"
+    },
+    "urimail://{account}/message/command/compose": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "mail.message.compose",
+        "operation": "mail.message.compose",
+        "scheme": "urimail",
+        "standard": "pack 'urimail' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urimail.handlers:message_compose",
+      "source": {
+        "handler": "python://urimail.handlers:message_compose",
+        "pack": "urimail",
+        "scheme": "urimail",
+        "type": "pack-manifest"
+      },
+      "uri": "urimail://{account}/message/command/compose"
+    },
+    "urimail://{account}/message/command/publish-post": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "mail.message.publish_post",
+        "operation": "mail.message.publish_post",
+        "scheme": "urimail",
+        "standard": "pack 'urimail' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urimail.handlers:message_publish_post",
+      "source": {
+        "handler": "python://urimail.handlers:message_publish_post",
+        "pack": "urimail",
+        "scheme": "urimail",
+        "type": "pack-manifest"
+      },
+      "uri": "urimail://{account}/message/command/publish-post"
+    },
+    "urimail://{account}/message/command/send": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "mail.message.send",
+        "operation": "mail.message.send",
+        "scheme": "urimail",
+        "standard": "pack 'urimail' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urimail.handlers:message_send",
+      "source": {
+        "handler": "python://urimail.handlers:message_send",
+        "pack": "urimail",
+        "scheme": "urimail",
+        "type": "pack-manifest"
+      },
+      "uri": "urimail://{account}/message/command/send"
+    },
+    "urimail://{account}/query/status": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "mail.status",
+        "operation": "mail.status",
+        "scheme": "urimail",
+        "standard": "pack 'urimail' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urimail.handlers:status",
+      "source": {
+        "handler": "python://urimail.handlers:status",
+        "pack": "urimail",
+        "scheme": "urimail",
+        "type": "pack-manifest"
+      },
+      "uri": "urimail://{account}/query/status"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

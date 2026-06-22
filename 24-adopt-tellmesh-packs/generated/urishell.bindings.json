@@ -1,0 +1,29 @@
+{
+  "bindings": {
+    "shell://{command}": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "shell.run",
+        "operation": "shell.run",
+        "scheme": "shell",
+        "standard": "pack 'urishell' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urishell.handlers:shell_run",
+      "source": {
+        "handler": "python://urishell.handlers:shell_run",
+        "pack": "urishell",
+        "scheme": "shell",
+        "type": "pack-manifest"
+      },
+      "uri": "shell://{command}"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

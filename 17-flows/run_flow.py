@@ -22,7 +22,7 @@ from pathlib import Path
 
 import urirun
 from urirun.node import mesh
-from urirun.runtime import _runtime, v2
+from urirun.runtime import v2
 
 
 def load(path: str) -> dict:
@@ -35,8 +35,8 @@ def load(path: str) -> dict:
 
 def run_flow(flow: dict, base_dir: Path, *, execute: bool, allow, secret_allow) -> dict:
     registry = v2.load_registry_arg(str(base_dir / flow["registry"]))
-    policy = _runtime.build_policy(None, list(allow or flow.get("allow") or []),
-                                   None, list(secret_allow or flow.get("secretAllow") or []))
+    policy = urirun.policy(allow=list(allow or flow.get("allow") or []),
+                           secret_allow=list(secret_allow or flow.get("secretAllow") or []))
     results: dict = {}
     timeline = []
     for step in flow["steps"]:

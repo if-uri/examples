@@ -16,12 +16,11 @@ sys.path.insert(0, str(ROOT / "urirun" / "adapters" / "python"))
 sys.path.insert(0, str(ROOT / "urirun-connector-sqlite-context"))
 
 import urirun
-from urirun.runtime import _runtime
 from urirun.runtime.worker import WorkerPool
 import urirun_connector_sqlite_context as sc
 
 reg = urirun.compile_registry(sc.urirun_bindings())
-pol = _runtime.build_policy(None, ["log://*"], None)
+pol = urirun.policy(allow=["log://*"])
 URI, PAYLOAD = "log://host/logs/query/recent", {"limit": 5}
 
 

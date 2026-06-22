@@ -1,0 +1,197 @@
+{
+  "bindings": {
+    "env://runtime/config/query/startup": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.startup_config",
+        "operation": "env.startup_config",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:startup_config",
+      "source": {
+        "handler": "python://urienv.handlers:startup_config",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/config/query/startup"
+    },
+    "env://runtime/query/health": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.health",
+        "operation": "env.health",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:health",
+      "source": {
+        "handler": "python://urienv.handlers:health",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/query/health"
+    },
+    "env://runtime/query/list": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.list_vars",
+        "operation": "env.list_vars",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:list_vars",
+      "source": {
+        "handler": "python://urienv.handlers:list_vars",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/query/list"
+    },
+    "env://runtime/secret/{name}/query/masked": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.secret_masked",
+        "operation": "env.secret_masked",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:secret_masked",
+      "source": {
+        "handler": "python://urienv.handlers:secret_masked",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/secret/{name}/query/masked"
+    },
+    "env://runtime/secret/{name}/query/value": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.secret_value",
+        "operation": "env.secret_value",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urienv.handlers:secret_value",
+      "source": {
+        "handler": "python://urienv.handlers:secret_value",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/secret/{name}/query/value"
+    },
+    "env://runtime/var/{name}/command/set": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.var_set",
+        "operation": "env.var_set",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urienv.handlers:var_set",
+      "source": {
+        "handler": "python://urienv.handlers:var_set",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/var/{name}/command/set"
+    },
+    "env://runtime/var/{name}/command/unset": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.var_unset",
+        "operation": "env.var_unset",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urienv.handlers:var_unset",
+      "source": {
+        "handler": "python://urienv.handlers:var_unset",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/var/{name}/command/unset"
+    },
+    "env://runtime/var/{name}/query/exists": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.var_exists",
+        "operation": "env.var_exists",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:var_exists",
+      "source": {
+        "handler": "python://urienv.handlers:var_exists",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/var/{name}/query/exists"
+    },
+    "env://runtime/var/{name}/query/value": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "env.var_value",
+        "operation": "env.var_value",
+        "scheme": "env",
+        "standard": "pack 'urienv' manifest",
+        "uriKind": "query"
+      },
+      "ref": "urienv.handlers:var_value",
+      "source": {
+        "handler": "python://urienv.handlers:var_value",
+        "pack": "urienv",
+        "scheme": "env",
+        "type": "pack-manifest"
+      },
+      "uri": "env://runtime/var/{name}/query/value"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

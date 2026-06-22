@@ -1,0 +1,189 @@
+{
+  "bindings": {
+    "browser://{session}/form/command/submit": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.form.submit",
+        "operation": "browser.form.submit",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:submit_form",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:submit_form",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/form/command/submit"
+    },
+    "browser://{session}/page/active/screenshot": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.page.screenshot",
+        "operation": "browser.page.screenshot",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:screenshot",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:screenshot",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/page/active/screenshot"
+    },
+    "browser://{session}/page/command/open": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.page.open",
+        "operation": "browser.page.open",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:open_page",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:open_page",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/page/command/open"
+    },
+    "browser://{session}/page/command/screenshot": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.page.screenshot",
+        "operation": "browser.page.screenshot",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:screenshot",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:screenshot",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/page/command/screenshot"
+    },
+    "browser://{session}/page/open": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.page.open",
+        "operation": "browser.page.open",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:open_page",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:open_page",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/page/open"
+    },
+    "browser://{session}/page/query/dom": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.page.dom",
+        "operation": "browser.page.dom",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uribrowserdocker.handlers:get_dom",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:get_dom",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/page/query/dom"
+    },
+    "browser://{session}/query/status": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.status",
+        "operation": "browser.status",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "query"
+      },
+      "ref": "uribrowserdocker.handlers:status",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:status",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/query/status"
+    },
+    "browser://{session}/social/command/publish-post": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "browser.social.publish_post",
+        "operation": "browser.social.publish_post",
+        "scheme": "browser",
+        "standard": "pack 'uribrowserdocker' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "uribrowserdocker.handlers:publish_post",
+      "source": {
+        "handler": "python://uribrowserdocker.handlers:publish_post",
+        "pack": "uribrowserdocker",
+        "scheme": "browser",
+        "type": "pack-manifest"
+      },
+      "uri": "browser://{session}/social/command/publish-post"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

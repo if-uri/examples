@@ -18,7 +18,6 @@ import sys
 from pathlib import Path
 
 import urirun
-from urirun.runtime import _runtime
 
 ROOT = Path(__file__).resolve().parents[2]            # if-uri/
 UP = str(ROOT / "urirun" / "adapters" / "python")
@@ -114,7 +113,7 @@ def check(c) -> dict:
             return row
         uri, payload = c["run"]
         scheme = uri.split("://", 1)[0]
-        policy = _runtime.build_policy(None, [f"{scheme}://*"], None)
+        policy = urirun.policy(allow=[f"{scheme}://*"])
         result = urirun.run(uri, registry, payload, mode="execute", policy=policy)
         ok = bool(result.get("ok"))
         row["ran"] = uri

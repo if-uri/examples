@@ -87,9 +87,9 @@ def gen_openapi(rs, title="urirun routes") -> dict:
 # --- typed Python client ---------------------------------------------------
 def gen_client(rs) -> str:
     out = ['# generated from the binding spec — one function per route',
-           "import urirun", "from urirun.runtime import _runtime", "",
+           "import urirun", "",
            "def _run(registry, uri, payload, allow):",
-           "    policy = _runtime.build_policy(None, [allow], None)",
+           "    policy = urirun.policy(allow=[allow])",
            "    return urirun.run(uri, registry, payload, mode='execute', policy=policy)", ""]
     for r in rs:
         args = ", ".join(f"{f}=None" for f in r["props"])

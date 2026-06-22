@@ -1,0 +1,19 @@
+# urishell's manifest as it ships in tellmesh — included here on purpose to show a
+# NUANCE of adoption: `shell://{command}` is a flat URI (scheme + one segment), but
+# urirun's grammar requires resource AND operation segments
+# (scheme://target/resource/.../operation). So this pattern is REJECTED by
+# `urirun validate`. The fix lives in the manifest, not urirun: restructure the URI
+# to e.g. `shell://{host}/command/command/run` with the command as a payload field.
+id: urishell
+version: 1
+scheme: shell
+description: Subprocess shell commands on the automation host.
+uri_patterns:
+  - pattern: shell://{command}
+    kind: command
+    operation: shell.run
+    side_effects: true
+    approval: required
+handlers:
+  python:
+    shell.run: python://urishell.handlers:shell_run

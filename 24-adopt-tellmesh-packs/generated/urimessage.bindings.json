@@ -1,0 +1,29 @@
+{
+  "bindings": {
+    "message://local/alert/command/send": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "message.alert.send",
+        "operation": "message.alert.send",
+        "scheme": "message",
+        "standard": "pack 'urimessage' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "ref": "urimessage.handlers:alert_send",
+      "source": {
+        "handler": "python://urimessage.handlers:alert_send",
+        "pack": "urimessage",
+        "scheme": "message",
+        "type": "pack-manifest"
+      },
+      "uri": "message://local/alert/command/send"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}
