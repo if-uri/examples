@@ -115,20 +115,12 @@ def plan_yaml(goal: str, allowed_uris: list[str], feedback: dict | None = None) 
     return yaml.safe_dump(flow, sort_keys=False, allow_unicode=True)
 
 
-# --- the real LLM planner (calls the llm:// connector) ---------------------
-
-_LLM_REGISTRY = None
-
-
-def _llm_registry() -> dict:
-    """A tiny registry containing only the llm:// routes, used to drive the model.
-    Kept separate from the agent's action space (the model plans *over* the agent
-    routes, it doesn't get to call llm:// as one of them)."""
-    global _LLM_REGISTRY
-    if _LLM_REGISTRY is None:
-        import urirun_connector_llm
-        _LLM_REGISTRY = urirun.compile_registry(urirun_connector_llm.urirun_bindings())
-    return _LLM_REGISTRY
+# --- the real LLM planner (calls the llm connector in-process) -------------
+#
+# The LLM call is infrastructure (how we obtain the plan), not one of the agent's
+# policy-gated actions — so we call the connector's `complete()` directly rather
+# than through the isolated-subprocess runtime. That also sidesteps native-lib
+# fragility (litellm can segfault / pollute stdout when run out-of-process).
 
 
 def _strip_fences(text: str) -> str:
@@ -147,6 +139,8 @@ def make_llm_planner(space: list[dict], model: str, base_url: str = "http://loca
     The model receives the goal, the allowed URIs *with their required fields*, and
     (on a retry) the structured failure — and must return a urirun flow as YAML.
     """
+    from urirun_connector_llm import complete
+
     routes = [{"uri": r["uri"], "required": r.get("required", []),
                "inputs": r.get("inputs", [])} for r in space]
 
@@ -167,13 +161,10 @@ def make_llm_planner(space: list[dict], model: str, base_url: str = "http://loca
         if feedback:
             prompt += ("\nThe previous flow FAILED. Fix it and return corrected YAML.\n"
                        "Error:\n" + json.dumps(feedback, ensure_ascii=False))
-        env = urirun.run("llm://host/chat/command/complete", _llm_registry(),
-                         {"prompt": prompt, "model": model, "base_url": base_url, "provider": provider},
-                         mode="execute", policy=urirun.policy(allow=["llm://*"]))
-        data = urirun.result_data(env)
-        if not (isinstance(data, dict) and data.get("ok")):
-            raise RuntimeError(f"llm call failed: {(data or {}).get('error') or env.get('error')}")
-        return _strip_fences(data.get("response", ""))
+        res = complete(prompt, model=model, base_url=base_url, provider=provider)
+        if not res.get("ok"):
+            raise RuntimeError(f"llm call failed: {res.get('error')}")
+        return _strip_fences(res.get("response", ""))
 
     return plan
 

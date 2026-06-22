@@ -44,25 +44,31 @@ RESULT: ok after 2 attempt(s)
 
 ## Run with a REAL model (`--llm`)
 
-The loop ships a real planner backed by the `llm://` connector — pass `--llm`:
+The loop ships a real planner backed by the `llm` connector — pass `--llm`. The
+model and key are read from **`examples/.env`** (`LLM_MODEL` + `OPENROUTER_API_KEY`,
+gitignored) automatically, so no flags are needed:
 
 ```bash
-# local Ollama (bare model name)
-python3 agent_repair.py --llm --model gemma4:e4b --execute "zapisz notatkę raport z wartością ok"
+# uses LLM_MODEL from examples/.env (e.g. openrouter/google/gemini-3.1-flash-image-preview)
+python3 agent_repair.py --llm --execute "zapisz notatkę raport z wartością ok"
 
-# hosted via litellm (provider-prefixed model + key in env)
-OPENROUTER_API_KEY=sk-... python3 agent_repair.py --llm \
-  --model openrouter/anthropic/claude-3.5-sonnet --execute "..."
+# or override the model explicitly:
+python3 agent_repair.py --llm --model gemma4:e4b --execute "..."           # local Ollama
+python3 agent_repair.py --llm --model openrouter/anthropic/claude-3.5-sonnet --execute "..."
 ```
 
-Real run against local Ollama (`gemma4:e4b`):
+The LLM call goes through the connector's `complete()` **in-process** (it's
+infrastructure, not a policy-gated agent action) — which also avoids the
+native-lib fragility litellm shows when run out-of-process.
+
+Real run (model from `.env`, via OpenRouter):
 
 ```
 ── attempt 1 ✓ ──
   task:
-    title: "Save note 'raport' with value 'ok'"
+    title: "Zapisz notatkę"
   steps:
-    - id: "save"
+    - id: "save-note"
       uri: "note://host/store/command/put"
       payload: {key: "raport", value: "ok"}
 RESULT: ok after 1 attempt(s)        # note {"raport": "ok"} written to notes.json
