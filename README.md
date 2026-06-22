@@ -45,6 +45,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 36 | [`36-remote-browser-cdp/`](36-remote-browser-cdp/) | control a remote browser over Chrome DevTools Protocol (`browser://<node>/cdp/*`) — launch/navigate/eval-JS/screenshot/tabs; Wayland-safe, no input tools | ✅ `e2e.sh` (local) + live on a node |
 | 37 | [`37-closed-loop-automation/`](37-closed-loop-automation/) | three closed-loop automation patterns (self-repair · goal-verify · agent) — NL→YAML flow→execute→feedback→re-plan, pluggable LLM/heuristic/stub planner | ✅ `pytest` (offline) + live on a node |
 | 38 | [`38-self-managing/`](38-self-managing/) | proposal + self-managing urirun: capability→connector resolver + a loop that installs a missing connector mid-run (gap→resolve→provision→re-plan) | ✅ `pytest` + `resolver.py` |
+| 39 | [`39-local-social-autonomy/`](39-local-social-autonomy/) | local fake LinkedIn with `.env` login + full autonomous browser publication on `linkedin.local` only | ✅ `pytest` + local Chrome CDP |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
