@@ -55,7 +55,7 @@ MESH_RELAY="$RELAY" MESH_NODE="$NODE" MESH_TOKEN="$TOKEN" LOCAL_NODE="http://127
 for _ in $(seq 1 40); do curl -fsS "$RELAY/nodes" | grep -q "$NODE" && break; sleep 0.25; done
 MESH_RELAY="$RELAY" MESH_TOKEN="$TOKEN" MESH_NODE="$NODE" MESH_POLL_INTERVAL=0.5 \
   python3 "$MESH/clients/mesh-proxy.py" --port "$PP" >"$TMP/proxy.log" 2>&1 & PIDS+=("$!")
-for _ in $(seq 1 40); do curl -fsS "http://127.0.0.1:$PP/routes" | grep -q "$NODE" && break; sleep 0.25; done
+for _ in $(seq 1 40); do curl -fsS "http://127.0.0.1:$PP/routes" 2>/dev/null | grep -q "$NODE" && break; sleep 0.25; done
 echo "  proxy /routes: $(curl -fsS "http://127.0.0.1:$PP/routes" | jq -c '.routes|map(.uri)')"
 
 echo "== 3) host mesh config points 'office' at the PROXY (never at the node directly) =="
@@ -65,7 +65,7 @@ cat > "$TMP/.urirun/mesh.json" <<JSON
 JSON
 
 echo "== 4) NL -> urirun host ask -> plan -> execute, all over the relay =="
-out="$(cd "$TMP" && U host ask --config .urirun/mesh.json --no-llm --node "$NODE" "show me the current date" --execute --json 2>"$TMP/ask.err" || true)"
+out="$(cd "$TMP" && U host ask --config .urirun/mesh.json --no-llm --node "$NODE" "show me the current date" --execute 2>"$TMP/ask.err" || true)"
 echo "  flow steps: $(jq -c '[.flow.steps[].uri]' <<<"$out" 2>/dev/null || echo '?')"
 echo "  timeline:   $(jq -c '[.timeline[]|{uri,ok}]' <<<"$out" 2>/dev/null || echo '?')"
 
