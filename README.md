@@ -44,7 +44,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 35 | [`35-deploy-lenovo-surface/`](35-deploy-lenovo-surface/) | deploy a browser/office/tools surface onto a remote node over POST /deploy (no SSH); real headless-Chrome control from the host | ✅ live on a node |
 | 36 | [`36-remote-browser-cdp/`](36-remote-browser-cdp/) | control a remote browser over Chrome DevTools Protocol (`browser://<node>/cdp/*`) — launch/navigate/eval-JS/screenshot/tabs; Wayland-safe, no input tools | ✅ `e2e.sh` (local) + live on a node |
 | 37 | [`37-closed-loop-automation/`](37-closed-loop-automation/) | three closed-loop automation patterns (self-repair · goal-verify · agent) — NL→YAML flow→execute→feedback→re-plan, pluggable LLM/heuristic/stub planner | ✅ `pytest` (offline) + live on a node |
-| 38 | [`38-self-managing/`](38-self-managing/) | proposal + resolver prototype for a SELF-managing urirun: map a needed capability (scheme/route/NL) to a connector + install spec across local `~/github/*`, git, hub | ✅ `resolver.py` (19 local connectors indexed) |
+| 38 | [`38-self-managing/`](38-self-managing/) | proposal + self-managing urirun: capability→connector resolver + a loop that installs a missing connector mid-run (gap→resolve→provision→re-plan) | ✅ `pytest` + `resolver.py` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.

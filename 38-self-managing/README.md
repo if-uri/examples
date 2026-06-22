@@ -55,10 +55,10 @@ $ python3 resolver.py "send email"
 It indexed **19 local connectors** and maps a needed scheme / route / NL phrase to the
 connector that provides it **and** how to install it (local path, git, or PyPI).
 
-### 2. The self-managing loop
+### 2. The self-managing loop — *built here* (`self_managing.py`)
 
-Extend the agent loop ([example 37](../37-closed-loop-automation)) with a
-capability-gap step:
+`self_managing_loop(client, goal, planner, resolver, provision)` extends the agent
+loop ([example 37](../37-closed-loop-automation)) with a capability-gap step:
 
 ```
 plan a step
@@ -74,6 +74,13 @@ plan a step
 
 Now the loop **manages** urirun: it self-extends with the capability it's missing,
 from local source first (fast, offline, your own `~/github`), then git, then the hub.
+
+Proven offline (`test_self_managing.py`, 2 passed): a node starts serving only
+`sys://`; the loop is asked to write a `note://`, **detects the gap, provisions the
+note connector, re-discovers the now-larger surface, and completes the goal** — and a
+second test shows it reports an unresolvable capability cleanly. The production
+`make_provision(...)` installs via the admin-gated `node://.../package/command/install`
+(local path → git fallback) then `host deploy --merge`s the connector's bindings.
 
 ### 3. Governance (so autonomy is safe)
 
@@ -96,10 +103,11 @@ three.
 
 ## Files
 
-- `resolver.py` — the capability→connector resolver across local/git/hub (run it: `python3 resolver.py [capability]`).
+- `resolver.py` — the capability→connector resolver across local/git/hub.
+- `self_managing.py` — the self-managing loop (gap → resolve → provision → re-plan) + `make_provision`.
+- `test_self_managing.py` — offline proof (node gains a missing capability mid-loop), 2 cases.
 
 ## Next to build
 
-- Wire `resolve()` into the example-37 agent loop (gap detection + provision step).
 - `urirun connectors resolve <cap>` / `connectors index` (cache the catalog).
 - The source allowlist + verify-before-serve in `apply_deploy` / `node:// --manage`.
