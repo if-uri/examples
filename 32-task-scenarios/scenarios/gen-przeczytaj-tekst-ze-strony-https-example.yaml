@@ -1,0 +1,6 @@
+name: przeczytaj-tekst-ze-strony-https-example
+description: "przeczytaj tekst ze strony https://example.com"
+steps:
+  - uri: browser://chrome/page/query/text
+    payload: {"url": "https://example.com"}
+    why: "Używam tej akcji, aby pobrać tekst ze strony https://example.com, co jest bezpośrednią realizacją celu."

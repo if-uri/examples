@@ -33,6 +33,12 @@ if [ "$DEPLOY" = "1" ]; then
   [ "$KEYAUTH" = "1" ] && AUTH_ARGS+=(--key-auth)
   [ -n "$ADMIN_TOKEN" ] && AUTH_ARGS+=(--admin-token "$ADMIN_TOKEN")
 fi
+# Also gate POST /run (not just /deploy) so this LAN-reachable node is not an open
+# execution endpoint. Needs a token the host presents via URIRUN_RUN_TOKEN; off by
+# default so the open mesh keeps working until you opt in.
+if [ "${URIRUN_NODE_REQUIRE_RUN_AUTH:-0}" = "1" ] && [ -n "$ADMIN_TOKEN" ]; then
+  AUTH_ARGS+=(--require-run-auth)
+fi
 IFURI_DIR="${IFURI_DIR:-$(cd "$HERE/../.." && pwd)}"
 TELLMESH_DIR="${TELLMESH_DIR:-$(cd "$IFURI_DIR/.." && pwd)/tellmesh}"
 

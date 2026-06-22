@@ -145,13 +145,46 @@ def main() -> int:
         return 2
     _load_env()
     node = rs.Node(os.environ.get("NODE_URL", rs.DEFAULT_NODE))
+    node.token = os.environ.get("NODE_TOKEN")  # admin token enables self-heal (ensure/adopt)
     space = []
     import urllib.request
     routes = json.loads(urllib.request.urlopen(node.base + "/routes", timeout=6).read())["routes"]
     for r in routes:
         space.append({"uri": node.concretize(r["uri"]), "kind": r.get("kind"), "inputSchema": r.get("inputSchema", {})})
 
-    print(f"node: {node.name} @ {node.base}  ({len(space)} routes)")
+    # expand the action space with ACQUIRABLE capabilities — connectors installed in the
+    # node's venv but not yet served. The planner may use them; run_ensuring adopts them on
+    # first dispatch. (Needs an admin token for node:// management.)
+    served = {s["uri"] for s in space}
+    acquirable = 0
+    if node.token:
+        try:
+            inst = rs._value(node.run(f"node://{node.name}/registry/query/installed", {})) or {}
+            for uri, entry in (inst.get("bindings") or {}).items():
+                cu = node.concretize(uri)
+                if cu not in served:
+                    space.append({"uri": cu, "kind": entry.get("kind"),
+                                  "inputSchema": entry.get("inputSchema", {}), "acquirable": True})
+                    served.add(cu); acquirable += 1
+        except Exception:  # noqa: BLE001
+            pass
+
+        # opt-in (URIRUN_DISCOVER_INSTALL=1): also surface NOT-installed local connectors
+        # (~/github) with real routes derived from source → fully zero-install acquisition.
+        if os.environ.get("URIRUN_DISCOVER_INSTALL"):
+            try:
+                disc = rs._value(node.run(f"node://{node.name}/connector/query/discover", {"include_routes": True})) or {}
+                for c in disc.get("local", []):
+                    for ru in c.get("routes", []):
+                        cu = node.concretize(ru)
+                        if cu not in served:
+                            space.append({"uri": cu, "kind": "command" if "/command/" in cu else "query",
+                                          "inputSchema": {}, "acquirable": True, "source": c.get("source")})
+                            served.add(cu); acquirable += 1
+            except Exception:  # noqa: BLE001
+                pass
+
+    print(f"node: {node.name} @ {node.base}  ({len(space)} routes, {acquirable} acquirable)")
     print(f"goal: {goal}")
     steps, planner = llm_steps(goal, space)
     name = _slug(goal)
@@ -172,7 +205,11 @@ def main() -> int:
         uri = node.concretize(step["uri"])
         payload = rs._resolve_refs(step.get("payload", {}) or {}, [t.get("_v") for t in trace])
         try:
-            env = node.run(uri, payload); ok = bool(env.get("ok")); val = rs._value(env)
+            # self-healing: if the node lacks the step's scheme, acquire it then run
+            env = node.run_ensuring(uri, payload) if node.token else node.run(uri, payload)
+            ok = bool(env.get("ok")); val = rs._value(env)
+            if env.get("ensured"):
+                print(f"      ⮑ acquired {uri.split('://',1)[0]}:// -> {env['ensured'].get('ok')}")
         except Exception as exc:  # noqa: BLE001
             ok, val = False, str(exc)
         print(f"  [{i}] {uri} -> {'ok' if ok else 'FAIL'}: {json.dumps(val, ensure_ascii=False)[:100]}")

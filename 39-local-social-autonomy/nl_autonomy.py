@@ -22,7 +22,7 @@ import autonomous_browser
 import mock_linkedin
 
 
-ROUTE = "social://linkedin.local/post/command/publish"
+ROUTE = "social://linkedin.com/post/command/publish"
 
 
 def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> str:
@@ -63,7 +63,7 @@ def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any
 
 def publish_local(
     post: str = "",
-    hostname: str = "linkedin.local",
+    hostname: str = "linkedin.com",
     host: str = "127.0.0.1",
     port: int = 0,
     env: str = "",

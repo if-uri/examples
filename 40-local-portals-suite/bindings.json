@@ -1,0 +1,61 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "portal://crm.local/lead/command/create": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "portal_autonomy:create_crm_lead",
+      "python": {"type": "python", "module": "portal_autonomy", "export": "create_crm_lead"},
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {
+        "customer": {"type": "string"},
+        "note": {"type": "string"},
+        "env": {"type": "string", "default": ""},
+        "keep_browser": {"type": "boolean", "default": false}
+      }},
+      "policy": {"allowExecute": true},
+      "meta": {"label": "Create local CRM lead"}
+    },
+    "portal://support.local/ticket/command/create": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "portal_autonomy:create_support_ticket",
+      "python": {"type": "python", "module": "portal_autonomy", "export": "create_support_ticket"},
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {
+        "title": {"type": "string"},
+        "message": {"type": "string"},
+        "env": {"type": "string", "default": ""},
+        "keep_browser": {"type": "boolean", "default": false}
+      }},
+      "policy": {"allowExecute": true},
+      "meta": {"label": "Create local support ticket"}
+    },
+    "portal://shop.local/order/command/create": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "portal_autonomy:create_shop_order",
+      "python": {"type": "python", "module": "portal_autonomy", "export": "create_shop_order"},
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {
+        "product": {"type": "string"},
+        "qty": {"type": "integer", "default": 1},
+        "env": {"type": "string", "default": ""},
+        "keep_browser": {"type": "boolean", "default": false}
+      }},
+      "policy": {"allowExecute": true},
+      "meta": {"label": "Create local shop order"}
+    },
+    "portal://docs.local/doc/command/create": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "portal_autonomy:create_docs_document",
+      "python": {"type": "python", "module": "portal_autonomy", "export": "create_docs_document"},
+      "inputSchema": {"type": "object", "additionalProperties": false, "properties": {
+        "title": {"type": "string"},
+        "body": {"type": "string"},
+        "env": {"type": "string", "default": ""},
+        "keep_browser": {"type": "boolean", "default": false}
+      }},
+      "policy": {"allowExecute": true},
+      "meta": {"label": "Create local docs document"}
+    }
+  }
+}

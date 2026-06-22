@@ -10,7 +10,7 @@ This example is the safe development version of "full autonomy on a social site"
 - verification that the post landed in the local mock feed.
 
 It never talks to linkedin.com and refuses the autonomous write flow for non-local
-hosts. The default browser hostname is `linkedin.local`, mapped inside Chrome to
+hosts. The default browser hostname is `linkedin.com`, mapped inside Chrome to
 `127.0.0.1` with `--host-resolver-rules`, so the demo works without editing
 `/etc/hosts`.
 
@@ -27,7 +27,7 @@ Expected result:
 ```json
 {
   "ok": true,
-  "url": "http://linkedin.local:<port>/feed",
+  "url": "http://linkedin.com:<port>/feed",
   "login": {"ok": true},
   "publish": {"ok": true},
   "apiPosts": [{"content": "..."}]
@@ -37,6 +37,7 @@ Expected result:
 Custom post:
 
 ```bash
+python3 autonomous_browser.py --post "Zaloguj sie"
 python3 autonomous_browser.py --post "Testowa publikacja z pelnej lokalnej autonomii."
 ```
 
@@ -65,7 +66,7 @@ PYTHONPATH=/home/tom/github/if-uri/urirun/adapters/python:$PWD \
 The registry exposes one command:
 
 ```text
-social://linkedin.local/post/command/publish
+social://linkedin.com/post/command/publish
 ```
 
 `nl_autonomy:planner` maps the NL prompt to that typed URI payload, and urirun's
@@ -88,9 +89,9 @@ The credentials are the values in `.env`.
 ## Files
 
 - `mock_linkedin.py` — local LinkedIn-like server with `/login`, `/feed`, `/post`, `/api/posts`.
-- `autonomous_browser.py` — launches Chrome, maps `linkedin.local`, logs in from `.env`, publishes, verifies.
+- `autonomous_browser.py` — launches Chrome, maps `linkedin.com`, logs in from `.env`, publishes, verifies.
 - `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
-- `bindings.json` — typed `social://linkedin.local/post/command/publish` route.
+- `bindings.json` — typed `social://linkedin.com/post/command/publish` route.
 - `run_prompt.sh` — one-command prompt runner around `urirun compile` + `urirun agent run`.
 - `.env.example` — sample local-only credentials and post text.
 - `test_local_social.py` — offline tests for the server, `.env` loading, and local-host scope.

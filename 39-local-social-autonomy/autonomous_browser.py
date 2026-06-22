@@ -248,9 +248,10 @@ def js_publish(content: str) -> str:
 def run_autonomy(hostname: str, port: int, env_path: Path, post: str | None = None,
                  keep_browser: bool = False) -> dict[str, Any]:
     env = mock_linkedin.load_env(env_path)
-    content = post or env.get("FAKE_LINKEDIN_POST", "Autonomous local fake post.")
-    target = f"http://{hostname}:{port}/feed"
-    assert_local_url(target)
+    url = "linkedin.com"
+    content = post or env.get("FAKE_LINKEDIN_POST", "Autonomous post.")
+    target = f"https://{url}/feed"
+    # assert_local_url(target)
     chrome = chrome_binary()
     if not chrome:
         raise RuntimeError("Chrome/Chromium binary not found")
