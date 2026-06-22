@@ -44,3 +44,25 @@ def test_summarize_page_detects_login():
     page = ub.summarize_page({"title": "LinkedIn Login", "href": "https://www.linkedin.com/login", "text": "Sign in"})
     assert page["hasLinkedIn"] is True
     assert page["hasLogin"] is True
+
+
+def test_physical_screen_falls_back_to_screen_portal(monkeypatch):
+    class FakeClient:
+        def run(self, uri, payload=None, **kwargs):
+            if uri.endswith("/kvm/screen/query/inspect"):
+                return {"ok": True, "result": {"value": {"ok": False, "capture": {"ok": False}}}}
+            if uri.endswith("/portal/query/capture"):
+                return {"ok": True, "result": {"value": {"ok": True, "via": "portal", "base64": "ignored"}}}
+            raise AssertionError(uri)
+
+    monkeypatch.setattr(ub, "_save_portal_capture", lambda data: {"ok": True, "image": "/tmp/shot.png"})
+    monkeypatch.setattr(ub, "_local_ocr", lambda image, contains: {"ok": True, "matched": True})
+
+    routes = {
+        "browser://laptop/kvm/screen/query/inspect",
+        "screen://laptop/portal/query/capture",
+    }
+    observed = ub.observe_physical_screen(FakeClient(), "laptop", routes, "LinkedIn")
+    assert observed["ok"] is True
+    assert observed["method"] == "screen-portal-local-ocr"
+    assert observed["attempts"][-1]["artifact"]["image"] == "/tmp/shot.png"

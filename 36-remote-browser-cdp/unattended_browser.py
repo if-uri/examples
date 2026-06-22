@@ -9,9 +9,12 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -27,6 +30,7 @@ DEFAULT_NODE_URL = os.environ.get("NODE_URL", "http://192.168.188.201:8766")
 DEFAULT_NODE = os.environ.get("NODE", "laptop")
 DEFAULT_DEV_HOSTS = ("localhost", "127.0.0.1", "::1", ".local", ".test", ".internal", ".lan")
 PUBLIC_SOCIAL_HOSTS = ("linkedin.com", "www.linkedin.com")
+DEFAULT_ARTIFACT_DIR = Path(os.environ.get("URIRUN_ARTIFACT_DIR", "~/.urirun/artifacts/screenshots")).expanduser()
 
 BLOCKED_PATTERNS = [
     r"\bpost\b", r"\bpublish\b", r"\bsend\b", r"\bmessage\b", r"\bcomment\b",
@@ -127,13 +131,86 @@ def summarize_page(data: dict) -> dict:
     }
 
 
+def _save_portal_capture(data: dict, artifact_dir: Path = DEFAULT_ARTIFACT_DIR) -> dict:
+    b64 = data.get("base64")
+    if not b64:
+        return {"ok": False, "error": "capture did not include base64 image"}
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    stamp = time.strftime("%Y%m%dT%H%M%S")
+    image = artifact_dir / f"{node_safe(data.get('node') or 'screen')}-{stamp}.png"
+    try:
+        image.write_bytes(base64.b64decode(str(b64)))
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "error": f"could not decode capture: {exc}"}
+    return {"ok": True, "image": str(image), "bytes": image.stat().st_size}
+
+
+def node_safe(name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_.-]+", "-", name).strip("-") or "node"
+
+
+def _local_ocr(image: str, contains: str) -> dict:
+    if not image:
+        return {"ok": False, "error": "no image for OCR"}
+    if not shutil.which("tesseract"):
+        return {"ok": False, "error": "local tesseract is not installed", "image": image}
+    out = Path(image).with_suffix(Path(image).suffix + ".ocr.txt")
+    commands = [["tesseract", image, "stdout", "-l", "eng+pol", "--psm", "6"],
+                ["tesseract", image, "stdout", "--psm", "6"]]
+    last: dict[str, Any] = {}
+    for cmd in commands:
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        except Exception as exc:  # noqa: BLE001
+            last = {"ok": False, "error": str(exc), "cmd": cmd}
+            continue
+        text = proc.stdout.strip()
+        if proc.returncode == 0 or text:
+            out.write_text(text, encoding="utf-8")
+            return {"ok": proc.returncode == 0, "image": image, "textFile": str(out),
+                    "chars": len(text), "matched": bool(contains and contains.lower() in text.lower()),
+                    "snippet": text[:1200], "stderr": proc.stderr[-500:]}
+        last = {"ok": False, "cmd": cmd, "returncode": proc.returncode, "stderr": proc.stderr[-500:]}
+    return last or {"ok": False, "error": "OCR failed"}
+
+
+def _compact_capture(data: Any) -> Any:
+    if not isinstance(data, dict):
+        return data
+    return {k: v for k, v in data.items() if k != "base64"}
+
+
 def observe_physical_screen(client: NodeClient, node: str, routes: set[str], contains: str) -> dict:
+    attempts: list[dict] = []
     uri = f"browser://{node}/kvm/screen/query/inspect"
-    if uri not in routes:
-        return {"ok": False, "available": False, "reason": "kvm screen inspect route is not served"}
-    env = run(client, uri, {"contains": contains}, timeout=30)
-    data = value(env)
-    return {"ok": bool(env.get("ok")), "available": True, "envOk": env.get("ok"), "data": data}
+    if uri in routes:
+        env = run(client, uri, {"contains": contains}, timeout=30)
+        data = value(env)
+        attempts.append({"route": uri, "ok": bool(env.get("ok")), "data": data})
+        if isinstance(data, dict) and (data.get("ok") or data.get("matched")):
+            return {"ok": True, "available": True, "method": "browser-kvm-inspect", "attempts": attempts}
+    else:
+        attempts.append({"route": uri, "ok": False, "reason": "kvm screen inspect route is not served"})
+
+    for route in (f"screen://{node}/portal/query/capture", f"screen://{node}/monitor/query/capture"):
+        if route not in routes:
+            continue
+        env = run(client, route, {}, timeout=30)
+        data = value(env)
+        compact = _compact_capture(data)
+        attempt = {"route": route, "ok": bool(env.get("ok")), "data": compact}
+        if isinstance(data, dict) and data.get("base64"):
+            saved = _save_portal_capture({**data, "node": node})
+            attempt["artifact"] = saved
+            if saved.get("ok"):
+                attempt["ocr"] = _local_ocr(str(saved["image"]), contains)
+                if attempt["ocr"].get("matched") or attempt["ocr"].get("ok"):
+                    attempts.append(attempt)
+                    return {"ok": True, "available": True, "method": "screen-portal-local-ocr",
+                            "attempts": attempts}
+        attempts.append(attempt)
+
+    return {"ok": False, "available": bool(attempts), "attempts": attempts}
 
 
 def observe_cdp(client: NodeClient, node: str, routes: set[str], url: str | None) -> dict:

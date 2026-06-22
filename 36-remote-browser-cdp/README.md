@@ -25,8 +25,8 @@ Against any node that serves the CDP surface (e.g. a remote box):
 NODE_URL=http://192.168.188.201:8765 NODE=laptop python3 drive_cdp.py https://example.com
 ```
 
-Read-only unattended browser observation, with physical-screen KVM/OCR detection first
-and CDP fallback second:
+Read-only unattended browser observation, with physical-screen KVM/OCR detection first,
+`screen://.../portal/query/capture` + local OCR fallback second, and CDP fallback third:
 
 ```bash
 NODE_URL=http://192.168.188.201:8766 NODE=laptop \
@@ -37,6 +37,11 @@ The unattended runner is intentionally **read-only**. It refuses social writes a
 login/payment actions such as publishing posts, sending messages, commenting, liking,
 following, entering passwords, or buying. Use it to inspect the screen/page, capture
 evidence, and prepare drafts for a human to approve.
+
+When the node can capture the desktop through `screen://<node>/portal/query/capture`,
+the runner saves the PNG under `~/.urirun/artifacts/screenshots/` and OCRs it locally
+with `tesseract` when available. This is the practical GNOME/Wayland path when
+`grim` is missing and `gnome-screenshot` hangs inside the node process.
 
 For local development and fake/staging surfaces, the runner has a dev override:
 
@@ -84,8 +89,8 @@ tools, no portal. For Chrome on Linux desktops, prefer `browser://.../cdp/*`.
 ## Files
 
 - `drive_cdp.py` — host-side driver: launch → navigate → eval → screenshot → tabs (`NODE_URL`, `NODE`).
-- `unattended_browser.py` — KVM/OCR-first then CDP read-only unattended observation with
-  policy gates for social-write/login/payment actions.
+- `unattended_browser.py` — KVM/OCR-first, screen-portal/OCR fallback, then CDP read-only
+  unattended observation with policy gates for social-write/login/payment actions.
 - `cdp-bindings.json` — the 5 CDP routes (templated on `NODE`), mapping to the connector's `cdp-flat-handler.py`.
 - `e2e.sh` — local node + signed `/deploy` of the CDP handler + `drive_cdp.py` (self-contained; skips if no Chrome).
 
