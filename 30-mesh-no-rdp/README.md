@@ -88,6 +88,28 @@ urirun node stop --port 8766     # stop one instance (repeatable)
 urirun node stop --all           # stop them all (node.sh's free-port fallback breeds duplicates)
 ```
 
+## Watch a node's activity live (no SSH)
+
+A node streams every `/run` and every error as Server-Sent Events on `GET /events`, so you
+can follow what a remote machine is doing in real time — over plain HTTP, nothing to tail:
+
+```bash
+HC=~/.urirun-host/mesh.json
+urirun host watch node-b --config "$HC"                  # live stream, formatted
+urirun host watch node-b --scheme sh,error --config "$HC"   # only these schemes
+urirun host watch node-b --follow --config "$HC"         # reconnect + replay on drop
+curl -N http://192.168.1.20:8765/events                  # raw SSE, no CLI
+```
+
+```
+data: {"event":"run","uri":"sys://node-b/runtime/query/info","ok":true, ...}
+data: {"event":"error","uri":"error://local/E-a7d90355/...","message":"Route not found: ...", ...}
+```
+
+`GET /health` reports `events` (subscriber count); for the node's own stdout use
+`tail -f ~/.urirun-node/node.log` (`--background`) or `journalctl --user -u urirun-node -f`
+(`--service`). [Example 32](../32-task-scenarios) drives scenarios while watching this stream.
+
 ## Run the whole thing locally (two nodes + a host)
 
 ```bash

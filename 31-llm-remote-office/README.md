@@ -219,6 +219,15 @@ curl -s -X POST http://192.168.188.201:8765/run -H 'Content-Type: application/js
   -d '{"uri":"log://lenovo/session/query/recent","payload":{"limit":20}}'
 ```
 
+- **live** — watch the office node act in real time (every `/run` + every error) as the
+  agent drives it, over plain HTTP, no SSH:
+
+```bash
+urirun host watch lenovo --config ~/.urirun-host/mesh.json   # or: curl -N http://192.168.188.201:8765/events
+# data: {"event":"run","uri":"him://lenovo/keyboard/command/type-text","ok":true, ...}
+# data: {"event":"error","uri":"error://local/E-…","message":"Route not found: kvm.display.query", ...}
+```
+
 A real run delegated to the live node, end to end:
 
 ```
