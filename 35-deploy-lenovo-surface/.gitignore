@@ -1,0 +1,3 @@
+__pycache__/
+node-surface.bindings.json
+*.pyc

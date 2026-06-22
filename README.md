@@ -41,6 +41,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 32 | [`32-host-ask-over-relay/`](32-host-ask-over-relay/) | drive a NAT'd node from natural language end-to-end through the `mesh.urirun.com` relay (discover + plan + execute) | ✅ `run.sh` |
 | 33 | [`33-office-automation-mcp/`](33-office-automation-mcp/) | 6 office tasks from NL over an MCP tool surface (windows/browser/email/files/calendar) — ≥10-step flows, each **verified** | ✅ `pytest` |
 | 34 | [`34-all-connectors-flow/`](34-all-connectors-flow/) | install AND use every connector via two YAML flows (`pkg://` install step + a route per connector); 7 ran · 8 config-gated · 0 broken | ✅ `pytest` |
+| 35 | [`35-deploy-lenovo-surface/`](35-deploy-lenovo-surface/) | deploy a browser/office/tools surface onto a remote node over POST /deploy (no SSH); real headless-Chrome control from the host | ✅ live on a node |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
