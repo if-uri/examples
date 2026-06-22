@@ -1,0 +1,65 @@
+{
+  "goal": "write a log note that says 'biuro: audyt zakonczony', then read back the node log",
+  "node": {
+    "name": "lenovo",
+    "url": "http://192.168.188.201:8765"
+  },
+  "planner": "llm",
+  "plan": [
+    {
+      "payload": {
+        "text": "biuro: audyt zakonczony"
+      },
+      "uri": "log://lenovo/session/command/write",
+      "why": "Writing the log note as requested."
+    },
+    {
+      "payload": {
+        "limit": 1
+      },
+      "uri": "log://lenovo/session/query/recent",
+      "why": "Reading back the most recent log entry to verify the write."
+    }
+  ],
+  "trace": [
+    {
+      "i": 0,
+      "uri": "log://lenovo/session/command/write",
+      "why": "Writing the log note as requested.",
+      "payload": {
+        "text": "biuro: audyt zakonczony"
+      },
+      "ok": true,
+      "value": {
+        "at": 1782132858.725851,
+        "text": "biuro: audyt zakonczony"
+      },
+      "decision": true
+    },
+    {
+      "i": 1,
+      "uri": "log://lenovo/session/query/recent",
+      "why": "Reading back the most recent log entry to verify the write.",
+      "payload": {
+        "limit": 1
+      },
+      "ok": true,
+      "value": {
+        "logs": [
+          "{\"at\": 1782132858.7749414, \"text\": \"[host->node] step 1: log://lenovo/session/query/recent payload={\\\"limit\\\": 1}\"}"
+        ]
+      },
+      "decision": true
+    }
+  ],
+  "node_log_tail": [
+    "{\"at\": 1782132858.676753, \"text\": \"[host] new task: \\\"write a log note that says 'biuro: audyt zakonczony', then read back the node log\\\" (2 steps, planner=llm)\"}",
+    "{\"at\": 1782132858.701927, \"text\": \"[host->node] step 0: log://lenovo/session/command/write payload={\\\"text\\\": \\\"biuro: audyt zakonczony\\\"}\"}",
+    "{\"at\": 1782132858.725851, \"text\": \"biuro: audyt zakonczony\"}",
+    "{\"at\": 1782132858.7500386, \"text\": \"[node] step 0 ok: {\\\"at\\\": 1782132858.725851, \\\"text\\\": \\\"biuro: audyt zakonczony\\\"}\"}",
+    "{\"at\": 1782132858.7749414, \"text\": \"[host->node] step 1: log://lenovo/session/query/recent payload={\\\"limit\\\": 1}\"}",
+    "{\"at\": 1782132858.8263326, \"text\": \"[node] step 1 ok: {\\\"logs\\\": [\\\"{\\\\\\\"at\\\\\\\": 1782132858.7749414, \\\\\\\"text\\\\\\\": \\\\\\\"[host->node] step 1: log://lenovo/session/query/recent payload={\\\\\\\\\\\\\\\"limit\\\\\\\\\\\\\\\": 1}\\\\\\\"}\\\"]}\"}"
+  ],
+  "host_log": "/home/tom/github/if-uri/examples/31-llm-remote-office/generated/host-run-20260622-145445.log",
+  "at": "20260622-145445"
+}

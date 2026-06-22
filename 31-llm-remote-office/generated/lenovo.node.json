@@ -1,0 +1,10 @@
+{
+  "version": "urirun.mesh.v1",
+  "node": {
+    "name": "lenovo",
+    "registry": "/home/tom/github/if-uri/examples/31-llm-remote-office/generated/node-office.registry.json",
+    "host": "127.0.0.1",
+    "port": 57467,
+    "execute": true
+  }
+}

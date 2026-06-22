@@ -42,11 +42,42 @@ recover:
 RESULT: ok after 2 attempt(s)
 ```
 
-## Plug in a real LLM
+## Run with a REAL model (`--llm`)
 
-`plan_yaml()` is a deterministic stand-in so the example runs in CI. Replace it
-with a call to the **`llm` connector** — pass the goal, the allowed URIs and the
-last error, and ask for YAML only:
+The loop ships a real planner backed by the `llm://` connector — pass `--llm`:
+
+```bash
+# local Ollama (bare model name)
+python3 agent_repair.py --llm --model gemma4:e4b --execute "zapisz notatkę raport z wartością ok"
+
+# hosted via litellm (provider-prefixed model + key in env)
+OPENROUTER_API_KEY=sk-... python3 agent_repair.py --llm \
+  --model openrouter/anthropic/claude-3.5-sonnet --execute "..."
+```
+
+Real run against local Ollama (`gemma4:e4b`):
+
+```
+── attempt 1 ✓ ──
+  task:
+    title: "Save note 'raport' with value 'ok'"
+  steps:
+    - id: "save"
+      uri: "note://host/store/command/put"
+      payload: {key: "raport", value: "ok"}
+RESULT: ok after 1 attempt(s)        # note {"raport": "ok"} written to notes.json
+```
+
+Two things make a small local model reliable here: a **few-shot YAML example** in
+the prompt, and a **tolerant normalizer** that coerces the shapes models drift
+into (`task` as a bare string → `{title}`, integer `id`s → strings) before strict
+validation — so a minor deviation doesn't burn a repair attempt, while real
+structural errors still trigger the feedback loop.
+
+## How the real planner is wired
+
+`make_llm_planner()` calls the `llm` connector and returns YAML; the default
+`plan_yaml()` stub stays for CI. The call is just:
 
 ```python
 import urirun, json

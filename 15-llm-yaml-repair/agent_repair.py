@@ -36,9 +36,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _ensure_imports() -> None:
-    """Make `import urirun` and `import urirun_flow` work from a sibling checkout,
-    so the example runs without installing anything (mirrors examples/14)."""
-    for rel in (("..", "..", "urirun", "adapters", "python"), ("..", "..", "urirun-flow", "src")):
+    """Make `import urirun`, `urirun_flow` and `urirun_connector_llm` work from
+    sibling checkouts, so the example runs without installing anything."""
+    for rel in (("..", "..", "urirun", "adapters", "python"),
+                ("..", "..", "urirun-flow", "src"),
+                ("..", "..", "urirun-connector-llm")):
         cand = os.path.normpath(os.path.join(HERE, *rel))
         if os.path.isdir(cand) and cand not in sys.path:
             sys.path.insert(0, cand)
@@ -92,6 +94,97 @@ def plan_yaml(goal: str, allowed_uris: list[str], feedback: dict | None = None) 
     return yaml.safe_dump(flow, sort_keys=False, allow_unicode=True)
 
 
+# --- the real LLM planner (calls the llm:// connector) ---------------------
+
+_LLM_REGISTRY = None
+
+
+def _llm_registry() -> dict:
+    """A tiny registry containing only the llm:// routes, used to drive the model.
+    Kept separate from the agent's action space (the model plans *over* the agent
+    routes, it doesn't get to call llm:// as one of them)."""
+    global _LLM_REGISTRY
+    if _LLM_REGISTRY is None:
+        import urirun_connector_llm
+        _LLM_REGISTRY = urirun.compile_registry(urirun_connector_llm.urirun_bindings())
+    return _LLM_REGISTRY
+
+
+def _strip_fences(text: str) -> str:
+    t = (text or "").strip()
+    if t.startswith("```"):
+        t = t.split("\n", 1)[1] if "\n" in t else t[3:]
+        if t.rstrip().endswith("```"):
+            t = t.rstrip()[:-3]
+    return t.removeprefix("yaml\n").strip()
+
+
+def make_llm_planner(space: list[dict], model: str, base_url: str = "http://localhost:11434",
+                     provider: str = ""):
+    """Return a planner backed by a real model via `llm://host/chat/command/complete`.
+
+    The model receives the goal, the allowed URIs *with their required fields*, and
+    (on a retry) the structured failure — and must return a urirun flow as YAML.
+    """
+    routes = [{"uri": r["uri"], "required": r.get("required", []),
+               "inputs": r.get("inputs", [])} for r in space]
+
+    def plan(goal: str, allowed: list[str], feedback: dict | None = None) -> str:
+        prompt = (
+            "You translate a goal into a urirun flow. Return ONLY a YAML document — "
+            "no prose, no code fences.\n"
+            "Exact shape (copy it): `task` is a MAPPING, each `id` is a STRING in quotes:\n"
+            "task:\n  title: \"<short title>\"\n"
+            "steps:\n"
+            "  - id: \"save\"\n"
+            "    uri: \"note://host/store/command/put\"\n"
+            "    payload:\n      key: \"my-key\"\n      value: \"my-value\"\n"
+            "Use ONLY these routes, and fill every `required` field in payload:\n"
+            + json.dumps(routes, ensure_ascii=False) + "\n"
+            "GOAL: " + goal
+        )
+        if feedback:
+            prompt += ("\nThe previous flow FAILED. Fix it and return corrected YAML.\n"
+                       "Error:\n" + json.dumps(feedback, ensure_ascii=False))
+        env = urirun.run("llm://host/chat/command/complete", _llm_registry(),
+                         {"prompt": prompt, "model": model, "base_url": base_url, "provider": provider},
+                         mode="execute", policy=urirun.policy(allow=["llm://*"]))
+        data = urirun.result_data(env)
+        if not (isinstance(data, dict) and data.get("ok")):
+            raise RuntimeError(f"llm call failed: {(data or {}).get('error') or env.get('error')}")
+        return _strip_fences(data.get("response", ""))
+
+    return plan
+
+
+# --- tolerate common LLM deviations before strict validation ---------------
+
+def _normalize_flow_dict(raw: object) -> dict:
+    """Coerce the loose shapes models tend to emit into the strict Flow schema:
+    `task` as a bare string → {title: ...}; integer step `id`s → strings; a single
+    step mapping → a one-item list. Real structural errors still surface."""
+    d = dict(raw) if isinstance(raw, dict) else {}
+    task = d.get("task")
+    if isinstance(task, str):
+        d["task"] = {"title": task}
+    elif task is None:
+        d["task"] = {}
+    steps = d.get("steps")
+    if isinstance(steps, dict):
+        steps = [steps]
+    norm = []
+    for i, s in enumerate(steps or []):
+        if not isinstance(s, dict):
+            continue
+        s = dict(s)
+        s["id"] = str(s.get("id", f"s{i + 1}"))
+        if "payload" in s and not isinstance(s["payload"], dict):
+            s.pop("payload")
+        norm.append(s)
+    d["steps"] = norm
+    return d
+
+
 # --- the loop --------------------------------------------------------------
 
 def run_step(registry: dict, uri: str, payload: dict, *, execute: bool) -> tuple[bool, dict]:
@@ -115,10 +208,11 @@ def repair_run(goal: str, registry: dict, *, tries: int = 3, execute: bool = Fal
         yaml_text = planner(goal, allowed, feedback)
         record: dict = {"attempt": attempt, "yaml": yaml_text}
 
-        # 1) parse + schema-validate the YAML the model returned
+        # 1) parse YAML, tolerate common LLM shape deviations, then schema-validate
         try:
-            flow = Flow.from_yaml(yaml_text)
-        except (FlowError, ValueError) as exc:
+            import yaml
+            flow = Flow(**_normalize_flow_dict(yaml.safe_load(yaml_text)))
+        except (FlowError, ValueError, yaml.YAMLError) as exc:
             feedback = {"stage": "parse", "error": str(exc)}
             record.update(ok=False, feedback=feedback); transcript.append(record); continue
 
@@ -155,10 +249,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--execute", action="store_true", help="actually run steps (default: dry-run)")
     parser.add_argument("--tries", type=int, default=3)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--llm", action="store_true", help="use a real model via llm:// (default: deterministic stub)")
+    parser.add_argument("--model", default="llama3", help="LLM model id (e.g. gemma4:e4b, openrouter/anthropic/claude-3.5-sonnet)")
+    parser.add_argument("--base-url", default="http://localhost:11434", help="Ollama backend (ignored for litellm models)")
+    parser.add_argument("--provider", default="", help="force litellm/ollama")
     args = parser.parse_args(argv)
 
     registry = load_registry()
-    report = repair_run(args.goal, registry, tries=args.tries, execute=args.execute)
+    if args.llm:
+        space = urirun.action_space(registry)
+        planner = make_llm_planner(space, args.model, args.base_url, args.provider)
+    else:
+        planner = plan_yaml
+    report = repair_run(args.goal, registry, tries=args.tries, execute=args.execute, planner=planner)
 
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))

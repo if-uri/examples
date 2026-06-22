@@ -1,0 +1,912 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "env://lenovo/runtime/query/health": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "argv": [
+        "/home/tom/github/if-uri/examples/31-llm-remote-office/../../../tellmesh/urisys-node/.venv/bin/python",
+        "-c",
+        "import json,platform,socket,os;print(json.dumps({'host':socket.gethostname(),'platform':platform.platform(),'cwd':os.getcwd()}))"
+      ],
+      "policy": {
+        "allowExecute": true,
+        "maxArgs": 8
+      },
+      "meta": {
+        "label": "Node runtime health"
+      }
+    },
+    "log://lenovo/session/command/write": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "argv": [
+        "/home/tom/github/if-uri/examples/31-llm-remote-office/../../../tellmesh/urisys-node/.venv/bin/python",
+        "-c",
+        "import json,pathlib,sys,time;p=pathlib.Path('/tmp/urirun-lenovo.log');p.open('a').write(json.dumps({'at':time.time(),'text':sys.argv[1]})+chr(10));print(json.dumps({'wrote':sys.argv[1]}))",
+        "{text}"
+      ],
+      "policy": {
+        "allowExecute": true,
+        "maxArgs": 8
+      },
+      "meta": {
+        "label": "Write local node log entry"
+      }
+    },
+    "log://lenovo/session/query/recent": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200
+          }
+        }
+      },
+      "argv": [
+        "/home/tom/github/if-uri/examples/31-llm-remote-office/../../../tellmesh/urisys-node/.venv/bin/python",
+        "-c",
+        "import json,pathlib,sys;p=pathlib.Path('/tmp/urirun-lenovo.log');print(json.dumps({'lines':p.read_text().splitlines()[-int(sys.argv[1]):] if p.exists() else []}))",
+        "{limit}"
+      ],
+      "policy": {
+        "allowExecute": true,
+        "maxArgs": 8
+      },
+      "meta": {
+        "label": "Read local node log entries"
+      }
+    },
+    "proc://lenovo/process/query/list": {
+      "kind": "command",
+      "adapter": "argv-template",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 12,
+            "minimum": 1,
+            "maximum": 50
+          }
+        }
+      },
+      "argv": [
+        "/home/tom/github/if-uri/examples/31-llm-remote-office/../../../tellmesh/urisys-node/.venv/bin/python",
+        "-c",
+        "import json,subprocess,sys;out=subprocess.run(['ps','-eo','pid,comm,%cpu','--sort=-%cpu'],capture_output=True,text=True).stdout.splitlines()[:int(sys.argv[1])+1];print(json.dumps({'processes':out}))",
+        "{limit}"
+      ],
+      "policy": {
+        "allowExecute": true,
+        "maxArgs": 8
+      },
+      "meta": {
+        "label": "List top local processes"
+      }
+    },
+    "him://{host}/mouse/query/status": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_mouse_status",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_mouse_status"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.mouse.status",
+        "tellmesh": "him.mouse.status"
+      }
+    },
+    "him://{host}/mouse/command/move": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_mouse_move",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_mouse_move"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.mouse.move",
+        "tellmesh": "him.mouse.move"
+      }
+    },
+    "him://{host}/mouse/command/click": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_mouse_click",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_mouse_click"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "button": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right",
+              "middle"
+            ]
+          },
+          "clicks": {
+            "type": "integer"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.mouse.click",
+        "tellmesh": "him.mouse.click"
+      }
+    },
+    "him://{host}/mouse/command/scroll": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_mouse_scroll",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_mouse_scroll"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "amount": {
+            "type": "integer"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.mouse.scroll",
+        "tellmesh": "him.mouse.scroll"
+      }
+    },
+    "him://{host}/keyboard/command/type": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_keyboard_type",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_keyboard_type"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.keyboard.type",
+        "tellmesh": "him.keyboard.type"
+      }
+    },
+    "him://{host}/keyboard/command/type-text": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_keyboard_type_text",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_keyboard_type_text"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.keyboard.type_text",
+        "tellmesh": "him.keyboard.type_text"
+      }
+    },
+    "him://{host}/keyboard/command/hotkey": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_keyboard_hotkey",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_keyboard_hotkey"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.keyboard.hotkey",
+        "tellmesh": "him.keyboard.hotkey"
+      }
+    },
+    "him://{host}/keyboard/command/key": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_him_keyboard_key",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_him_keyboard_key"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "key": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "him \u00b7 him.keyboard.key",
+        "tellmesh": "him.keyboard.key"
+      }
+    },
+    "kvm://{host}/monitor/query/list": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_kvm_monitor_list",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_kvm_monitor_list"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "kvm \u00b7 kvm.monitor.list",
+        "tellmesh": "kvm.monitor.list"
+      }
+    },
+    "kvm://{host}/display/query/info": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_kvm_display_info",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_kvm_display_info"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "kvm \u00b7 kvm.display.info",
+        "tellmesh": "kvm.display.info"
+      }
+    },
+    "kvm://{host}/monitor/{monitor}/query/screenshot": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_kvm_monitor_screenshot",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_kvm_monitor_screenshot"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "kvm \u00b7 kvm.monitor.screenshot",
+        "tellmesh": "kvm.monitor.screenshot"
+      }
+    },
+    "kvm://{host}/task/command/click-text": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_kvm_task_click_text",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_kvm_task_click_text"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "kvm \u00b7 kvm.task.click_text",
+        "tellmesh": "kvm.task.click_text"
+      }
+    },
+    "kvm://{host}/task/command/type-text": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_kvm_task_type_text",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_kvm_task_type_text"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "kvm \u00b7 kvm.task.type_text",
+        "tellmesh": "kvm.task.type_text"
+      }
+    },
+    "browser://{session}/query/status": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_status",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_status"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.status",
+        "tellmesh": "browser.status"
+      }
+    },
+    "browser://{session}/page/command/open": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_page_open",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_page_open"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.page.open",
+        "tellmesh": "browser.page.open"
+      }
+    },
+    "browser://{session}/page/open": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_page_open",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_page_open"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.page.open",
+        "tellmesh": "browser.page.open"
+      }
+    },
+    "browser://{session}/page/query/dom": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_page_dom",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_page_dom"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.page.dom",
+        "tellmesh": "browser.page.dom"
+      }
+    },
+    "browser://{session}/page/command/screenshot": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_page_screenshot",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_page_screenshot"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.page.screenshot",
+        "tellmesh": "browser.page.screenshot"
+      }
+    },
+    "browser://{session}/page/active/screenshot": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_page_screenshot",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_page_screenshot"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.page.screenshot",
+        "tellmesh": "browser.page.screenshot"
+      }
+    },
+    "browser://{session}/form/command/submit": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_form_submit",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_form_submit"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "form_id": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.form.submit",
+        "tellmesh": "browser.form.submit"
+      }
+    },
+    "browser://{session}/social/command/publish-post": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_browser_social_publish_post",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_browser_social_publish_post"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "platform": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "browser \u00b7 browser.social.publish_post",
+        "tellmesh": "browser.social.publish_post"
+      }
+    },
+    "urioffice://{host}/query/status": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_office_status",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_office_status"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "urioffice \u00b7 office.status",
+        "tellmesh": "office.status"
+      }
+    },
+    "urioffice://{host}/document/command/open": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_office_document_open",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_office_document_open"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "urioffice \u00b7 office.document.open",
+        "tellmesh": "office.document.open"
+      }
+    },
+    "urioffice://{host}/document/command/save": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_office_document_save",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_office_document_save"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "urioffice \u00b7 office.document.save",
+        "tellmesh": "office.document.save"
+      }
+    },
+    "urioffice://{host}/document/command/export-pdf": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_office_document_export_pdf",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_office_document_export_pdf"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "urioffice \u00b7 office.document.export_pdf",
+        "tellmesh": "office.document.export_pdf"
+      }
+    },
+    "urioffice://{host}/writer/command/render": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_office_writer_render",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_office_writer_render"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "txt",
+              "pdf",
+              "html"
+            ]
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "urioffice \u00b7 office.writer.render",
+        "tellmesh": "office.writer.render"
+      }
+    },
+    "screen://{target}/monitor/{monitor}/query/frame": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_screen_frame",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_screen_frame"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "monitor": {
+            "type": "integer"
+          },
+          "backend": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "screen \u00b7 screen.frame",
+        "tellmesh": "screen.frame"
+      }
+    },
+    "screen://{target}/monitor/{monitor}/command/capture": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_screen_capture",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_screen_capture"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "monitor": {
+            "type": "integer"
+          },
+          "output": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "screen \u00b7 screen.capture",
+        "tellmesh": "screen.capture"
+      }
+    },
+    "screen://{target}/capture/command/loop": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_screen_capture_loop",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_screen_capture_loop"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {}
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "screen \u00b7 screen.capture_loop",
+        "tellmesh": "screen.capture_loop"
+      }
+    },
+    "shell://{host}/process/command/run": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "tellmesh_bridge:h_shell_run",
+      "python": {
+        "type": "python",
+        "module": "tellmesh_bridge",
+        "export": "h_shell_run"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "shell \u00b7 shell.run",
+        "tellmesh": "shell.run"
+      }
+    }
+  }
+}
