@@ -66,8 +66,16 @@ A refactor **would** be warranted if you adopt any of these:
    signature; 403 otherwise), a `?scheme=kvm,him,error` server-side filter, and
    `Last-Event-ID` replay from a ring buffer (`id:` lines + `host watch --follow`
    reconnect). *Additive — no refactor.*
-3. Publish events to the `mesh-urirun-com` relay / MQTT for NAT'd nodes + multi-node UI.
-   *(integration — no core refactor)*
+3. **(done)** Publish events to the `mesh-urirun-com` relay for NAT'd nodes: relay
+   gained `POST /events` (node publishes) + `GET /events?since=&scheme=` (host polls a
+   per-node ring, token-gated); clients `mesh-events.sh` (node SSE→relay) and
+   `mesh-watch.sh` (host poll). Both sides outbound-only. *(integration — no core
+   refactor; tested by `tests/events-e2e.sh`.)*
+   **MQTT fan-out (done):** `urirun host watch <node> --mqtt-broker host:port` republishes
+   each event to `urirun/events/<node>/<event>/<scheme>`, so many subscribers / a UI can
+   consume (`mosquitto_sub -t 'urirun/events/+/error/#'`). `mesh.fanout_to_mqtt` /
+   `event_topic` are unit-tested with an injected publisher (no broker needed in CI; the
+   paho publish path is covered by `urirun-connector-mqtt`'s own tests).
 4. **Only if** interactive/full-duplex control is required: add an optional ASGI/WS
    transport (`urirun[ws]`) alongside the HTTP one. *(true refactor — defer until needed)*
 

@@ -78,6 +78,25 @@ run    browser://lab/page/command/screenshot  FAIL  INVALID_ARGUMENT
 error  error://local/E-1ebc9205/query/info  INVALID_ARGUMENT
 ```
 
+### Fan out events to MQTT (many subscribers / a UI)
+
+For more than one consumer — a dashboard, several operators, automations — republish the
+node's events to an MQTT broker. `urirun host watch` does it inline:
+
+```bash
+urirun host watch lab --mqtt-broker localhost:1883            # node events -> MQTT
+urirun host watch lab --mqtt-broker localhost:1883 --scheme error   # only errors
+
+# any number of subscribers then consume, wildcarding by node or kind:
+mosquitto_sub -t 'urirun/events/lab/#'        # everything from node 'lab'
+mosquitto_sub -t 'urirun/events/+/error/#'    # every node's errors
+```
+
+Topic layout: `urirun/events/<node>/<event>/<uri-scheme>` (e.g.
+`urirun/events/lab/run/him`, `urirun/events/lab/error/error`). Needs `paho-mqtt` on the
+watcher (`pip install paho-mqtt`) and a reachable broker. The same publish point can feed
+the `urirun-connector-mqtt` device bridge or any MQTT-native dashboard.
+
 See [`NOTES-bidirectional.md`](NOTES-bidirectional.md) for why SSE (not WebSocket) and
 whether a fuller two-way channel needs a package refactor.
 

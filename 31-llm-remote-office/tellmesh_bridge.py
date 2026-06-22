@@ -25,7 +25,9 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
-import yaml
+# NOTE: yaml is imported lazily inside _manifest_routes so this module imports even on a
+# node that lacks PyYAML — otherwise a hard import here would fail at module load and the
+# node's local-function executor would drop the connection instead of returning an error.
 
 # --- where the tellmesh monorepo lives, and which packs to expose ----------------
 TELLMESH_DIR = Path(
@@ -104,6 +106,10 @@ def _manifest_routes() -> list[dict]:
     """Parse every manifest into route descriptors — WITHOUT importing the handlers, so
     a host can build bindings even without the tellmesh runtime deps installed. The
     actual handler import is deferred to `__getattr__` on the node (see below)."""
+    try:
+        import yaml
+    except ImportError:
+        return []  # no PyYAML here -> no routes; __getattr__ returns a clean error per call
     routes: list[dict] = []
     for rel in PACKS:
         manifest = TELLMESH_DIR / rel
