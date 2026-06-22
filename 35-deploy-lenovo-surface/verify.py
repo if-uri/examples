@@ -15,19 +15,27 @@ import urllib.request
 NODE = os.environ.get("NODE_URL", "http://192.168.188.201:8765")
 
 
+try:
+    from urirun.node.client import NodeClient
+except ModuleNotFoundError:
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "urirun" / "adapters" / "python"))
+    from urirun.node.client import NodeClient
+
+_C: "NodeClient | None" = None
+
+
 def run(uri: str, payload: dict | None = None, timeout: float = 60) -> dict:
-    body = json.dumps({"uri": uri, "payload": payload or {}}).encode()
-    req = urllib.request.Request(NODE + "/run", data=body, headers={"Content-Type": "application/json"}, method="POST")
+    global _C
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return json.loads(resp.read())
-    except Exception as exc:  # noqa: BLE001
+        if _C is None:
+            _C = NodeClient(NODE)
+        return _C.run(uri, payload, timeout=timeout)
+    except Exception as exc:  # noqa: BLE001 - report connection issues as a soft error
         return {"ok": False, "error": str(exc)}
 
 
-def value(env: dict):
-    r = env.get("result") or {}
-    return r.get("value", r) if isinstance(r, dict) else r
+value = NodeClient.value
 
 
 CHECKS = [
