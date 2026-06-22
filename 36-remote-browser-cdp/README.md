@@ -1,0 +1,66 @@
+# 36 — control a remote browser over CDP (no xdotool/ydotool, Wayland-safe)
+
+Drive a node's **real browser** from the host over the URI contract, using the
+browser-control connector's **Chrome DevTools Protocol** surface
+(`browser://<node>/cdp/...`). CDP runs headed under Wayland and needs no
+`xdotool`/`ydotool` — the practical way to control Chrome on a Linux desktop node.
+
+```
+host                                node (Chrome + a urirun node)
+ browser://NODE/cdp/session/command/launch {headless}   ── launch Chrome w/ debug port
+ browser://NODE/cdp/page/command/navigate  {url}        ── go to a page
+ browser://NODE/cdp/page/query/eval        {expr}       ── run JS in the page, get the value
+ browser://NODE/cdp/page/query/screenshot              ── PNG over CDP
+ browser://NODE/cdp/page/query/tabs                    ── list tabs
+```
+
+The surface is **stateful**: launch first, then navigate / eval / screenshot
+against the live page.
+
+## Run
+
+Against any node that serves the CDP surface (e.g. a remote box):
+
+```bash
+NODE_URL=http://192.168.188.201:8765 NODE=laptop python3 drive_cdp.py https://example.com
+```
+
+Self-contained local proof (spins a local node, deploys the CDP handler, drives a
+local Chrome) — needs a Chrome/Chromium on this machine:
+
+```bash
+./e2e.sh
+```
+
+```
+== deploy the CDP surface ==
+  deploy ok= True routeCount= 5
+== drive the local browser over CDP ==
+  ✓ launch        {"ok":true,"browser":"Chrome/149.0.7827.155","debugPort":9222,...}
+  ✓ navigate      https://example.com
+  ✓ eval title    'Example Domain'
+  ✓ eval links    1 <a> on the page
+  ✓ screenshot    17149-byte PNG
+  ✓ tabs          ['Example Domain', 'about:blank']
+  6/6 CDP browser steps ok
+```
+
+Verified live the same way against a remote Fedora node ("lenovo", 192.168.188.201).
+
+## Why CDP (and not the GUI/KVM path)
+
+The browser-control connector also has a browser-agnostic `browser://<node>/kvm/*`
+path (launch + navigate + type + click-text + capture by GUI automation). On a
+**GNOME/Wayland** node that path needs `ydotool`+`grim` and the node running inside
+the graphical user session. **CDP sidesteps all of that** for Chrome-family
+browsers: the debug protocol drives the page directly, headed or headless, no input
+tools, no portal. For Chrome on Linux desktops, prefer `browser://.../cdp/*`.
+
+## Files
+
+- `drive_cdp.py` — host-side driver: launch → navigate → eval → screenshot → tabs (`NODE_URL`, `NODE`).
+- `cdp-bindings.json` — the 5 CDP routes (templated on `NODE`), mapping to the connector's `cdp-flat-handler.py`.
+- `e2e.sh` — local node + signed `/deploy` of the CDP handler + `drive_cdp.py` (self-contained; skips if no Chrome).
+
+The handler is [`urirun-connector-browser-control/examples/cdp-flat-handler.py`](../../urirun-connector-browser-control/examples/cdp-flat-handler.py)
+(stdlib-only CDP WebSocket client; deployable as a single file).

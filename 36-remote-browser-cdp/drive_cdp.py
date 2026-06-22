@@ -97,8 +97,11 @@ def main() -> int:
     ok += bool(e.get("ok"))
 
     e = cdp("page/query/screenshot", {})
-    shot = _save_screenshot(value(e))
-    print(f"  {'✓' if e.get('ok') else '✗'} screenshot    {('saved ' + shot) if shot else 'taken'}")
+    v = value(e)
+    shot = _save_screenshot(v)
+    nbytes = v.get("bytes") if isinstance(v, dict) else None
+    detail = ("saved " + shot) if shot else (f"{nbytes}-byte PNG" if nbytes else "taken")
+    print(f"  {'✓' if e.get('ok') else '✗'} screenshot    {detail}")
     ok += bool(e.get("ok"))
 
     e = cdp("page/query/tabs", {})

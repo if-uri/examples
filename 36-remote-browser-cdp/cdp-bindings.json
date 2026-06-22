@@ -1,0 +1,46 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "browser://NODE/cdp/session/command/launch": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:launch",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "launch"},
+      "inputSchema": {"type": "object", "additionalProperties": true,
+        "properties": {"browser": {"type": "string"}, "url": {"type": "string"}, "headless": {"type": "boolean"}}},
+      "meta": {"label": "Launch a Chrome-family browser with a CDP debug port"}
+    },
+    "browser://NODE/cdp/page/command/navigate": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:nav",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "nav"},
+      "inputSchema": {"type": "object", "additionalProperties": true, "properties": {"url": {"type": "string"}}},
+      "meta": {"label": "Navigate the active page"}
+    },
+    "browser://NODE/cdp/page/query/eval": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:eval_js",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "eval_js"},
+      "inputSchema": {"type": "object", "additionalProperties": true, "properties": {"expr": {"type": "string"}}},
+      "meta": {"label": "Evaluate a JS expression in the page"}
+    },
+    "browser://NODE/cdp/page/query/screenshot": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:screenshot",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "screenshot"},
+      "inputSchema": {"type": "object", "additionalProperties": true, "properties": {}},
+      "meta": {"label": "Screenshot the active page (PNG over CDP)"}
+    },
+    "browser://NODE/cdp/page/query/tabs": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:tabs",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "tabs"},
+      "inputSchema": {"type": "object", "additionalProperties": true, "properties": {}},
+      "meta": {"label": "List open tabs"}
+    }
+  }
+}
