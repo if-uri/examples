@@ -76,9 +76,13 @@ echo "-- init + serve --"
 "$PY" -m urirun.runtime.v2 node init --config "$CFG" --name "$NODE_NAME" \
   --registry "$REG" --host "$NODE_HOST" --port "$NODE_PORT" --execute >/dev/null
 
+# --manage exposes admin-gated node:// URIs (pip install into the node venv, etc.) so the
+# office surface (tellmesh) can be provisioned over the mesh — set MANAGE=0 to drop it.
+MANAGE_ARGS=(); [ "${MANAGE:-1}" = "1" ] && [ "$DEPLOY" = "1" ] && MANAGE_ARGS=(--manage)
+
 # Open policy (your choice): every office scheme may execute, including arbitrary shell.
 exec "$PY" -m urirun.runtime.v2 node serve --config "$CFG" --execute \
-  "${AUTH_ARGS[@]}" \
+  "${AUTH_ARGS[@]}" "${MANAGE_ARGS[@]}" \
   --allow "him://${NODE_NAME}/**" \
   --allow "kvm://${NODE_NAME}/**" \
   --allow "browser://${NODE_NAME}/**" \
