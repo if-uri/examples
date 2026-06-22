@@ -37,6 +37,9 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 21 | [`21-generate-from-binding/`](21-generate-from-binding/) | generate protobuf/gRPC + OpenAPI + a typed client from one URI binding spec (typed `inputSchema`) | ✅ `pytest` |
 | 22 | [`22-warm-worker/`](22-warm-worker/) | warm-worker pool: amortize the interpreter cold start for argv-template connectors (268ms→4ms, 69×) | ✅ host run |
 | 14 | [`14-llm-uri-agent/`](14-llm-uri-agent/) | LLM-over-URI agent loop: registry as action space, drive Chrome + tools by URI under policy | ✅ `pytest` |
+| 15 | [`15-llm-yaml-repair/`](15-llm-yaml-repair/) | NL → LLM builds a YAML flow → execute → on failure feed the error back → corrected flow (self-repair) | ✅ `pytest` |
+| 32 | [`32-host-ask-over-relay/`](32-host-ask-over-relay/) | drive a NAT'd node from natural language end-to-end through the `mesh.urirun.com` relay (discover + plan + execute) | ✅ `run.sh` |
+| 33 | [`33-office-automation-mcp/`](33-office-automation-mcp/) | 6 office tasks from NL over an MCP tool surface (windows/browser/email/files/calendar) — ≥10-step flows, each **verified** | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
