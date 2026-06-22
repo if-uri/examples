@@ -59,44 +59,30 @@ def load_env(path: str | None = None) -> None:
 
 
 # ------------------------------------------------------------------- node client
-def _get(url: str, timeout: float = 6.0) -> dict:
-    with urllib.request.urlopen(url, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
+# Dispatch / envelope-unwrap / $ref chaining live in urirun's reusable NodeClient; this
+# example's Node just adds its placeholder map, the planner's action_space, and node logging.
+try:
+    from urirun.node.client import NodeClient
+except ModuleNotFoundError:
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent.parent.parent / "urirun" / "adapters" / "python"))
+    from urirun.node.client import NodeClient
 
 
-def _post(url: str, body: dict, timeout: float = 120.0) -> dict:
-    data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
-
-
-class Node:
+class Node(NodeClient):
     def __init__(self, base: str) -> None:
-        self.base = base.rstrip("/")
-        health = _get(self.base + "/health")
-        self.name = health.get("name", "node")
-        self.routes = _get(self.base + "/routes").get("routes", [])
+        super().__init__(base)
+        self.routes = super().routes()  # eager list (shadows the method on this instance)
 
+    # explicit NodeClient.x(self, …) (not zero-arg super()) so the test's FakeNode can borrow
+    # these as unbound methods without subclassing Node.
     def concretize(self, uri: str) -> str:
-        uri = urllib.parse.unquote(uri)  # /routes percent-encodes braces: %7Bmonitor%7D
-        for ph, default in PLACEHOLDERS.items():
-            uri = uri.replace(ph, default if default is not None else self.name)
-        return uri
+        return NodeClient.concretize(self, uri, PLACEHOLDERS)
 
     def action_space(self) -> list[dict]:
-        space = []
-        for r in self.routes:
-            space.append({
-                "uri": self.concretize(r["uri"]),
-                "kind": r.get("kind"),
-                "title": r.get("title", ""),
-                "inputSchema": r.get("inputSchema", {}),
-            })
-        return space
-
-    def run(self, uri: str, payload: dict) -> dict:
-        return _post(self.base + "/run", {"uri": uri, "payload": payload})
+        return [{"uri": self.concretize(r["uri"]), "kind": r.get("kind"),
+                 "title": r.get("title", ""), "inputSchema": r.get("inputSchema", {})} for r in self.routes]
 
     def log(self, text: str) -> None:
         """Best-effort: record a line in the node's OWN log (visible on the node side)."""
@@ -111,14 +97,7 @@ class Node:
         uri = f"log://{self.name}/session/query/recent"
         if not any(r["uri"] == uri for r in self.routes):
             return []
-        try:
-            env = self.run(uri, {"limit": limit})
-            out = (env.get("result") or {}).get("stdout") or "{}"
-            data = json.loads(out)
-            # the default node uses "logs"; this example's base route uses "lines"
-            return data.get("logs") or data.get("lines") or []
-        except Exception:
-            return []
+        return NodeClient.recent_log(self, limit)
 
 
 # ------------------------------------------------------------------- planning
@@ -196,34 +175,9 @@ def llm_plan(goal: str, space: list[dict]) -> tuple[list[dict], str]:
 
 
 # ------------------------------------------------------------------- $ref threading
-def resolve_refs(payload: Any, results: list[dict]) -> Any:
-    if isinstance(payload, dict):
-        return {k: resolve_refs(v, results) for k, v in payload.items()}
-    if isinstance(payload, list):
-        return [resolve_refs(v, results) for v in payload]
-    if isinstance(payload, str) and payload.startswith("$ref:"):
-        m = re.match(r"\$ref:(\d+)\.([\w.]+)", payload)
-        if m:
-            idx, field = int(m.group(1)), m.group(2)
-            cur: Any = results[idx] if idx < len(results) else {}
-            for part in field.split("."):
-                cur = (cur or {}).get(part) if isinstance(cur, dict) else None
-            return cur if cur is not None else payload
-    return payload
-
-
-def _value(env: dict) -> Any:
-    """Unwrap a node /run envelope: local-function -> result.value; argv -> result.stdout(json)."""
-    res = env.get("result") or {}
-    if "value" in res:
-        return res["value"]
-    out = res.get("stdout")
-    if isinstance(out, str):
-        try:
-            return json.loads(out)
-        except Exception:
-            return out
-    return res
+# $ref chaining + envelope unwrap are reused from NodeClient.
+resolve_refs = NodeClient.resolve_refs
+_value = NodeClient.value
 
 
 # ------------------------------------------------------------------- run

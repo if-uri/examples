@@ -66,97 +66,34 @@ def _mini_yaml(text: str) -> dict:
     return doc
 
 
-def _get(url: str, timeout: float = 6.0) -> dict:
-    with urllib.request.urlopen(url, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
+# Host-side plumbing (dispatch, envelope-unwrap, $ref chaining, SSE watch) now lives in
+# urirun's reusable NodeClient — the example just adds its placeholder map and event print.
+try:
+    from urirun.node.client import NodeClient
+except ModuleNotFoundError:
+    sys.path.insert(0, str(HERE.parent.parent / "urirun" / "adapters" / "python"))
+    from urirun.node.client import NodeClient
 
 
-def _post(url: str, body: dict, timeout: float = 60.0) -> dict:
-    data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
-
-
-class Node:
-    def __init__(self, base: str) -> None:
-        self.base = base.rstrip("/")
-        h = _get(self.base + "/health")
-        self.name = h.get("name", "node")
-        self.has_events = "events" in h
-
+class Node(NodeClient):
     def concretize(self, uri: str) -> str:
-        from urllib.parse import unquote
-        uri = unquote(uri)  # /routes percent-encodes inner braces: %7Bmonitor%7D
-        for ph, default in PLACEHOLDERS.items():
-            uri = uri.replace(ph, default if default is not None else self.name)
-        return uri
-
-    def run(self, uri: str, payload: dict) -> dict:
-        return _post(self.base + "/run", {"uri": uri, "payload": payload})
-
-    def recent_log(self, limit: int = 12) -> list:
-        """Read the node's own log back (the other direction): handles both the default
-        node's `logs` key and this example's base-route `lines` key."""
-        uri = f"log://{self.name}/session/query/recent"
-        try:
-            env = self.run(uri, {"limit": limit})
-            out = (env.get("result") or {}).get("stdout") or "{}"
-            data = json.loads(out)
-            return data.get("logs") or data.get("lines") or []
-        except Exception:
-            return []
+        return super().concretize(uri, PLACEHOLDERS)
 
 
 def watch_thread(base: str, stop: threading.Event, sink: list) -> None:
     """Background SSE subscriber: collect the node's live events while steps dispatch."""
     try:
-        req = urllib.request.Request(base.rstrip("/") + "/events",
-                                     headers={"Accept": "text/event-stream"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            for raw in resp:
-                if stop.is_set():
-                    return
-                line = raw.decode("utf-8", "replace").strip()
-                if line.startswith("data:") and line[5:].strip():
-                    try:
-                        ev = json.loads(line[5:].strip())
-                    except Exception:
-                        continue
-                    sink.append(ev)
-                    mark = "" if ev.get("ok") is None else ("ok" if ev.get("ok") else "FAIL")
-                    print(f"      ░ node-event: {ev.get('event'):5} {ev.get('uri')} {mark} "
-                          f"{ev.get('category') or ''}".rstrip(), flush=True)
+        for ev in NodeClient(base).watch(stop=stop):
+            sink.append(ev)
+            mark = "" if ev.get("ok") is None else ("ok" if ev.get("ok") else "FAIL")
+            print(f"      ░ node-event: {ev.get('event'):5} {ev.get('uri')} {mark} "
+                  f"{ev.get('category') or ''}".rstrip(), flush=True)
     except Exception:
         return
 
 
-def _resolve_refs(payload, results):
-    if isinstance(payload, dict):
-        return {k: _resolve_refs(v, results) for k, v in payload.items()}
-    if isinstance(payload, list):
-        return [_resolve_refs(v, results) for v in payload]
-    if isinstance(payload, str) and payload.startswith("$ref:"):
-        m = re.match(r"\$ref:(\d+)\.([\w.]+)", payload)
-        if m and int(m.group(1)) < len(results):
-            cur = results[int(m.group(1))]
-            for part in m.group(2).split("."):
-                cur = (cur or {}).get(part) if isinstance(cur, dict) else None
-            return cur if cur is not None else payload
-    return payload
-
-
-def _value(env: dict):
-    res = env.get("result") or {}
-    if "value" in res:
-        return res["value"]
-    out = res.get("stdout")
-    if isinstance(out, str):
-        try:
-            return json.loads(out)
-        except Exception:
-            return out
-    return res if env.get("ok") else env.get("error")
+_resolve_refs = NodeClient.resolve_refs
+_value = NodeClient.value
 
 
 def run_scenario(node: Node, scenario: dict) -> dict:
