@@ -5,8 +5,12 @@ export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
 
 .PHONY: connectors
-connectors: ## Install urirun + every sibling Python connector editable (examples then run with no PYTHONPATH juggling)
+connectors: ## Install urirun + sibling libs + every Python connector editable (examples then run with no PYTHONPATH juggling)
 	pip install -e ../urirun/adapters/python
+	@for d in ../urirun-*/; do \
+	  case "$$d" in */urirun-connector-*) continue;; esac; \
+	  if [ -f "$$d/pyproject.toml" ]; then echo "installing lib $$d"; pip install -q -e "$$d" --no-deps || exit 1; fi; \
+	done
 	@for d in ../urirun-connector-*/; do \
 	  if [ -f "$$d/pyproject.toml" ]; then echo "installing $$d"; pip install -q -e "$$d" --no-deps || exit 1; fi; \
 	done
@@ -14,6 +18,19 @@ connectors: ## Install urirun + every sibling Python connector editable (example
 .PHONY: test
 test: ## Run host-runnable checks for every NN-* example (Docker demos skipped)
 	./run_tests.sh
+
+.PHONY: test-connectors
+test-connectors: ## Run pytest for every sibling Python connector with a tests/ dir (runs all, reports the failures)
+	@fail=0; n=0; failed=""; \
+	for d in ../urirun-connector-*/; do \
+	  if [ -d "$$d/tests" ]; then \
+	    n=$$((n+1)); echo "== $$d =="; \
+	    ( cd "$$d" && PYTHONPATH=. python -m pytest tests -q ) || { fail=1; failed="$$failed $$(basename $$d)"; }; \
+	  fi; \
+	done; \
+	echo "----------------------------------------"; \
+	if [ "$$fail" = "0" ]; then echo "all $$n connector suites passed"; else echo "FAILED:$$failed"; fi; \
+	exit $$fail
 
 .PHONY: help
 help:

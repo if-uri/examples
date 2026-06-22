@@ -22,16 +22,16 @@ NODE_HOST="${NODE_HOST:-0.0.0.0}"
 NODE_PORT="${NODE_PORT:-8765}"
 ALLOW_REAL="${ALLOW_REAL:-1}"
 # POST /deploy lets the host re-provision this node over the mesh (new bindings / code /
-# allow) WITHOUT touching it again. Enabled by default with an auto-generated token saved
-# to ~/.urirun-node/admin-token (printed at startup; read it once on the host). Set an
-# explicit URIRUN_NODE_TOKEN to pin the value, or DEPLOY=0 to disable /deploy entirely.
+# allow) WITHOUT touching it again. Enabled by default with SSH-key auth: from the host
+# run `uri-copy-id <this-host>` once (no shared secret), then `host deploy --identity`.
+# Set URIRUN_NODE_TOKEN to also accept a token, KEYAUTH=0 to drop key-auth, DEPLOY=0 off.
 DEPLOY="${DEPLOY:-1}"
+KEYAUTH="${KEYAUTH:-1}"
 ADMIN_TOKEN="${URIRUN_NODE_TOKEN:-}"
+AUTH_ARGS=()
 if [ "$DEPLOY" = "1" ]; then
-  TOKEN_ARGS=( ${ADMIN_TOKEN:+--admin-token "$ADMIN_TOKEN"} )
-  [ -z "$ADMIN_TOKEN" ] && TOKEN_ARGS=(--generate-token)
-else
-  TOKEN_ARGS=()
+  [ "$KEYAUTH" = "1" ] && AUTH_ARGS+=(--key-auth)
+  [ -n "$ADMIN_TOKEN" ] && AUTH_ARGS+=(--admin-token "$ADMIN_TOKEN")
 fi
 IFURI_DIR="${IFURI_DIR:-$(cd "$HERE/../.." && pwd)}"
 TELLMESH_DIR="${TELLMESH_DIR:-$(cd "$IFURI_DIR/.." && pwd)/tellmesh}"
@@ -53,7 +53,7 @@ echo "  ifuri dir   : $IFURI_DIR"
 echo "  tellmesh dir: $TELLMESH_DIR"
 echo "  serving     : $NODE_NAME on $NODE_HOST:$NODE_PORT  (allow_real=$ALLOW_REAL)"
 if [ "$DEPLOY" = "1" ]; then
-  echo "  deploy /api : ENABLED${ADMIN_TOKEN:+ (pinned token)}$([ -z "$ADMIN_TOKEN" ] && echo " (auto token -> ~/.urirun-node/admin-token)")"
+  echo "  deploy /api : ENABLED${KEYAUTH:+ (ssh-key: run 'uri-copy-id' from the host)}${ADMIN_TOKEN:+ + pinned token}"
 else
   echo "  deploy /api : off (DEPLOY=0)"
 fi
@@ -78,7 +78,7 @@ echo "-- init + serve --"
 
 # Open policy (your choice): every office scheme may execute, including arbitrary shell.
 exec "$PY" -m urirun.runtime.v2 node serve --config "$CFG" --execute \
-  "${TOKEN_ARGS[@]}" \
+  "${AUTH_ARGS[@]}" \
   --allow "him://${NODE_NAME}/**" \
   --allow "kvm://${NODE_NAME}/**" \
   --allow "browser://${NODE_NAME}/**" \

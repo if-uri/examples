@@ -85,17 +85,37 @@ hot-swaps the served surface live (no restart). So after the node runs once with
 admin token, the host drives everything over the mesh:
 
 ```bash
-# on the node — /deploy is ON by default; the node mints + persists an admin token to
-# ~/.urirun-node/admin-token and prints it at startup (reused across restarts):
+# on the node — /deploy is ON by default with SSH-key auth (no shared secret):
 ./node_serve.sh
-#   [urirun] /deploy admin token: 58fa25f5…   ← copy this once
-#   pin your own instead:  URIRUN_NODE_TOKEN=secret ./node_serve.sh
-#   disable /deploy:        DEPLOY=0 ./node_serve.sh
+#   deploy /api : ENABLED (ssh-key: run 'uri-copy-id' from the host)
 
-# from the host — build the office bindings locally and push them + the bridge code:
-URIRUN_NODE_TOKEN=<token-from-node> ./deploy_from_host.sh
-#   node routeCount jumps 7 -> 34, no restart. Re-run any time you change bindings/code.
+# from the host — enroll your SSH key once, then push the office bindings + bridge code:
+./deploy_from_host.sh
+#   == enroll SSH key (uri-copy-id; trust-on-first-use) ==   ← first run only
+#   == push … ==  -> node routeCount jumps 7 -> 34, no restart. Re-run any time.
 ```
+
+### SSH-style auth — `uri-copy-id` (no tokens)
+
+Managing many nodes by shared token is a pain, so urirun also does **public-key auth
+like SSH**, reusing your `~/.ssh/id_ed25519`:
+
+```bash
+uri-copy-id 192.168.188.201          # ssh-copy-id for urirun: enroll your key on the node
+#   (equiv: urirun host copy-id 192.168.188.201 --identity ~/.ssh/id_ed25519)
+urirun host deploy lenovo --bindings node-office.bindings.json \
+  --code tellmesh_bridge.py --identity ~/.ssh/id_ed25519     # signed, no token
+```
+
+- The node keeps `~/.urirun-node/authorized_keys`. The **first** enrollment on a fresh
+  node is trust-on-first-use (claims the node, no secret); afterwards adding a key must
+  be **signed by an already-enrolled key**. Start the node with `--key-auth`
+  (`node_serve.sh` and `get.urirun.com/node.sh` do this by default).
+- `/deploy` then authenticates by an **ed25519 signature** over the request
+  (purpose + timestamp + body hash, ±300 s) — `urirun host deploy --identity KEY`.
+- Token auth still works in parallel: set `URIRUN_NODE_TOKEN` on the node and pass
+  `--token`. The node needs the `cryptography` package for key-auth (`node.sh` installs
+  it; otherwise `pip install cryptography`).
 
 Under the hood it is a first-class urirun command:
 
