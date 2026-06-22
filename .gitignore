@@ -261,3 +261,6 @@ __marimo__/
 
 # Markpact unpack output (urisys markpact run/materialize)
 .markpact/
+
+# Keep the sanitized template tracked even though .env / .env.example are ignored above.
+!.env.example

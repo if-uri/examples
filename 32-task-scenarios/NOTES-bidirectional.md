@@ -51,10 +51,9 @@ A refactor **would** be warranted if you adopt any of these:
    → `ThreadingHTTPServer` is the wrong base. Move the node server to **ASGI**
    (`uvicorn`+`starlette`) or add a dedicated WS port. This is a real refactor of
    `node/mesh.py:serve_node` and a new optional dependency (`urirun[ws]`).
-2. **Event auth + scoping.** `GET /events` is currently **unauthenticated** — anyone who
-   reaches the port reads the stream. If nodes are exposed beyond localhost, gate
-   `/events` behind the same token/key auth as `/run` (small, no refactor) and add
-   **per-subscriber filters** (by scheme/host) and a `Last-Event-ID` replay buffer.
+2. **Event auth + scoping.** *(done — see increment #2 below.)* `/events` is gated by the
+   same token/key auth as `/run` when `--require-run-auth` is on (otherwise open, like an
+   ungated `/run`), with a `?scheme=` filter and `Last-Event-ID` replay.
 3. **Durable / fan-out events** across many nodes and a UI. → introduce a broker
    (the existing `mesh-urirun-com` relay, or MQTT via `urirun-connector-mqtt`) and have
    nodes *publish* events to it; the host subscribes once. This is an integration, not a
@@ -63,8 +62,10 @@ A refactor **would** be warranted if you adopt any of these:
 ## Recommended increments (in order, each shippable on its own)
 
 1. **(done)** SSE `/events` + `host watch` — node→host logs/errors as URIs.
-2. Gate `/events` behind auth when `--require-run-auth`/key-auth is on; add `?scheme=`
-   filter and `Last-Event-ID` replay. *(small, additive — no refactor)*
+2. **(done)** `/events` gated behind auth when `--require-run-auth` (token or enrolled-key
+   signature; 403 otherwise), a `?scheme=kvm,him,error` server-side filter, and
+   `Last-Event-ID` replay from a ring buffer (`id:` lines + `host watch --follow`
+   reconnect). *Additive — no refactor.*
 3. Publish events to the `mesh-urirun-com` relay / MQTT for NAT'd nodes + multi-node UI.
    *(integration — no core refactor)*
 4. **Only if** interactive/full-duplex control is required: add an optional ASGI/WS
