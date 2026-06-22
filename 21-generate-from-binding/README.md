@@ -1,5 +1,10 @@
 # 21 — generate transport/runtime artifacts FROM a binding spec
 
+> **Now first-class:** this generator graduated into urirun core as
+> `urirun gen proto|openapi|client <registry>` (richer: a generic carrier rpc +
+> typed rpc per route + a NUANCE report for JSON-Schema↔proto3 mismatches). Run
+> `./gen.sh` to use it; `generate.py` below is the original standalone walkthrough.
+
 A URI scheme binding (uri + JSON-Schema `inputSchema` + kind + adapter) is the
 **single source of truth**. Because it is typed and machine-readable, you generate
 everything around it instead of hand-writing per (language × transport):
