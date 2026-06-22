@@ -35,6 +35,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 19 | [`19-all-connectors/`](19-all-connectors/) | check all 17 connectors (Python/PHP/Go/JS) through one contract: bindings→validate→compile→run | ✅ `pytest` |
 | 20 | [`20-runtime-transport-matrix/`](20-runtime-transport-matrix/) | the thesis: connectors in Go/PHP/JS/Python × transports inprocess/queue(MQTT)/HTTP/MCP — identical output | ✅ `pytest` |
 | 21 | [`21-generate-from-binding/`](21-generate-from-binding/) | generate protobuf/gRPC + OpenAPI + a typed client from one URI binding spec (typed `inputSchema`) | ✅ `pytest` |
+| 22 | [`22-warm-worker/`](22-warm-worker/) | warm-worker pool: amortize the interpreter cold start for argv-template connectors (268ms→4ms, 69×) | ✅ host run |
 | 14 | [`14-llm-uri-agent/`](14-llm-uri-agent/) | LLM-over-URI agent loop: registry as action space, drive Chrome + tools by URI under policy | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM

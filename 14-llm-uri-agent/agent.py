@@ -53,20 +53,15 @@ TOOLS = [sys.executable, os.path.join(HERE, "tools.py")]
 BROWSER_CONNECTOR_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "urirun-connector-browser-control"))
 
 
-BROWSER_CONNECTOR_MODULE = "urirun_connector_browser_control.core"
-
-
 def browser_control_bindings() -> dict | None:
     """Reuse the `urirun-connector-browser-control` package when available.
 
-    The connector now exposes its routes as in-process ``local-function`` handlers
-    (no argv, and the live ref is stripped from the serializable bindings). So the
-    agent drives it as an **external tool over its derived CLI**: for each route we
-    synthesize an ``argv-template`` binding that calls
-    ``python -m urirun_connector_browser_control.core <subcommand> --flags`` —
-    subcommand = ``meta.cliAlias`` or the last URI segment, flags from the schema.
-    ``external`` routes get ``--execute`` appended so the step actually runs once
-    the agent's policy has decided to run it (queries freely, commands when allowed).
+    The connector ships ``argv-template`` routes whose argv invokes its own
+    out-of-process executor (``python3 -m urirun_connector_browser_control._exec
+    <subcommand> ...``), which prints the route's JSON result. The agent reuses
+    those bindings as-is, only swapping the leading ``python3`` for this
+    interpreter (``sys.executable``) so the subprocess uses the same environment
+    that has urirun + the connector importable.
 
     The connector dir is added to ``sys.path``/``PYTHONPATH`` so it imports here and
     in the spawned subprocess — no install needed. Returns None when the connector
@@ -83,17 +78,10 @@ def browser_control_bindings() -> dict | None:
     except Exception:  # noqa: BLE001 - connector is optional; fall back to the stub
         return None
     doc = browser_control.urirun_bindings()
-    rebuilt: dict = {}
-    for uri, binding in (doc.get("bindings") or {}).items():
-        meta = binding.get("meta") or {}
-        subcommand = meta.get("cliAlias") or uri.rsplit("/", 1)[-1]
-        argv = [sys.executable, "-m", BROWSER_CONNECTOR_MODULE, subcommand]
-        for prop in ((binding.get("inputSchema") or {}).get("properties") or {}):
-            argv += [f"--{prop}", f"{{{prop}}}"]
-        if meta.get("external"):
-            argv.append("--execute")
-        rebuilt[uri] = {**binding, "adapter": "argv-template", "kind": "command", "argv": argv}
-    doc["bindings"] = rebuilt
+    for binding in (doc.get("bindings") or {}).values():
+        argv = binding.get("argv") or []
+        if argv and argv[0] in ("python3", "python"):
+            binding["argv"] = [sys.executable, *argv[1:]]
     return doc
 
 
