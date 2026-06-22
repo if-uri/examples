@@ -9,6 +9,7 @@ from pathlib import Path
 
 import autonomous_browser as auto
 import mock_linkedin
+import nl_autonomy
 
 
 def free_port() -> int:
@@ -73,3 +74,16 @@ def test_js_helpers_embed_values_safely():
     publish = auto.js_publish("hello </script>")
     assert "a@example.local" in login
     assert "hello" in publish
+
+
+def test_nl_extracts_quoted_post():
+    assert nl_autonomy.extract_post('opublikuj "tekst testowy"', env_file(Path(tempfile.mkdtemp()))) == "tekst testowy"
+
+
+def test_nl_planner_returns_social_publish_step():
+    steps = nl_autonomy.planner("opublikuj post: lokalny test", [{"uri": nl_autonomy.ROUTE}])
+    assert steps == [{
+        "uri": nl_autonomy.ROUTE,
+        "payload": {"post": "lokalny test"},
+        "why": "NL prompt asks for a local fake social publication",
+    }]

@@ -40,6 +40,37 @@ Custom post:
 python3 autonomous_browser.py --post "Testowa publikacja z pelnej lokalnej autonomii."
 ```
 
+## Natural Language Via urirun
+
+The shortest prompt-driven command is:
+
+```bash
+./run_prompt.sh 'opublikuj "Testowa publikacja z promptu NL przez urirun agent run"'
+```
+
+That script uses built-in urirun pieces:
+
+```bash
+PYTHONPATH=/home/tom/github/if-uri/urirun/adapters/python \
+  python3 -m urirun.runtime.v2 compile bindings.json --out .state/local-social.registry.json
+
+PYTHONPATH=/home/tom/github/if-uri/urirun/adapters/python:$PWD \
+  python3 -m urirun.runtime.v2 agent run .state/local-social.registry.json \
+    --planner nl_autonomy:planner \
+    --allow 'social://**' \
+    --allow-commands \
+    --goal 'opublikuj "Testowa publikacja z promptu NL przez urirun agent run"'
+```
+
+The registry exposes one command:
+
+```text
+social://linkedin.local/post/command/publish
+```
+
+`nl_autonomy:planner` maps the NL prompt to that typed URI payload, and urirun's
+agent runner validates and executes the command under policy.
+
 Run only the fake site:
 
 ```bash
@@ -58,6 +89,9 @@ The credentials are the values in `.env`.
 
 - `mock_linkedin.py` — local LinkedIn-like server with `/login`, `/feed`, `/post`, `/api/posts`.
 - `autonomous_browser.py` — launches Chrome, maps `linkedin.local`, logs in from `.env`, publishes, verifies.
+- `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
+- `bindings.json` — typed `social://linkedin.local/post/command/publish` route.
+- `run_prompt.sh` — one-command prompt runner around `urirun compile` + `urirun agent run`.
 - `.env.example` — sample local-only credentials and post text.
 - `test_local_social.py` — offline tests for the server, `.env` loading, and local-host scope.
 
