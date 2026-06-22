@@ -86,3 +86,10 @@ urirun host ask --node lenovo "list the top processes and read the screen" --exe
 - **Token ≥ 8 chars** — the relay rejects shorter ones; the clients fail fast.
 
 Token-free, port-free, RDP-free remote control — driven by natural language.
+
+## See also
+
+[Example 33](../33-office-automation-mcp) builds the richer half: six office tasks
+(email, browser, files, calendar, windows…) as ≥10-step flows an LLM plans over an
+MCP tool surface, each **verified** against the resulting system state. Those same
+office URIs run on a remote NAT'd node through this relay.
