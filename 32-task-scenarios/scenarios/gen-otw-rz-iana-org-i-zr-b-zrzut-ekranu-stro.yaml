@@ -1,0 +1,9 @@
+name: otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro
+description: "otwórz iana.org i zrób zrzut ekranu strony"
+steps:
+  - uri: browser://laptop/main/page/command/open
+    payload: {"url": "https://iana.org"}
+    why: "Otwieram stronę iana.org w przeglądarce."
+  - uri: browser://laptop/main/page/command/screenshot
+    payload: {"url": "https://iana.org"}
+    why: "Robię zrzut ekranu otwartej strony iana.org."

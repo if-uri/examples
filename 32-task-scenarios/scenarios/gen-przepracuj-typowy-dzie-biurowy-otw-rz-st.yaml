@@ -1,0 +1,9 @@
+name: przepracuj-typowy-dzie-biurowy-otw-rz-st
+description: "przepracuj typowy dzień biurowy: otwórz stronę logowania, sprawdź stronę informacyjną iana.org i zrób zrzut ekranu"
+steps:
+  - uri: browser://laptop/main/page/command/open
+    payload: {"url": "https://www.iana.org/"}
+    why: "Otwieram stronę główną IANA, aby sprawdzić informacje."
+  - uri: browser://laptop/main/page/command/screenshot
+    payload: {"url": "https://www.iana.org/"}
+    why: "Robię zrzut ekranu strony głównej IANA."
