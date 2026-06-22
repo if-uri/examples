@@ -22,9 +22,27 @@ node directly — discovery *and* execution ride the relay.
 ./run.sh
 ```
 
+With a real model (key + `LLM_MODEL` from [`examples/.env`](../.env)):
+
+```bash
+USE_LLM=1 ./run.sh     # plan with the LLM instead of the heuristic
+```
+
+```
+== 4) ... [plan: LLM (openrouter/google/gemini-3.1-flash-image-preview)] ==
+  planner:    {"fallback":false,"provider":"litellm"}
+  flow steps: ["env://office/runtime/query/health","shell://office/command/date"]
+  timeline:   [{...,"ok":true},{...,"ok":true}]
+PASS
+```
+
+(litellm 1.89.x segfaults in an atexit cleanup *after* returning the result, so the
+LLM run sets `PYTHONUNBUFFERED=1` to flush `host ask`'s JSON before that crash and
+strips litellm's `Provider List` stdout banner — the plan is still produced.)
+
 `run.sh` stands up the whole chain on localhost (the relay/proxy stand in for the
-internet) and drives it with `urirun host ask --no-llm`, so it is deterministic
-and needs no API key:
+internet) and drives it with `urirun host ask --no-llm` by default, so it is
+deterministic and needs no API key:
 
 ```
 == 4) NL -> urirun host ask -> plan -> execute, all over the relay ==

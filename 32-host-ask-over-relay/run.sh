@@ -31,8 +31,15 @@ free_port() { python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0)
 LLM_FLAG="--no-llm"; PLAN_MODE="heuristic (--no-llm)"
 if [ "${USE_LLM:-0}" = "1" ]; then
   [ -f "$HERE/../.env" ] && { set -a; . "$HERE/../.env" 2>/dev/null || true; set +a; }
-  [ -n "${URIRUN_LLM_MODEL:-${LLM_MODEL:-}}" ] && { LLM_FLAG=""; PLAN_MODE="LLM (${URIRUN_LLM_MODEL:-$LLM_MODEL})"; } \
-    || echo "  (USE_LLM=1 but no LLM_MODEL/OPENROUTER key — staying on heuristic)"
+  if [ -n "${URIRUN_LLM_MODEL:-${LLM_MODEL:-}}" ]; then
+    LLM_FLAG=""; PLAN_MODE="LLM (${URIRUN_LLM_MODEL:-$LLM_MODEL})"
+    # litellm 1.89.x segfaults in an atexit async-client cleanup AFTER returning the
+    # result; unbuffered stdout flushes host ask's JSON before that crash so the
+    # (exit-139) process still yields a usable plan. Harmless in heuristic mode.
+    export PYTHONUNBUFFERED=1
+  else
+    echo "  (USE_LLM=1 but no LLM_MODEL/OPENROUTER key — staying on heuristic)"
+  fi
 fi
 
 NODE=office; TOKEN=meshsecret123
@@ -74,7 +81,9 @@ cat > "$TMP/.urirun/mesh.json" <<JSON
 JSON
 
 echo "== 4) NL -> urirun host ask -> plan -> execute, all over the relay  [plan: $PLAN_MODE] =="
-out="$(cd "$TMP" && U host ask --config .urirun/mesh.json $LLM_FLAG --node "$NODE" "check the node health and show me the current date" --execute 2>"$TMP/ask.err" || true)"
+raw="$(cd "$TMP" && U host ask --config .urirun/mesh.json $LLM_FLAG --node "$NODE" "check the node health and show me the current date" --execute 2>"$TMP/ask.err" || true)"
+# litellm prints a 'Provider List' banner to stdout; keep only the JSON document
+out="$(printf '%s\n' "$raw" | sed -n '/^{/,$p')"
 echo "  planner:    $(jq -c '.generator' <<<"$out" 2>/dev/null || echo '?')"
 echo "  flow steps: $(jq -c '[.flow.steps[].uri]' <<<"$out" 2>/dev/null || echo '?')"
 echo "  timeline:   $(jq -c '[.timeline[]|{uri,ok}]' <<<"$out" 2>/dev/null || echo '?')"
