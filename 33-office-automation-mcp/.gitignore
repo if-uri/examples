@@ -1,3 +1,8 @@
 .office_state.json
 __pycache__/
 .pytest_cache/
+generated/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.urirun

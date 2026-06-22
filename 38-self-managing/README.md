@@ -1,4 +1,4 @@
-# 38 — toward a self-managing urirun (proposal + resolver prototype)
+# 38 — self-managing urirun (resolver + loop + governance)
 
 > What's missing so urirun is not only **LLM-controlled** but **LLM-managed** — it
 > installs the connectors it needs, on demand, from the hub, from local
@@ -101,6 +101,13 @@ Proven offline (`test_governance.py`, 4 passed): a trusted source installs; an u
 one is blocked without approval and allowed with it; a connector that fails verify is
 not served.
 
+### 4. Real connector E2E — *proved here* (`test_e2e_self_managing.py`)
+
+The end-to-end test starts a real local node with only `sys://`, asks for a
+`time://` route, resolves that capability to `urirun-connector-time-tools`, gates it
+through governance, provisions the connector, re-discovers the node surface, and runs
+the new route. This is the self-managing path with a real connector, not a stub.
+
 ## Why local-first
 
 Your `~/github/*` already holds 19 connectors. Resolving a capability to a **local
@@ -114,8 +121,13 @@ three.
 - `resolver.py` — the capability→connector resolver across local/git/hub.
 - `self_managing.py` / `test_self_managing.py` — the loop (gap → resolve → provision → re-plan) + `make_provision`; offline proof (node gains a capability mid-run), 2 cases.
 - `governance.py` / `test_governance.py` — allowlist + verify-before-serve + audit gates, 4 cases.
+- `test_e2e_self_managing.py` — real-node proof using `urirun-connector-time-tools`.
 
 ## Next to build
 
-- `urirun connectors resolve <cap>` / `connectors index` (cache the catalog).
-- The source allowlist + verify-before-serve in `apply_deploy` / `node:// --manage`.
+- Persist/cache the connector index so repeated `connectors resolve` calls do not rescan
+  local projects every time.
+- Wire the core resolver + `NodeClient.ensure_scheme(...)` into production NL→flow
+  execution, so a missing scheme automatically triggers resolve → install → adopt → retry.
+- Move governance deeper into node-side management (`apply_deploy` / `node:// --manage`),
+  so allowlist, verify-before-serve, and audit are enforced even outside this example.
