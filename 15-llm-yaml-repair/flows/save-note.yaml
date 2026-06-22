@@ -1,0 +1,24 @@
+# Ready-to-run urirun flow — the exact shape the LLM in this example generates.
+# Run it directly, no LLM needed:
+#   python3 agent_repair.py --flow flows/save-note.yaml            # dry-run (plan)
+#   python3 agent_repair.py --flow flows/save-note.yaml --execute  # actually run
+# The registry (action space) is this example's tools.py; every step is a real URI.
+task:
+  title: "Stamp the time and save a note"
+allow:
+  - "time://*"
+  - "note://*"
+  - "log://*"
+steps:
+  - id: "stamp"
+    uri: "time://host/clock/query/now"
+  - id: "save"
+    uri: "note://host/store/command/put"
+    payload:
+      key: "raport"
+      value: "ok"
+  - id: "record"
+    uri: "log://host/run/command/write"
+    payload:
+      event: "flow-demo"
+      detail: "note 'raport' saved via a ready YAML flow"

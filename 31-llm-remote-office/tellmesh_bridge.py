@@ -98,17 +98,10 @@ def _ensure_paths() -> None:
             sys.path.insert(0, str(top))
 
 
-def _wrap(fn: Callable) -> Callable:
-    def handler(**payload: Any) -> Any:
-        return fn(payload, CONTEXT)
-
-    return handler
-
-
-def _load() -> list[dict]:
-    """Read every manifest, import its handlers, register `h_<op>` wrappers in this
-    module's namespace, and return route descriptors {uri, kind, operation, export}."""
-    _ensure_paths()
+def _manifest_routes() -> list[dict]:
+    """Parse every manifest into route descriptors — WITHOUT importing the handlers, so
+    a host can build bindings even without the tellmesh runtime deps installed. The
+    actual handler import is deferred to `__getattr__` on the node (see below)."""
     routes: list[dict] = []
     for rel in PACKS:
         manifest = TELLMESH_DIR / rel
@@ -122,18 +115,35 @@ def _load() -> list[dict]:
             ref = handlers.get(op)
             if not ref:
                 continue
-            mod_name, _, func_name = ref.replace("python://", "").partition(":")
-            fn = getattr(importlib.import_module(mod_name), func_name)
-            export = "h_" + op.replace(".", "_")
-            globals()[export] = _wrap(fn)  # re-importable for urirun's execute path
             routes.append(
                 {"uri": pat["pattern"], "kind": pat.get("kind", "command"),
-                 "operation": op, "scheme": scheme, "export": export}
+                 "operation": op, "scheme": scheme,
+                 "ref": ref.replace("python://", ""), "export": "h_" + op.replace(".", "_")}
             )
     return routes
 
 
-ROUTES: list[dict] = _load()
+ROUTES: list[dict] = _manifest_routes()
+_BY_EXPORT: dict[str, dict] = {r["export"]: r for r in ROUTES}
+
+
+def __getattr__(name: str) -> Callable:
+    """PEP 562: resolve `h_<operation>` lazily — import the real tellmesh handler the
+    first time urirun calls it on the node, wrap it to urirun's `fn(**payload)` shape
+    (forwarding the persistent CONTEXT), and cache it. Building bindings never triggers
+    this; only execution does."""
+    route = _BY_EXPORT.get(name)
+    if route is None:
+        raise AttributeError(name)
+    _ensure_paths()
+    mod_name, _, func_name = route["ref"].partition(":")
+    fn = getattr(importlib.import_module(mod_name), func_name)
+
+    def handler(**payload: Any) -> Any:
+        return fn(payload, CONTEXT)
+
+    globals()[name] = handler  # cache so urirun's re-import path finds it directly
+    return handler
 
 
 def _input_schema(op: str) -> dict:

@@ -1,0 +1,29 @@
+# Ready-to-run VISION flow: OCR an image, then store the recognised text.
+# OCR runs through the llm connector's vision route (llm://host/vision/command/ocr).
+#   dry-run (always works, shows the plan):
+#     python3 agent_repair.py --flow flows/ocr-to-note.yaml
+#   real run (needs a vision model — set `model` below):
+#     python3 agent_repair.py --flow flows/ocr-to-note.yaml --execute
+#
+# Model/provider follow the llm connector: a local Ollama vision model (e.g.
+# `llava`, `llama3.2-vision`) runs cleanly as an isolated step; a hosted
+# (litellm) model should be called in-process instead (see the llm connector
+# README — isolated + litellm can segfault).
+task:
+  title: "OCR an invoice image and store its text"
+allow:
+  - "llm://*"
+  - "note://*"
+steps:
+  - id: "read"
+    uri: "llm://host/vision/command/ocr"
+    payload:
+      image: "invoice.png"      # path / http(s) URL / data-URI / base64
+      model: "llava"            # a vision-capable model
+  # Chain the OCR text into the note with `value_from` (resolved at --execute):
+  - id: "save"
+    uri: "note://host/store/command/put"
+    depends_on: ["read"]
+    payload:
+      key: "invoice-text"
+      value_from: "read.result.response"

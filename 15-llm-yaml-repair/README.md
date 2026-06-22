@@ -29,6 +29,31 @@ python3 agent_repair.py --execute "zapisz notatke o uruchomieniu"   # actually r
 python3 agent_repair.py --execute --json "..."                      # machine-readable transcript
 ```
 
+## Ready-to-run YAML flows (`flows/`)
+
+The same flows the LLM generates, as committed files you can run directly — no
+model needed. Every step is a real URI; the action space is this example's
+`tools.py` (+ the `llm` connector for the vision flow).
+
+| File | What it does | Run |
+| --- | --- | --- |
+| [`flows/save-note.yaml`](flows/save-note.yaml) | `time://` → `note://` → `log://` | `python3 agent_repair.py --flow flows/save-note.yaml --execute` |
+| [`flows/ocr-to-note.yaml`](flows/ocr-to-note.yaml) | OCR an image via `llm://host/vision/command/ocr`, store the text in `note://` (chained with `value_from`) | `python3 agent_repair.py --flow flows/ocr-to-note.yaml` (dry-run; `--execute` needs a vision model) |
+
+```bash
+make flow        # runs flows/save-note.yaml --execute
+make flow-ocr    # shows the flows/ocr-to-note.yaml plan (dry-run)
+```
+
+`save-note.yaml` runs fully offline. `ocr-to-note.yaml` shows the vision URI and
+result-chaining (`value_from: "read.result.response"`); dry-run validates the
+plan, and `--execute` needs a vision model (a local Ollama `llava` runs as an
+isolated step; a hosted model should be called in-process — see the llm
+connector README).
+
+Each YAML is also a valid `urirun-flow` document — add a `registry:` field and
+you can run it with the canonical `urirun-flow run flows/save-note.yaml --execute`.
+
 The bundled stub planner deliberately makes a plausible mistake on the first pass
 (forgets the required `key` on the `note://` step), so you can watch the loop
 recover:

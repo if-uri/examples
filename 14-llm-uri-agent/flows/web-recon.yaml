@@ -1,0 +1,30 @@
+# Ready-to-run urirun flow — the plan this example's agent produces for a web
+# recon, as a committed file you can run directly (no LLM):
+#   python3 agent.py --flow flows/web-recon.yaml                  # queries only
+#   python3 agent.py --flow flows/web-recon.yaml --allow-commands # + the log:// command
+# Every step is a real URI; the action space is this example's tools.py
+# (or the packaged browser-control connector, when checked out beside the repo).
+task:
+  title: "Web recon: time, status, read page, log"
+allow:
+  - "time://*"
+  - "httpcheck://*"
+  - "browser://*"
+  - "log://*"
+steps:
+  - id: "stamp"
+    uri: "time://host/clock/query/now"
+  - id: "status"
+    uri: "httpcheck://host/url/query/status"
+    payload:
+      url: "https://example.com"
+  - id: "read"
+    uri: "browser://chrome/page/query/dom"
+    payload:
+      url: "https://example.com"
+      max: 300
+  - id: "record"
+    uri: "log://host/run/command/write"
+    payload:
+      event: "recon"
+      detail: "https://example.com"

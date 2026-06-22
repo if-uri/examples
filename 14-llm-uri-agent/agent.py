@@ -155,16 +155,25 @@ def run_step(registry: dict, step: dict, *, allow_commands: bool) -> dict:
     return {"ran": False, "skipped": "command not permitted (pass --allow-commands)", "uri": uri}
 
 
+def load_flow_steps(path: str) -> list[dict]:
+    """Read a ready urirun flow YAML into a list of {uri, payload} steps."""
+    import yaml
+    doc = yaml.safe_load(open(path, encoding="utf-8").read()) or {}
+    return [{"uri": s["uri"], "payload": s.get("payload", {}), "why": f"flow step {s.get('id', '')}".strip()}
+            for s in doc.get("steps", [])]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="agent", description="LLM-over-URI agent demo")
     parser.add_argument("goal", nargs="?", default="check and read https://example.com")
     parser.add_argument("--allow-commands", action="store_true", help="permit /command/ routes to execute")
+    parser.add_argument("--flow", metavar="YAML", help="run a ready YAML flow file instead of planning (e.g. flows/web-recon.yaml)")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
     registry = load_registry()
     routes = action_space(registry)
-    steps = plan(args.goal, routes)
+    steps = load_flow_steps(args.flow) if args.flow else plan(args.goal, routes)
 
     trace = []
     for step in steps:

@@ -77,6 +77,52 @@ NODE_URL=http://192.168.188.201:8765 ./office_cli.sh "list the top processes" --
   that plans JSON fine (like example 27) but cannot do MCP tool-calling — point
   `URIRUN_OFFICE_MODEL` at a stronger model if you want richer plans.
 
+## Provision the node FROM the host (no SSH) — `POST /deploy`
+
+You don't have to log into the node to change what it serves. urirun nodes expose a
+token-gated `POST /deploy` that accepts a registry **and the handler code**, then
+hot-swaps the served surface live (no restart). So after the node runs once with an
+admin token, the host drives everything over the mesh:
+
+```bash
+# on the node — /deploy is ON by default; the node mints + persists an admin token to
+# ~/.urirun-node/admin-token and prints it at startup (reused across restarts):
+./node_serve.sh
+#   [urirun] /deploy admin token: 58fa25f5…   ← copy this once
+#   pin your own instead:  URIRUN_NODE_TOKEN=secret ./node_serve.sh
+#   disable /deploy:        DEPLOY=0 ./node_serve.sh
+
+# from the host — build the office bindings locally and push them + the bridge code:
+URIRUN_NODE_TOKEN=<token-from-node> ./deploy_from_host.sh
+#   node routeCount jumps 7 -> 34, no restart. Re-run any time you change bindings/code.
+```
+
+Under the hood it is a first-class urirun command:
+
+```bash
+urirun host deploy lenovo --bindings node-office.bindings.json \
+  --code tellmesh_bridge.py --env TELLMESH_DIR=~/github/tellmesh \
+  --allow 'him://lenovo/**' --allow 'browser://lenovo/**' --token secret
+#   (lenovo resolves from the host mesh config, or pass a full URL)
+```
+
+- `--code FILE` ships a handler module the node writes to `~/.urirun-node/deploy/` and
+  imports lazily — that is how `tellmesh_bridge.py` gets onto the node. Heavy packages
+  the bridge imports (`urihim`, `urikvm`, …) must already be installed on the node;
+  `--env TELLMESH_DIR=…` points the bridge at them.
+- **Token**: `urirun node serve --generate-token` (what `node_serve.sh` uses) mints a
+  random token and persists it to `~/.urirun-node/admin-token` (0600), reused across
+  restarts so the host's token stays valid; `--admin-token TOKEN` / `URIRUN_NODE_TOKEN`
+  pins your own; `--admin-token auto` is the generate-or-reuse shorthand.
+- **Security**: `/deploy` is **off** unless a token is set, and every call must send the
+  matching `X-Urirun-Token`. It can add executable routes and push code, so treat the
+  token like a deploy key and use it only on a trusted LAN. `GET /health` reports
+  `"deploy": true|false`.
+
+> Chicken-and-egg: the *first* time still needs the node started with a token (and, for
+> the office handlers, the tellmesh runtime present). After that, every update —
+> new bindings, new allow policy, new handler code — is host-driven over HTTP.
+
 ## Both-sides logging (the point of the setup)
 
 Every run is recorded twice, and the host reads the node's log back so you can confirm

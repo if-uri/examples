@@ -83,3 +83,41 @@ def test_dry_run_does_not_execute_steps():
     notes = os.path.join(os.path.dirname(agent_repair.__file__), "notes.json")
     assert not os.path.exists(notes)               # nothing was actually written
     _cleanup()
+
+
+# --- the ready-to-run YAML flow files --------------------------------------
+
+import glob
+from urirun_flow import Flow
+
+FLOWS = sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "flows", "*.yaml")))
+
+
+def test_ready_flows_parse_and_use_known_uris():
+    import urirun
+    assert FLOWS, "no flows/*.yaml found"
+    allowed = {r["uri"] for r in urirun.action_space(agent_repair.load_registry(include_llm=True))}
+    for path in FLOWS:
+        flow = Flow.from_yaml(open(path, encoding="utf-8").read())   # parses + validates DAG
+        assert flow.steps, f"{path} has no steps"
+        for s in flow.steps:
+            assert s.uri in allowed, f"{path}: {s.uri} not in action space"
+
+
+def test_ready_flow_save_note_executes():
+    _cleanup()
+    registry = agent_repair.load_registry(include_llm=True)
+    path = os.path.join(os.path.dirname(agent_repair.__file__), "flows", "save-note.yaml")
+    report = agent_repair.run_flow_file(path, registry, execute=True)
+    assert report["ok"] is True
+    assert [t["uri"] for t in report["timeline"]][0] == "time://host/clock/query/now"
+    assert os.path.exists(os.path.join(os.path.dirname(agent_repair.__file__), "notes.json"))
+    _cleanup()
+
+
+def test_ready_flow_ocr_dry_run_is_a_valid_plan():
+    registry = agent_repair.load_registry(include_llm=True)
+    path = os.path.join(os.path.dirname(agent_repair.__file__), "flows", "ocr-to-note.yaml")
+    report = agent_repair.run_flow_file(path, registry, execute=False)
+    assert report["ok"] is True                    # the plan validates (URIs + DAG)
+    assert any(t["uri"] == "llm://host/vision/command/ocr" for t in report["timeline"])

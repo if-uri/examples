@@ -77,10 +77,15 @@ DEFAULT_LLM_MODEL = os.environ.get("LLM_MODEL") or os.environ.get("URIRUN_LLM_MO
 TOOLS = [sys.executable, os.path.join(HERE, "tools.py")]
 
 
-def load_registry() -> dict:
+def load_registry(include_llm: bool = False) -> dict:
     import subprocess
     raw = subprocess.run(TOOLS + ["bindings"], capture_output=True, text=True, check=True).stdout
-    return urirun.compile_registry(json.loads(raw))
+    doc = json.loads(raw)
+    if include_llm:
+        # add the llm:// routes (e.g. for the vision/OCR flow) to the action space
+        import urirun_connector_llm
+        doc["bindings"].update(urirun_connector_llm.urirun_bindings()["bindings"])
+    return urirun.compile_registry(doc)
 
 
 # --- the LLM (deterministic stub) ------------------------------------------
@@ -255,6 +260,52 @@ def repair_run(goal: str, registry: dict, *, tries: int = 3, execute: bool = Fal
     return {"ok": False, "attempts": tries, "transcript": transcript, "lastError": feedback}
 
 
+# --- run a ready YAML flow file (no LLM) -----------------------------------
+
+def _resolve_payload(step, results: dict, execute: bool) -> dict:
+    """Resolve `<key>_from` chaining. In execute mode dig the real prior result;
+    in dry-run substitute a placeholder so the plan still validates."""
+    from urirun.node import mesh
+    if execute:
+        return mesh.resolve_step_payload(step.payload or {}, results)
+    out = {}
+    for k, v in (step.payload or {}).items():
+        if k.endswith("_from"):
+            out[k[:-len("_from")]] = f"<from {v}>"
+        else:
+            out[k] = v
+    return out
+
+
+def run_flow_file(path: str, registry: dict, *, execute: bool) -> dict:
+    """Load and run a ready urirun flow YAML against the example's registry."""
+    import yaml
+    flow = Flow(**_normalize_flow_dict(yaml.safe_load(open(path, encoding="utf-8").read())))
+    allowed = {r["uri"] for r in urirun.action_space(registry)}
+    unknown = [s.uri for s in flow.steps if s.uri not in allowed]
+    if unknown:
+        return {"ok": False, "error": f"flow uses URIs not in the registry: {unknown}",
+                "allowed": sorted(allowed)}
+    results: dict = {}
+    timeline: list[dict] = []
+    for step in flow.order():
+        scheme = step.uri.split("://", 1)[0]
+        policy = urirun.policy(allow=list(flow.allow) if flow.allow else [f"{scheme}://*"])
+        env = urirun.run(step.uri, registry, _resolve_payload(step, results, execute),
+                         mode="execute" if execute else "dry-run", policy=policy)
+        data = urirun.result_data(env)
+        # dry-run = is the plan valid (env.ok); execute also checks the tool's own ok
+        ok = bool(env.get("ok"))
+        if execute and isinstance(data, dict):
+            ok = ok and data.get("ok", True)
+        results[step.id] = env
+        timeline.append({"id": step.id, "uri": step.uri, "ok": ok})
+        if not ok:
+            return {"ok": False, "flow": flow.to_dict(), "timeline": timeline,
+                    "failed": {"step": step.id, "uri": step.uri, "data": data}}
+    return {"ok": True, "flow": flow.to_dict(), "timeline": timeline, "results": results}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="agent_repair", description="NL→YAML flow→execute→repair loop")
     parser.add_argument("goal", nargs="?", default="zapisz notatkę o uruchomieniu")
@@ -266,7 +317,23 @@ def main(argv: list[str] | None = None) -> int:
                         help="LLM model id (default from examples/.env LLM_MODEL: %(default)s)")
     parser.add_argument("--base-url", default="http://localhost:11434", help="Ollama backend (ignored for litellm models)")
     parser.add_argument("--provider", default="", help="force litellm/ollama")
+    parser.add_argument("--flow", metavar="YAML", help="run a ready YAML flow file (no LLM), e.g. flows/save-note.yaml")
     args = parser.parse_args(argv)
+
+    # --flow: run a ready YAML flow directly, no LLM involved.
+    if args.flow:
+        registry = load_registry(include_llm=True)
+        report = run_flow_file(args.flow, registry, execute=args.execute)
+        if args.json:
+            print(json.dumps(report, indent=2, ensure_ascii=False))
+        else:
+            print(f"flow: {args.flow}   ({'EXECUTE' if args.execute else 'dry-run'})")
+            if "error" in report:
+                print(f"  ✗ {report['error']}")
+            for t in report.get("timeline", []):
+                print(f"  {'✓' if t['ok'] else '✗'} {t['uri']}")
+            print(f"\nRESULT: {'ok' if report['ok'] else 'failed'}")
+        return 0 if report["ok"] else 1
 
     registry = load_registry()
     if args.llm:
