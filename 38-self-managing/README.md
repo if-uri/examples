@@ -82,16 +82,24 @@ second test shows it reports an unresolvable capability cleanly. The production
 `make_provision(...)` installs via the admin-gated `node://.../package/command/install`
 (local path → git fallback) then `host deploy --merge`s the connector's bindings.
 
-### 3. Governance (so autonomy is safe)
+### 3. Governance — *built here* (`governance.py`)
+
+`governed_provision(install_fn, allowlist=, verify_fn=, approve=, audit=)` wraps any
+provision with the safety gates, so autonomy is safe by default:
 
 - **Source allowlist** — trusted by default: `connect.ifuri.com`, `github.com/if-uri/*`,
-  `~/github/if-uri/*`. An install from outside the allowlist pauses for human approval.
-- **Verify before serve** — `connectors verify` runs on the freshly installed connector
-  before its routes join the registry; a connector that advertises a dead route never
-  serves.
-- **Admin-gated + audited** — installs go through `node:// --manage` (signed, never on
-  the open `/run`); every install is logged with source, spec and authorizer, and
-  emitted on the `/events` stream.
+  `~/github/if-uri/*`. An install from outside the allowlist is blocked unless an
+  `approve(candidate)` callback (a human) says yes.
+- **Verify before serve** — `make_verify_fn()` runs `connectors verify` on the
+  connector's source before its routes serve; a connector that advertises a dead route
+  never joins the registry.
+- **Admin-gated + audited** — the underlying install goes through `node:// --manage`
+  (signed, never on the open `/run`); every decision (source, spec, verdict) is handed
+  to an `audit` sink for the log / `/events` stream.
+
+Proven offline (`test_governance.py`, 4 passed): a trusted source installs; an untrusted
+one is blocked without approval and allowed with it; a connector that fails verify is
+not served.
 
 ## Why local-first
 
@@ -104,8 +112,8 @@ three.
 ## Files
 
 - `resolver.py` — the capability→connector resolver across local/git/hub.
-- `self_managing.py` — the self-managing loop (gap → resolve → provision → re-plan) + `make_provision`.
-- `test_self_managing.py` — offline proof (node gains a missing capability mid-loop), 2 cases.
+- `self_managing.py` / `test_self_managing.py` — the loop (gap → resolve → provision → re-plan) + `make_provision`; offline proof (node gains a capability mid-run), 2 cases.
+- `governance.py` / `test_governance.py` — allowlist + verify-before-serve + audit gates, 4 cases.
 
 ## Next to build
 
