@@ -49,10 +49,16 @@ A served node used to cold-start argv-template connectors per `/run` (245 ms).
 executor so v2.run's validate → gate → execute is unchanged).
 **Measured end-to-end over HTTP: 245 → 5.9 ms/request (42×).**
 
-### 4. Hydrate `local-function` — ⏭ MOOT
-The connectors converged on `argv-template` (now `python -m <pkg>._exec`), not
-`local-function`, so there is nothing to hydrate. The hot-path answer instead is the
-warm-worker pool (#3): same isolation as a spawn, but the cold start is paid once.
+### 4. Hydrate `local-function` — ✅ DONE (now the connector default)
+The bundled Python connectors migrated from `argv-template` (`python -m <pkg>._exec`)
+to `@handler`, which emits a `local-function` binding carrying a re-importable
+`python: {module, export}` descriptor. The runtime **hydrates** that descriptor at call
+time, so a route runs **in-process** from a compiled file registry — no argv, no
+per-connector `_exec.py`. `isolated=True` opts a route into the shared
+`python -m urirun.exec` runner (crash containment / untrusted code) without writing a
+shim. In-process `local-function` is ~0 ms/call vs ~220 ms for the old Python
+`argv-template` spawn. `argv-template` remains for Go/untrusted/polyglot connectors,
+where the warm-worker pool (#3) amortizes the spawn.
 
 ### 5. Local `urirun` daemon — ✅ DONE
 Every CLI `urirun run` is a fresh process (~515 ms: interpreter + urirun import +
@@ -62,11 +68,6 @@ client (`daemon.call`) is **pure stdlib** — it never imports urirun, so a requ
 just interpreter startup + a socket round-trip.
 **Measured: 515 → 35.9 ms/call (≈14×).** `urirun/runtime/daemon.py`.
 
-### 5. A local `urirun` daemon (or reuse `node serve`)
-Every CLI `urirun run` pays the ~28 ms interpreter cold start. For high-frequency CLI
-use, a local socket daemon (or just pointing the CLI at a running `node serve`) amortizes
-both the interpreter and the discovery.
-
 ### 6. Flow / batch reuse
 Flows (example 17) re-resolve the registry per step. Reuse one discovered registry + one
 worker pool across all steps of a flow.
@@ -75,7 +76,8 @@ worker pool across all steps of a flow.
 
 ## Status
 
-**1, 2, 3, 5 done and measured** (above); 4 moot. Combined effect on a single
+**1, 2, 3, 4, 5 done** (above; 1/2/3/5 measured, 4 is the connector default now).
+Combined effect on a single
 `time://` call: a fresh `urirun run` went 339→246 ms in import alone (#1) and never
 re-imports the whole runtime for `list`/`registry://` (#2); a served node's `/run`
 went 245→5.9 ms (#3); and the daemon path is 515→36 ms (#5). 6 (one registry + one

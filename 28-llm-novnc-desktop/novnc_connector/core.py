@@ -15,6 +15,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+import shlex
 import subprocess
 import time
 from pathlib import Path
@@ -55,29 +56,35 @@ def start(image: str = IMAGE, port: int = 6080) -> dict[str, Any]:
     if run.returncode != 0:
         return urirun.fail(f"docker run failed: {run.stderr.strip()[:200]}")
     cid = run.stdout.strip()
-    # wait for the X display, then make sure the control tools exist
+    # wait for the X server's socket to appear
     ready = False
     for _ in range(40):
-        if _exec(cid, "bash", "-lc", "DISPLAY=:1 xdpyinfo >/dev/null 2>&1").returncode == 0:
+        if _exec(cid, "bash", "-lc", "[ -S /tmp/.X11-unix/X1 ]", display=False).returncode == 0:
             ready = True
             break
         time.sleep(1)
-    tools_ok = _exec(cid, "bash", "-lc", "command -v xdotool && command -v scrot", display=False).returncode == 0
-    if not tools_ok:
-        _exec(cid, "bash", "-lc", "apt-get update -qq && apt-get install -y -qq xdotool scrot xdpyinfo",
+    time.sleep(2)  # let the desktop session settle
+    # xdotool is needed for input (ffmpeg, preinstalled, handles screenshots)
+    if _exec(cid, "bash", "-lc", "command -v xdotool", display=False).returncode != 0:
+        _exec(cid, "bash", "-lc", "apt-get update 2>/dev/null; apt-get install -y xdotool >/dev/null 2>&1",
               display=False, timeout=180)
-        tools_ok = _exec(cid, "bash", "-lc", "command -v xdotool && command -v scrot", display=False).returncode == 0
+    tools_ok = _exec(cid, "bash", "-lc", "command -v xdotool", display=False).returncode == 0
     STATE.write_text(json.dumps({"cid": cid, "port": port, "image": image}))
     return urirun.ok(containerId=cid[:12], novncUrl=f"http://localhost:{port}/", displayReady=ready, toolsReady=tools_ok)
 
 
 @conn.handler("app/command/launch", external=True, meta={"label": "Launch an app on the desktop"})
-def launch(command: str, settle: float = 2.0) -> dict[str, Any]:
-    """Launch a GUI command on the desktop (e.g. ``lxterminal``)."""
+def launch(command: str, settle: float = 4.0) -> dict[str, Any]:
+    """Launch a GUI command on the desktop (e.g. ``lxterminal``) and focus its window."""
     cid = _state()["cid"]
     _exec(cid, "bash", "-lc", f"DISPLAY=:1 nohup {command} >/tmp/launch.log 2>&1 &")
     time.sleep(settle)
-    return urirun.ok(launched=command)
+    # best-effort: raise/focus the launched window so subsequent typing lands in it
+    base = Path(command.split()[0]).name
+    act = _exec(cid, "bash", "-lc",
+                f"DISPLAY=:1 xdotool search --onlyvisible --class {shlex.quote(base)} "
+                f"windowactivate --sync 2>/dev/null | tail -1")
+    return urirun.ok(launched=command, focused=act.returncode == 0)
 
 
 @conn.handler("input/command/type", external=True, meta={"label": "Type text into the focused window"})
@@ -89,6 +96,7 @@ def type_text(text: str, enter: bool = False) -> dict[str, Any]:
         return urirun.fail(f"xdotool type failed: {res.stderr.strip()[:160]}")
     if enter:
         _exec(cid, "xdotool", "key", "Return")
+        time.sleep(0.8)  # let the command output render before any screenshot
     return urirun.ok(typed=text, enter=enter)
 
 
@@ -104,9 +112,13 @@ def key(keys: str) -> dict[str, Any]:
 def screenshot(name: str = "shot") -> dict[str, Any]:
     """Grab the current desktop as a PNG; returns the saved path and a base64 thumbnail."""
     cid = _state()["cid"]
-    cap = _exec(cid, "bash", "-lc", "DISPLAY=:1 scrot -o /tmp/_shot.png")
+    # scrot if available, else ffmpeg x11grab (preinstalled in the desktop image)
+    grab = ("DISPLAY=:1 scrot -o /tmp/_shot.png" if
+            _exec(cid, "bash", "-lc", "command -v scrot", display=False).returncode == 0
+            else "ffmpeg -loglevel error -f x11grab -i :1 -frames:v 1 -y /tmp/_shot.png")
+    cap = _exec(cid, "bash", "-lc", grab)
     if cap.returncode != 0:
-        return urirun.fail(f"scrot failed: {cap.stderr.strip()[:160]}")
+        return urirun.fail(f"screenshot grab failed: {cap.stderr.strip()[:160]}")
     SHOT_DIR.mkdir(parents=True, exist_ok=True)
     local = SHOT_DIR / f"{name}.png"
     cp = _run(["docker", "cp", f"{cid}:/tmp/_shot.png", str(local)])

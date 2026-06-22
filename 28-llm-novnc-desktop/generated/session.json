@@ -1,0 +1,86 @@
+{
+  "goal": "Open a terminal on the desktop and run a command that prints 'urirun agent was here', then take a screenshot of the result.",
+  "plannerUsed": "llm",
+  "actionSpaceSize": 6,
+  "steps": [
+    {
+      "uri": "desktop://novnc/session/command/start",
+      "payload": {},
+      "ran": true,
+      "ok": true,
+      "data": {
+        "ok": true,
+        "containerId": "1e025a4a35e3",
+        "novncUrl": "http://localhost:6080/",
+        "displayReady": true,
+        "toolsReady": true
+      },
+      "why": "Start the desktop session to perform actions."
+    },
+    {
+      "uri": "desktop://novnc/app/command/launch",
+      "payload": {
+        "command": "lxterminal"
+      },
+      "ran": true,
+      "ok": true,
+      "data": {
+        "ok": true,
+        "launched": "lxterminal",
+        "focused": true
+      },
+      "why": "Open a terminal window on the desktop."
+    },
+    {
+      "uri": "desktop://novnc/input/command/type",
+      "payload": {
+        "enter": true,
+        "text": "echo 'urirun agent was here'"
+      },
+      "ran": true,
+      "ok": true,
+      "data": {
+        "ok": true,
+        "typed": "echo 'urirun agent was here'",
+        "enter": true
+      },
+      "why": "Type the command to print the message and press enter."
+    },
+    {
+      "uri": "desktop://novnc/screen/query/screenshot",
+      "payload": {
+        "name": "result_screenshot"
+      },
+      "ran": true,
+      "ok": true,
+      "data": {
+        "ok": true,
+        "path": "/home/tom/github/if-uri/examples/28-llm-novnc-desktop/generated/shots/result_screenshot.png",
+        "bytes": 164029
+      },
+      "why": "Capture the screenshot showing the command output."
+    },
+    {
+      "uri": "desktop://novnc/session/command/stop",
+      "payload": {},
+      "ran": true,
+      "ok": true,
+      "data": {
+        "ok": true,
+        "stopped": true,
+        "containerId": "1e025a4a35e3"
+      },
+      "why": "Stop the desktop session."
+    }
+  ],
+  "screenshots": [
+    "result_screenshot.png"
+  ],
+  "typedText": "echo 'urirun agent was here'",
+  "verdict": {
+    "allStepsRan": true,
+    "screenshotCaptured": true,
+    "typedTextVisibleOnScreen": true,
+    "intentionRealized": true
+  }
+}

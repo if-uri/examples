@@ -1,3 +1,16 @@
+# Prefer the examples venv (venv/) so `make` uses it without activating it first.
+VENV_BIN := $(wildcard venv/bin)
+ifneq ($(VENV_BIN),)
+export PATH := $(abspath $(VENV_BIN)):$(PATH)
+endif
+
+.PHONY: connectors
+connectors: ## Install urirun + every sibling Python connector editable (examples then run with no PYTHONPATH juggling)
+	pip install -e ../urirun/adapters/python
+	@for d in ../urirun-connector-*/; do \
+	  if [ -f "$$d/pyproject.toml" ]; then echo "installing $$d"; pip install -q -e "$$d" --no-deps || exit 1; fi; \
+	done
+
 .PHONY: test
 test: ## Run host-runnable checks for every NN-* example (Docker demos skipped)
 	./run_tests.sh

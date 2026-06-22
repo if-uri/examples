@@ -42,7 +42,7 @@ CONNECTORS = [
      "run": ("httpcheck://host/http/query/status", {"url": "https://example.com"})},
     {"n": "domain-monitor", "lang": "py", "pkg": "urirun_connector_domain_monitor",
      "run": ("monitor://host/dns/query/current",
-             {"domain": "example.com", "current_records": '[{"Name":"@","Type":"A","Address":"203.0.113.10"}]'})},
+             {"domain": "example.com", "current_records": [{"Name": "@", "Type": "A", "Address": "203.0.113.10"}]})},
     {"n": "browser-control", "lang": "py", "pkg": "urirun_connector_browser_control",
      "run": ("browser://chrome/page/query/text", {"url": "https://example.com", "max": 80})},
     {"n": "get-node", "lang": "py", "pkg": "urirun_connector_get_node",

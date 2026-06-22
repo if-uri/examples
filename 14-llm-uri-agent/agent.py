@@ -55,12 +55,13 @@ BROWSER_CONNECTOR_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "urirun-
 def browser_control_bindings() -> dict | None:
     """Reuse the `urirun-connector-browser-control` package when available.
 
-    The connector ships ``argv-template`` routes whose argv invokes its own
-    out-of-process executor (``python3 -m urirun_connector_browser_control._exec
-    <subcommand> ...``), which prints the route's JSON result. The agent reuses
-    those bindings as-is, only swapping the leading ``python3`` for this
-    interpreter (``sys.executable``) so the subprocess uses the same environment
-    that has urirun + the connector importable.
+    The connector now ships ``local-function`` routes (``@handler``); with
+    ``isolated=True`` they run out-of-process through the shared
+    ``python -m urirun.exec`` runner, which already uses ``sys.executable``. The
+    agent reuses those bindings as-is — it only needs the connector dir on
+    ``PYTHONPATH`` (below) so the runner can import it. The argv rewrite further
+    down is a harmless no-op for the migrated routes and still covers any legacy
+    ``argv-template`` route whose argv starts with ``python3``.
 
     The connector dir is added to ``sys.path``/``PYTHONPATH`` so it imports here and
     in the spawned subprocess — no install needed. Returns None when the connector
