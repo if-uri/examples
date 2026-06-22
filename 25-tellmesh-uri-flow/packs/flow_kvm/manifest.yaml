@@ -1,0 +1,16 @@
+# tellmesh `kvm` scheme (cf. ../../../tellmesh/urikvm) — capture a monitor.
+# Real urikvm needs the full tellmesh monorepo to execute; this local handler is a
+# deterministic stand-in so the FLOW (kvm -> ocr -> llm) runs end-to-end in action.
+id: flowkvm
+version: 1
+scheme: kvm
+description: Capture a monitor and return an image id (flow stand-in for urikvm).
+uri_patterns:
+  - pattern: kvm://{host}/monitor/command/capture
+    kind: command
+    operation: kvm.monitor.capture
+    side_effects: true
+    approval: required
+handlers:
+  python:
+    kvm.monitor.capture: python://flow_kvm.handlers:capture

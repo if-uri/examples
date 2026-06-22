@@ -1,0 +1,20 @@
+# A deliberately NON-conforming manifest, kept to demonstrate that adoption is a
+# real contract check. `demo://{thing}` is a flat URI (scheme + one segment), but
+# urirun requires resource AND operation segments (scheme://target/resource/.../op).
+# `urirun validate` REJECTS it with:
+#   invalid uri: URI must include resource and operation segments
+# (This is the shape urishell used to ship; it has since been fixed upstream to
+#  shell://{host}/process/command/run — see ../tellmesh/urishell.)
+id: flatdemo
+version: 1
+scheme: demo
+description: Synthetic flat-URI pack used to show the adoption grammar check.
+uri_patterns:
+  - pattern: demo://{thing}
+    kind: command
+    operation: demo.run
+    side_effects: true
+    approval: required
+handlers:
+  python:
+    demo.run: python://flatdemo.handlers:run

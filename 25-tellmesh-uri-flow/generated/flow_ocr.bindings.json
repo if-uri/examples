@@ -1,0 +1,30 @@
+{
+  "bindings": {
+    "ocr://{host}/image/query/text": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "ocr.image.text",
+        "operation": "ocr.image.text",
+        "scheme": "ocr",
+        "standard": "pack 'flowocr' manifest",
+        "uriKind": "query"
+      },
+      "python": {
+        "export": "extract_text",
+        "module": "flow_ocr.handlers",
+        "type": "python"
+      },
+      "ref": "flow_ocr.handlers:extract_text",
+      "source": {
+        "handler": "python://flow_ocr.handlers:extract_text",
+        "pack": "flowocr",
+        "scheme": "ocr",
+        "type": "pack-manifest"
+      },
+      "uri": "ocr://{host}/image/query/text"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

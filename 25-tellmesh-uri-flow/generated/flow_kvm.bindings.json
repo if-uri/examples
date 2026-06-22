@@ -1,0 +1,34 @@
+{
+  "bindings": {
+    "kvm://{host}/monitor/command/capture": {
+      "adapter": "local-function",
+      "config": {},
+      "kind": "function",
+      "meta": {
+        "label": "kvm.monitor.capture",
+        "operation": "kvm.monitor.capture",
+        "scheme": "kvm",
+        "standard": "pack 'flowkvm' manifest",
+        "uriKind": "command"
+      },
+      "policy": {
+        "approval": "required",
+        "sideEffects": true
+      },
+      "python": {
+        "export": "capture",
+        "module": "flow_kvm.handlers",
+        "type": "python"
+      },
+      "ref": "flow_kvm.handlers:capture",
+      "source": {
+        "handler": "python://flow_kvm.handlers:capture",
+        "pack": "flowkvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "uri": "kvm://{host}/monitor/command/capture"
+    }
+  },
+  "version": "urirun.bindings.v2"
+}

@@ -1,0 +1,10 @@
+{
+  "version": "urirun.mesh.v1",
+  "node": {
+    "name": "flownode",
+    "registry": "/home/tom/github/if-uri/examples/25-tellmesh-uri-flow/generated/flow.registry.json",
+    "host": "127.0.0.1",
+    "port": 60739,
+    "execute": true
+  }
+}

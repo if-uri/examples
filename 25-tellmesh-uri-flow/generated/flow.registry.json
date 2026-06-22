@@ -1,0 +1,210 @@
+{
+  "generatedAt": "2026-06-22T10:35:47.982062+00:00",
+  "index": {
+    "895e12a69556f9f5fec6ae29c71f48f4766cac135c71edaca3324c3a449ff429": {
+      "route": [
+        "kvm",
+        "monitor",
+        "command"
+      ],
+      "routeEntry": {
+        "adapter": "local-function",
+        "config": {},
+        "kind": "function",
+        "meta": {
+          "label": "kvm.monitor.capture",
+          "operation": "kvm.monitor.capture",
+          "scheme": "kvm",
+          "standard": "pack 'flowkvm' manifest",
+          "uriKind": "command"
+        },
+        "policy": {
+          "approval": "required",
+          "sideEffects": true
+        },
+        "python": {
+          "export": "capture",
+          "module": "flow_kvm.handlers",
+          "type": "python"
+        },
+        "ref": "flow_kvm.handlers:capture"
+      },
+      "source": {
+        "handler": "python://flow_kvm.handlers:capture",
+        "pack": "flowkvm",
+        "scheme": "kvm",
+        "type": "pack-manifest"
+      },
+      "target": "{host}",
+      "uri": "kvm://{host}/monitor/command/capture"
+    },
+    "f4fcef7fa962108eeb16d11ccdd54362847ccfef32ef8ce57653e42dcff8a2f1": {
+      "route": [
+        "ocr",
+        "image",
+        "query"
+      ],
+      "routeEntry": {
+        "adapter": "local-function",
+        "config": {},
+        "kind": "function",
+        "meta": {
+          "label": "ocr.image.text",
+          "operation": "ocr.image.text",
+          "scheme": "ocr",
+          "standard": "pack 'flowocr' manifest",
+          "uriKind": "query"
+        },
+        "python": {
+          "export": "extract_text",
+          "module": "flow_ocr.handlers",
+          "type": "python"
+        },
+        "ref": "flow_ocr.handlers:extract_text"
+      },
+      "source": {
+        "handler": "python://flow_ocr.handlers:extract_text",
+        "pack": "flowocr",
+        "scheme": "ocr",
+        "type": "pack-manifest"
+      },
+      "target": "{host}",
+      "uri": "ocr://{host}/image/query/text"
+    },
+    "fa30b290ef2322cc7c43ddc71f6f08de862a3ab629460f706531aa57b822a1a0": {
+      "route": [
+        "llm",
+        "chat",
+        "command"
+      ],
+      "routeEntry": {
+        "adapter": "local-function",
+        "config": {},
+        "kind": "function",
+        "meta": {
+          "label": "llm.chat.complete",
+          "operation": "llm.chat.complete",
+          "scheme": "llm",
+          "standard": "pack 'flowllm' manifest",
+          "uriKind": "command"
+        },
+        "policy": {
+          "approval": "required",
+          "sideEffects": true
+        },
+        "python": {
+          "export": "complete",
+          "module": "flow_llm.handlers",
+          "type": "python"
+        },
+        "ref": "flow_llm.handlers:complete"
+      },
+      "source": {
+        "handler": "python://flow_llm.handlers:complete",
+        "pack": "flowllm",
+        "scheme": "llm",
+        "type": "pack-manifest"
+      },
+      "target": "{host}",
+      "uri": "llm://{host}/chat/command/complete"
+    }
+  },
+  "routeCount": 3,
+  "routes": {
+    "kvm": {
+      "monitor": {
+        "command": {
+          "adapter": "local-function",
+          "config": {},
+          "kind": "function",
+          "meta": {
+            "label": "kvm.monitor.capture",
+            "operation": "kvm.monitor.capture",
+            "scheme": "kvm",
+            "standard": "pack 'flowkvm' manifest",
+            "uriKind": "command"
+          },
+          "policy": {
+            "approval": "required",
+            "sideEffects": true
+          },
+          "python": {
+            "export": "capture",
+            "module": "flow_kvm.handlers",
+            "type": "python"
+          },
+          "ref": "flow_kvm.handlers:capture"
+        }
+      }
+    },
+    "llm": {
+      "chat": {
+        "command": {
+          "adapter": "local-function",
+          "config": {},
+          "kind": "function",
+          "meta": {
+            "label": "llm.chat.complete",
+            "operation": "llm.chat.complete",
+            "scheme": "llm",
+            "standard": "pack 'flowllm' manifest",
+            "uriKind": "command"
+          },
+          "policy": {
+            "approval": "required",
+            "sideEffects": true
+          },
+          "python": {
+            "export": "complete",
+            "module": "flow_llm.handlers",
+            "type": "python"
+          },
+          "ref": "flow_llm.handlers:complete"
+        }
+      }
+    },
+    "ocr": {
+      "image": {
+        "query": {
+          "adapter": "local-function",
+          "config": {},
+          "kind": "function",
+          "meta": {
+            "label": "ocr.image.text",
+            "operation": "ocr.image.text",
+            "scheme": "ocr",
+            "standard": "pack 'flowocr' manifest",
+            "uriKind": "query"
+          },
+          "python": {
+            "export": "extract_text",
+            "module": "flow_ocr.handlers",
+            "type": "python"
+          },
+          "ref": "flow_ocr.handlers:extract_text"
+        }
+      }
+    }
+  },
+  "sources": [
+    {
+      "handler": "python://flow_kvm.handlers:capture",
+      "pack": "flowkvm",
+      "scheme": "kvm",
+      "type": "pack-manifest"
+    },
+    {
+      "handler": "python://flow_llm.handlers:complete",
+      "pack": "flowllm",
+      "scheme": "llm",
+      "type": "pack-manifest"
+    },
+    {
+      "handler": "python://flow_ocr.handlers:extract_text",
+      "pack": "flowocr",
+      "scheme": "ocr",
+      "type": "pack-manifest"
+    }
+  ],
+  "version": "urirun.registry.v1"
+}

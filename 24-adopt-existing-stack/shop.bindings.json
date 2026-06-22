@@ -1,0 +1,57 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "shop://inventory/stock/query/check": {
+      "uri": "shop://inventory/stock/query/check",
+      "kind": "query",
+      "adapter": "argv-template",
+      "argv": ["python3", "legacy/inventory.py", "check", "--sku", "{sku}"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["sku"],
+        "properties": {"sku": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "meta": {"connector": "shop", "label": "Check stock for a SKU", "runtime": "python"}
+    },
+    "shop://inventory/stock/command/reserve": {
+      "uri": "shop://inventory/stock/command/reserve",
+      "kind": "command",
+      "adapter": "argv-template",
+      "argv": ["python3", "legacy/inventory.py", "reserve", "--sku", "{sku}", "--qty", "{qty}"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["sku", "qty"],
+        "properties": {"sku": {"type": "string"}, "qty": {"type": "integer", "minimum": 1}},
+        "additionalProperties": false
+      },
+      "meta": {"connector": "shop", "label": "Reserve stock", "runtime": "python"}
+    },
+    "shop://notify/email/command/send": {
+      "uri": "shop://notify/email/command/send",
+      "kind": "command",
+      "adapter": "argv-template",
+      "argv": ["node", "legacy/notify.mjs", "--to", "{to}", "--msg", "{msg}"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["to", "msg"],
+        "properties": {"to": {"type": "string"}, "msg": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "meta": {"connector": "shop", "label": "Send a notification", "runtime": "nodejs"}
+    },
+    "shop://report/sales/query/daily": {
+      "uri": "shop://report/sales/query/daily",
+      "kind": "query",
+      "adapter": "argv-template",
+      "argv": ["bash", "legacy/report.sh", "{date}"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["date"],
+        "properties": {"date": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "meta": {"connector": "shop", "label": "Daily sales report", "runtime": "shell"}
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# tellmesh `ocr` scheme (cf. ../../../tellmesh/uriocr) — extract text from an image id.
+# The image id is produced by the kvm step upstream and passed in as payload.
+id: flowocr
+version: 1
+scheme: ocr
+description: OCR text from an image id (flow stand-in for uriocr).
+uri_patterns:
+  - pattern: ocr://{host}/image/query/text
+    kind: query
+    operation: ocr.image.text
+    side_effects: false
+    approval: not_required
+handlers:
+  python:
+    ocr.image.text: python://flow_ocr.handlers:extract_text

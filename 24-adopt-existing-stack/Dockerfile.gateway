@@ -1,0 +1,21 @@
+FROM python:3.13-slim
+
+# The gateway needs every runtime the adopted code uses: python (base), node, bash.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends nodejs bash ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+# urirun is the only new dependency. >=0.4.4 for zero-config run + node serve.
+# Pre-release alternative:
+#   RUN pip install --no-cache-dir "urirun @ git+https://github.com/if-uri/urirun.git@main#subdirectory=adapters/python"
+RUN pip install --no-cache-dir "urirun>=0.4.4"
+
+WORKDIR /app
+COPY . /app
+
+# Adopt: compile the existing code's bindings into a runnable registry at build time.
+RUN urirun compile shop.bindings.json --out shop.registry.json
+
+# Serve the whole shop:// surface over HTTP. --allow is the node's security boundary.
+EXPOSE 8080
+CMD ["sh", "-c", "urirun node serve --registry shop.registry.json --host 0.0.0.0 --port 8080 --execute --allow 'shop://*'"]

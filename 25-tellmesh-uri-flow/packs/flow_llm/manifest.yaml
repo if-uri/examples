@@ -1,0 +1,15 @@
+# tellmesh `llm` scheme (cf. ../../../tellmesh/urillm) — summarize a prompt.
+# The prompt is built from the OCR step's text upstream.
+id: flowllm
+version: 1
+scheme: llm
+description: Summarize a prompt (flow stand-in for urillm, deterministic).
+uri_patterns:
+  - pattern: llm://{host}/chat/command/complete
+    kind: command
+    operation: llm.chat.complete
+    side_effects: true
+    approval: required
+handlers:
+  python:
+    llm.chat.complete: python://flow_llm.handlers:complete

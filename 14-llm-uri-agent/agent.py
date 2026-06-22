@@ -102,11 +102,9 @@ def browser_backend(registry: dict) -> str:
 
 
 def action_space(registry: dict) -> list[dict]:
-    """The routes an LLM would choose from (uri + input schema)."""
-    return [{"uri": r["uri"], "kind": "query" if "/query/" in r["uri"] else "command",
-             "label": (r.get("meta") or {}).get("label", ""),
-             "inputs": list(((r.get("inputSchema") or {}).get("properties") or {}).keys())}
-            for r in urirun.list_routes(registry)]
+    """The routes an LLM would choose from (uri + kind + input schema) — the public
+    projection, identical to urirun's MCP tool list."""
+    return urirun.action_space(registry)
 
 
 def plan(goal: str, routes: list[dict]) -> list[dict]:

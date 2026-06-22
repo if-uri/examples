@@ -1,0 +1,31 @@
+services:
+  # The URI gateway: serves every adopted shop:// route over HTTP. One process,
+  # all three runtimes (python/node/bash) live here because the argv templates
+  # invoke the existing code directly.
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "8080:8080"
+
+  # A second container — a different service — calling the shop:// URIs over HTTP.
+  # It needs no library, no SDK, no shared code: just one POST /run per URI.
+  client:
+    image: curlimages/curl:latest
+    depends_on:
+      - gateway
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        sleep 4
+        echo '--- shop://inventory/stock/query/check (python, over HTTP) ---'
+        curl -s -X POST http://gateway:8080/run -H 'Content-Type: application/json' \
+          -d '{"uri":"shop://inventory/stock/query/check","payload":{"sku":"sku-3"}}'
+        echo; echo '--- shop://notify/email/command/send (node, over HTTP) ---'
+        curl -s -X POST http://gateway:8080/run -H 'Content-Type: application/json' \
+          -d '{"uri":"shop://notify/email/command/send","payload":{"to":"ops@shop.io","msg":"restock"}}'
+        echo; echo '--- shop://report/sales/query/daily (shell, over HTTP) ---'
+        curl -s -X POST http://gateway:8080/run -H 'Content-Type: application/json' \
+          -d '{"uri":"shop://report/sales/query/daily","payload":{"date":"2026-06-22"}}'
+        echo
