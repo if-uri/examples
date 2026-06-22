@@ -1,12 +1,30 @@
 # 32 — YAML task scenarios + a live event stream from the node
 
-Two things in one example:
+Three things in one example:
 
 1. **Describe computer tasks as YAML scenarios** and run them against a urirun node over
    the mesh — login to a site, drive the desktop, write an office document, audit a box.
 2. **Receive the node's logs/errors live, as URIs** — the runner subscribes to the
    node's **SSE event stream** (`GET /events`) and prints each `run`/`error` event the
    node emits *while* the steps dispatch, so you see both sides in real time.
+3. **Generate scenarios from natural language** — `nl_scenario.py` turns an NL goal into
+   a YAML scenario of URIs (LLM, constrained to the node's live action space), runs it,
+   captures **both directions** of the flow, and writes a **Markdown report**.
+
+## NL → YAML scenario → run → Markdown (both directions)
+
+```bash
+./nl_scenario.sh "sprawdź zdrowie maszyny, wypisz 5 procesów i zapisz notatkę 'audyt OK'"
+NODE_URL=http://192.168.188.201:8765 ./nl_scenario.sh "otwórz https://example.com i zrób zrzut ekranu"
+```
+
+It (1) asks the LLM for `[{uri, payload, why}]` using **only** the node's `/routes`,
+(2) saves the YAML to `scenarios/gen-<slug>.yaml`, (3) dispatches each step (host→node)
+while a background SSE subscriber collects the node's events (node→host), (4) reads the
+node's own log back, and (5) writes `generated/<slug>.md` — goal, the generated YAML, a
+**Host → Node** dispatch table, a **Node → Host** live-events table, and the node-side
+log. See the committed `generated/*.md` for real runs against `lenovo`. The model + key
+come from `examples/.env`; with no key it falls back to a deterministic generator.
 
 ```txt
  HOST                                           NODE
@@ -102,9 +120,12 @@ whether a fuller two-way channel needs a package refactor.
 
 ## Files
 
-- `scenarios/*.yaml` — task scenarios (web login, desktop control, office doc, audit).
+- `scenarios/*.yaml` — task scenarios (web login, desktop control, office doc, audit) +
+  `gen-*.yaml` (NL-generated).
 - `run_scenarios.py` / `run_scenarios.sh` — dispatch steps + watch the event stream.
-- `test_scenarios.py` — offline test (parse, thread, run against a fake node).
+- `nl_scenario.py` / `nl_scenario.sh` — NL goal → generated YAML → run → Markdown report.
+- `generated/*.md` — Markdown reports of real both-direction runs.
+- `test_scenarios.py` — offline test (parse, thread, run against a fake node, NL generate).
 - `NOTES-bidirectional.md` — design assessment of the live channel.
 
 ## Test

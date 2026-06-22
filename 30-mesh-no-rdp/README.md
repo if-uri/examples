@@ -88,6 +88,35 @@ urirun node stop --port 8766     # stop one instance (repeatable)
 urirun node stop --all           # stop them all (node.sh's free-port fallback breeds duplicates)
 ```
 
+### Manage a node's environment — as URIs (`node://`, no script)
+
+Start a node with `--manage` and it exposes **admin-gated `node://` management routes**,
+so you provision it the URI way — install the packages a node needs (connectors, the
+tellmesh office surface, `cryptography`) into its **own venv**, over the mesh, no SSH:
+
+```bash
+# on the node: needs admin auth (token or key); served from a separate, always-gated registry
+urirun node serve … --key-auth --manage        # or --admin-token …
+
+# from the host (signed with your enrolled key, or --token):
+urirun run node://officepc/runtime/query/info        --execute   # python / venv / urirun version
+urirun run node://officepc/package/query/list   --payload '{"match":"urirun"}' --execute
+urirun run node://officepc/package/command/install \
+        --payload '{"spec":["uricontrol","urirun-connector-time-tools"]}' --execute
+urirun run node://officepc/connector/command/install --payload '{"id":"http-check"}' --execute
+```
+
+| URI | does |
+|-----|------|
+| `node://N/runtime/query/info` | interpreter, venv, urirun version |
+| `node://N/package/query/list` | installed packages (`match` filter) |
+| `node://N/package/command/install` | `pip install` a spec (PyPI / `git+…` / path) into the node's venv |
+| `node://N/connector/command/install` | install `urirun-connector-<id>` |
+
+Every `node://` call is gated by the **admin token / enrolled SSH key** (never the open
+`/run` allow-list), since installing is arbitrary code execution. This closes the loop:
+a node missing a connector is fixed with a URI, not a login.
+
 ## Watch a node's activity live (no SSH)
 
 A node streams every `/run` and every error as Server-Sent Events on `GET /events`, so you

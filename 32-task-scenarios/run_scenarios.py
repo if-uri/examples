@@ -95,6 +95,18 @@ class Node:
     def run(self, uri: str, payload: dict) -> dict:
         return _post(self.base + "/run", {"uri": uri, "payload": payload})
 
+    def recent_log(self, limit: int = 12) -> list:
+        """Read the node's own log back (the other direction): handles both the default
+        node's `logs` key and this example's base-route `lines` key."""
+        uri = f"log://{self.name}/session/query/recent"
+        try:
+            env = self.run(uri, {"limit": limit})
+            out = (env.get("result") or {}).get("stdout") or "{}"
+            data = json.loads(out)
+            return data.get("logs") or data.get("lines") or []
+        except Exception:
+            return []
+
 
 def watch_thread(base: str, stop: threading.Event, sink: list) -> None:
     """Background SSE subscriber: collect the node's live events while steps dispatch."""

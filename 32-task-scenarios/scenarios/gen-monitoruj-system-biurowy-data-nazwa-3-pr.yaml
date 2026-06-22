@@ -1,0 +1,13 @@
+name: monitoruj-system-biurowy-data-nazwa-3-pr
+description: "monitoruj system biurowy: data, nazwa, 3 procesy"
+steps:
+  - uri: shell://laptop/command/date
+    why: "Pobieram aktualną datę i godzinę."
+  - uri: shell://laptop/command/uname
+    why: "Pobieram nazwę systemu."
+  - uri: proc://laptop/process/query/list
+    payload: {"limit": 3}
+    why: "Pobieram listę 3 procesów."
+  - uri: log://laptop/session/command/write
+    payload: {"text": "Raport monitoringu:\nData: $ref:0.stdout\nSystem: $ref:1.stdout\nProcesy:\n$ref:2.processes"}
+    why: "Zapisuję zebrane informacje do logu sesji."

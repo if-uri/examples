@@ -61,6 +61,36 @@ def test_run_scenario_against_a_fake_node():
     assert calls[0][0] == "browser://lab/page/command/open"  # placeholder resolved, order kept
 
 
+def test_nl_scenario_generation_and_markdown():
+    import os
+    os.environ.pop("OPENROUTER_API_KEY", None)  # force the offline heuristic generator
+    os.environ.pop("LLM_MODEL", None)
+    import nl_scenario as nl
+    space = [
+        {"uri": "env://lab/runtime/query/health", "kind": "query", "inputSchema": {}},
+        {"uri": "proc://lab/process/query/list", "kind": "query", "inputSchema": {}},
+        {"uri": "log://lab/session/command/write", "kind": "command", "inputSchema": {}},
+    ]
+    steps, planner = nl.llm_steps("sprawdz procesy i zapisz notatke 'OK'", space)
+    assert planner == "heuristic" and steps
+    assert all(s["uri"] in {x["uri"] for x in space} for s in steps)  # only real URIs
+
+    y = nl.to_yaml("demo", "a goal", steps)
+    assert y.startswith("name: demo") and "steps:" in y
+    assert nl._slug("Otwórz https://X i zapisz!") and "/" not in nl._slug("a/b c")
+
+    report = {"name": "demo", "goal": "g", "node": "lab", "url": "u", "planner": planner,
+              "yaml": y, "trace": [{"i": 0, "uri": steps[0]["uri"], "payload": {}, "ok": True, "value": {"a": 1}}],
+              "events": [{"event": "run", "uri": steps[0]["uri"], "ok": True}],
+              "node_log": ['{"text":"OK"}'], "ok": 1, "total": 1, "at": "now"}
+    import tempfile
+    from pathlib import Path as _P
+    out = _P(tempfile.mkdtemp()) / "r.md"
+    nl.write_markdown(out, report)
+    md = out.read_text()
+    assert "## Generated scenario (YAML)" in md and "Host → Node" in md and "Node → Host" in md
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for fn in fns:

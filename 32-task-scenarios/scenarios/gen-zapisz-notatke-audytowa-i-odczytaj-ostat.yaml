@@ -1,0 +1,9 @@
+name: zapisz-notatke-audytowa-i-odczytaj-ostat
+description: "zapisz notatke audytowa i odczytaj ostatnie wpisy logu"
+steps:
+  - uri: log://laptop/session/command/write
+    payload: {"text": "Notatka audytowa: Rozpoczęto przegląd logów."}
+    why: "Zapisanie notatki audytowej w logu sesji."
+  - uri: log://laptop/session/query/recent
+    payload: {"limit": 10}
+    why: "Odczytanie ostatnich wpisów z logu sesji w celu weryfikacji."
