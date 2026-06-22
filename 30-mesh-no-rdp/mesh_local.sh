@@ -71,7 +71,12 @@ deny="$(dispatch "$PORT_B" 'sh://node-b/command/run' '{"cmd":"rm -rf /"}' | jq -
 echo "  rm -rf / -> ${deny}"
 
 echo ""
-echo "== shut down urirun on both computers =="
-cleanup; PIDS=()
-echo "  nodes stopped; on a real machine: 'systemctl --user disable --now urirun-node' (see get.urirun.com/node.sh --service)"
+echo "== discover running nodes on this machine ('urirun node list') =="
+U node list --ports "${PORT_A},${PORT_B}" | sed 's/^/  /'
+
+echo ""
+echo "== shut them down with 'urirun node stop' (SIGTERM -> port freed) =="
+U node stop --port "${PORT_A}" --port "${PORT_B}" | sed 's/^/  /' || true
+cleanup; PIDS=()   # belt-and-suspenders: also reap by PID
+echo "  on a real machine a --service node respawns: 'systemctl --user disable --now urirun-node'"
 echo "done"

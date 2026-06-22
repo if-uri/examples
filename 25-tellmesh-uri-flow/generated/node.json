@@ -4,7 +4,7 @@
     "name": "flownode",
     "registry": "/home/tom/github/if-uri/examples/25-tellmesh-uri-flow/generated/flow.registry.json",
     "host": "127.0.0.1",
-    "port": 43987,
+    "port": 34021,
     "execute": true
   }
 }
