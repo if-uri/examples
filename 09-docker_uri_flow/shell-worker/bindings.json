@@ -3,7 +3,7 @@
   "bindings": {
     "shell://shell-worker/report/write": {
       "kind": "command",
-      "adapter": "argv-template",
+      "adapter": "service",
       "inputSchema": {
         "type": "object",
         "required": ["slug", "text"],
@@ -14,7 +14,6 @@
         "additionalProperties": false
       },
       "argv": ["/bin/sh", "/app/write_report.sh", "{slug}", "{text}"],
-      "policy": { "allowExecute": true },
       "meta": { "label": "Write report via shell", "language": "shell" }
     }
   }
