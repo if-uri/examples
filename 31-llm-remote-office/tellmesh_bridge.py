@@ -91,11 +91,13 @@ _SCHEMA: dict[str, dict] = {
 
 
 def _ensure_paths() -> None:
-    """Put each pack's source dir on sys.path so `import <pkg>` works uninstalled."""
-    for rel in PACKS:
-        top = (TELLMESH_DIR / rel).parents[1]  # e.g. .../tellmesh/urihim
-        if top.is_dir() and str(top) not in sys.path:
-            sys.path.insert(0, str(top))
+    """Put each pack's source dir + the uri_control core on sys.path so the handlers
+    import straight from a tellmesh checkout — no pip install needed on the node."""
+    extra = [str(TELLMESH_DIR / "uricontrol" / "core" / "python")]  # provides uri_control
+    extra += [str((TELLMESH_DIR / rel).parents[1]) for rel in PACKS]  # urihim, urikvm, …
+    for p in extra:
+        if p not in sys.path and Path(p).is_dir():
+            sys.path.insert(0, p)
 
 
 def _manifest_routes() -> list[dict]:
@@ -128,18 +130,19 @@ _BY_EXPORT: dict[str, dict] = {r["export"]: r for r in ROUTES}
 
 
 def __getattr__(name: str) -> Callable:
-    """PEP 562: resolve `h_<operation>` lazily — import the real tellmesh handler the
-    first time urirun calls it on the node, wrap it to urirun's `fn(**payload)` shape
-    (forwarding the persistent CONTEXT), and cache it. Building bindings never triggers
-    this; only execution does."""
+    """PEP 562: resolve `h_<operation>` to a wrapper. The real tellmesh handler is
+    imported INSIDE the wrapper (at call time), not here — so a missing dependency
+    surfaces as a normal exception urirun can catch and report, instead of raising
+    during attribute resolution (which would kill the request). Building bindings never
+    triggers an import; only an actual call does."""
     route = _BY_EXPORT.get(name)
     if route is None:
         raise AttributeError(name)
-    _ensure_paths()
     mod_name, _, func_name = route["ref"].partition(":")
-    fn = getattr(importlib.import_module(mod_name), func_name)
 
     def handler(**payload: Any) -> Any:
+        _ensure_paths()
+        fn = getattr(importlib.import_module(mod_name), func_name)
         return fn(payload, CONTEXT)
 
     globals()[name] = handler  # cache so urirun's re-import path finds it directly

@@ -28,7 +28,7 @@ def base_bindings(name: str) -> dict:
     """Dependency-free argv-template routes every node should keep: health, logging,
     processes. The host writes to `log://<name>/session/command/write` on each step so
     the node's own log records what was delegated — visible on both sides."""
-    py = sys.executable
+    py = "python3"  # resolved on the NODE's PATH (sys.executable would bake the host path)
     logp = f"/tmp/urirun-{name}.log"
     return {
         f"env://{name}/runtime/query/health": {
