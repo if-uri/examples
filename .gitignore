@@ -11,6 +11,9 @@ node_modules/
 .run/
 dist/
 build/
+41-invoice-audit-flow
+42-host-compute-node-ocr
+.state
 _site/
 .env.example
 __pycache__/
