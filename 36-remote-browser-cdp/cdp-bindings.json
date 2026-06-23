@@ -10,6 +10,21 @@
         "properties": {"browser": {"type": "string"}, "url": {"type": "string"}, "headless": {"type": "boolean"}}},
       "meta": {"label": "Launch a Chrome-family browser with a CDP debug port"}
     },
+    "browser://NODE/cdp/session/query/find": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "cdp-flat-handler:find_session",
+      "python": {"type": "python", "module": "cdp-flat-handler", "export": "find_session"},
+      "inputSchema": {"type": "object", "additionalProperties": true,
+        "properties": {
+          "domain": {"type": "string"},
+          "url": {"type": "string"},
+          "endpoints": {"type": "string"},
+          "debug_ports": {"type": "string"},
+          "cookie_names": {"type": "string"}
+        }},
+      "meta": {"label": "Find an existing CDP browser session for a domain"}
+    },
     "browser://NODE/cdp/page/command/navigate": {
       "kind": "command",
       "adapter": "local-function",

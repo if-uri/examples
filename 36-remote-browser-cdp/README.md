@@ -8,6 +8,7 @@ browser-control connector's **Chrome DevTools Protocol** surface
 ```
 host                                node (Chrome + a urirun node)
  browser://NODE/cdp/session/command/launch {headless}   ── launch Chrome w/ debug port
+ browser://NODE/cdp/session/query/find     {domain}     ── find an existing CDP browser session
  browser://NODE/cdp/page/command/navigate  {url}        ── go to a page
  browser://NODE/cdp/page/query/eval        {expr}       ── run JS in the page, get the value
  browser://NODE/cdp/page/query/screenshot              ── PNG over CDP
@@ -15,7 +16,8 @@ host                                node (Chrome + a urirun node)
 ```
 
 The surface is **stateful**: launch first, then navigate / eval / screenshot
-against the live page.
+against the live page. The session probe is read-only and does not launch, navigate,
+type, click, or expose cookie values.
 
 ## Run
 
@@ -64,7 +66,7 @@ local Chrome) — needs a Chrome/Chromium on this machine:
 
 ```
 == deploy the CDP surface ==
-  deploy ok= True routeCount= 5
+  deploy ok= True routeCount= 6
 == drive the local browser over CDP ==
   ✓ launch        {"ok":true,"browser":"Chrome/149.0.7827.155","debugPort":9222,...}
   ✓ navigate      https://example.com
@@ -91,7 +93,7 @@ tools, no portal. For Chrome on Linux desktops, prefer `browser://.../cdp/*`.
 - `drive_cdp.py` — host-side driver: launch → navigate → eval → screenshot → tabs (`NODE_URL`, `NODE`).
 - `unattended_browser.py` — KVM/OCR-first, screen-portal/OCR fallback, then CDP read-only
   unattended observation with policy gates for social-write/login/payment actions.
-- `cdp-bindings.json` — the 5 CDP routes (templated on `NODE`), mapping to the connector's `cdp-flat-handler.py`.
+- `cdp-bindings.json` — the 6 CDP routes (templated on `NODE`), mapping to the connector's `cdp-flat-handler.py`.
 - `e2e.sh` — local node + signed `/deploy` of the CDP handler + `drive_cdp.py` (self-contained; skips if no Chrome).
 
 The handler is [`urirun-connector-browser-control/examples/cdp-flat-handler.py`](../../urirun-connector-browser-control/examples/cdp-flat-handler.py)
