@@ -303,7 +303,9 @@ def run_program(cdp: AttachCDP, config: ScoutConfig, commands: list[dict[str, An
             results.append({"ok": False, "command": uri, "error": str(exc)})
             if step.get("required", True):
                 return {"ok": False, "step": uri, "results": results}
-    return {"ok": True, "results": results, "captured": len(ctx.get("posts", [])) + len(ctx.get("comments", []))}
+    return {"ok": True, "results": results,
+            "captured": ctx.get("saved_posts", 0) + ctx.get("saved_comments", 0)
+                        + len(ctx.get("posts", [])) + len(ctx.get("comments", []))}
 
 
 # --- a sensible default program ----------------------------------------------
