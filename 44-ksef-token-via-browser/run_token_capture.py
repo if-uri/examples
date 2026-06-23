@@ -21,8 +21,11 @@ import time
 
 sys.path.insert(0, os.path.dirname(__file__))
 import ksef_token as kt
+import ksef_auth as ka
 
 ENV = os.getenv("KSEF_ENV", "test")
+NIP = os.getenv("KSEF_NIP", "")
+PUBLIC_KEY = os.getenv("KSEF_PUBLIC_KEY", "")             # MF public key (path/PEM) for a REAL handshake
 # TEST environment of the Aplikacja Podatnika KSeF. VERIFY these against the live site.
 LOGIN_URL = os.getenv("KSEF_LOGIN_URL", "https://ksef-test.mf.gov.pl/web/login")
 TOKENS_URL = os.getenv("KSEF_TOKENS_URL", "https://ksef-test.mf.gov.pl/web/tokens")
@@ -100,7 +103,20 @@ def main() -> int:
         print(f"   uwaga   : {stored['warning']}")
     print("\nUżyj w ksef:// (token rozwiązywany dopiero przy --execute, deny-by-default):")
     print(f"   --secret-allow '{stored['ref']}'")
-    print("Następnie: handshake ksef-token → accessToken (ksef://%s/auth/...)." % ENV)
+
+    # [7/7] handshake token → accessToken. Plan by default; real run needs NIP + MF public key.
+    do_real = "--auth" in sys.argv and NIP and PUBLIC_KEY
+    print(f"\n[7/7] handshake ksef-token → accessToken ({'EXECUTE' if do_real else 'plan/dry-run'})…")
+    auth = ka.authenticate_and_store(ENV, NIP or "0000000000", public_key=PUBLIC_KEY, execute=do_real)
+    if auth.get("dryRun"):
+        for s in auth.get("steps", []):
+            print("   ·", s)
+        print("   → realnie: ustaw KSEF_NIP + KSEF_PUBLIC_KEY i dodaj --auth")
+    elif auth.get("ok"):
+        print(f"   ✓ accessToken zapisany: {auth['accessRef']}  (podgląd {auth['accessMasked']})")
+        print(f"   → {auth['note']}")
+    else:
+        print(f"   [!] {auth.get('error')}")
     return 0
 
 

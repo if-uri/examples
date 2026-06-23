@@ -1,0 +1,64 @@
+version: urirun.flow.v1
+source:
+  nl: "Validate a KSeF FA(2) invoice, encrypt it, open an online session, send it, close, and fetch the UPO confirmation."
+task:
+  id: ksef-send-faktura
+  title: "KSeF send: FA(2) → session → UPO"
+# Plan-ready: the accessToken is carried by REFERENCE (secret://keyring/ksef/test-access from
+# example 44) and resolved only under --execute --secret-allow. Validate is a hard gate.
+steps:
+  - id: validate
+    uri: invoice://host/ksef/query/validate
+    payload:
+      path: "~/.urirun/camera-scans/receipt-invoice/faktura.xml"
+      xsd_path: "${env:KSEF_FA2_XSD}"
+    runs_on: node
+
+  # open the online session (the AES session key is wrapped with the MF public key)
+  - id: open_session
+    uri: ksef://test/sessions/online
+    headers:
+      Authorization: "Bearer {getv:KSEF_ACCESS_TOKEN}"
+    runs_on: node
+    depends_on:
+      - validate
+
+  - id: send_invoice
+    uri: ksef://test/session/online/{ref}/send
+    headers:
+      Authorization: "Bearer {getv:KSEF_ACCESS_TOKEN}"
+    payload:
+      ref: "${open_session.result.value.referenceNumber}"
+    runs_on: node
+    depends_on:
+      - open_session
+
+  - id: close_session
+    uri: ksef://test/session/{ref}/close
+    headers:
+      Authorization: "Bearer {getv:KSEF_ACCESS_TOKEN}"
+    payload:
+      ref: "${open_session.result.value.referenceNumber}"
+    runs_on: node
+    depends_on:
+      - send_invoice
+
+  - id: fetch_upo
+    uri: ksef://test/session/{ref}/upo
+    headers:
+      Authorization: "Bearer {getv:KSEF_ACCESS_TOKEN}"
+    payload:
+      ref: "${open_session.result.value.referenceNumber}"
+    runs_on: node
+    depends_on:
+      - close_session
+
+  # parse the UPO → the assigned KSeF number (proof of acceptance) and archive the raw UPO
+  - id: parse_upo
+    uri: invoice://host/ksef/query/upo
+    payload:
+      text: "${fetch_upo.result.value}"
+      output_path: "~/.urirun/camera-scans/receipt-invoice/upo.xml"
+    runs_on: node
+    depends_on:
+      - fetch_upo

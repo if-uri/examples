@@ -17,6 +17,8 @@ browser://cdp eval  → read token from the DOM (shown once)
 store in OS keyring  →  secret://keyring/ksef/test-token   (value stays in the store)
    ▼
 ksef://test/auth/...  → token → accessToken  (handshake; token never sent in plaintext)
+   ▼
+store accessToken → secret://keyring/ksef/test-access   (ready for ksef:// API calls)
 ```
 
 ## What is and isn't automated
@@ -50,6 +52,23 @@ podgląd : AbC***********yZ
 --secret-allow 'secret://keyring/ksef/test-token'
 ```
 
+Then it runs the **token → accessToken handshake** — in plan/dry-run by default (prints the
+steps, no secrets). For a real handshake set `KSEF_NIP` + `KSEF_PUBLIC_KEY` (the MF public key)
+and add `--auth`; the accessToken is stored as `secret://keyring/ksef/test-access`:
+
+```bash
+export KSEF_NIP=7781422455
+export KSEF_PUBLIC_KEY=/path/to/mf-public-key.pem   # GET .../security/public-key-certificates
+python3 run_token_capture.py --auth
+```
+
+## Files
+
+- `ksef_token.py` — token masking, the read/login JS builders, secure keyring/dotenv store.
+- `ksef_auth.py` — token → accessToken handshake (plan by default), accessToken stored by reference.
+- `run_token_capture.py` — the interactive orchestrator (run on the Lenovo).
+- `ksef-token-via-browser.flow.yaml` — the declarative URI shape (set your real selectors/URLs).
+
 ## Security model (why it's safe)
 
 - The token value goes into the **OS keyring** (`secret://keyring/...`); bindings/flows carry
@@ -60,16 +79,10 @@ podgląd : AbC***********yZ
   some other browser's storage.
 - No keyring? The helper falls back to a `chmod 600` dotenv and tells you to `pip install keyring`.
 
-## Files
-
-- `ksef_token.py` — testable glue: token masking, the read/login JS builders, secure store.
-- `run_token_capture.py` — the interactive orchestrator (run on the Lenovo).
-- `ksef-token-via-browser.flow.yaml` — the declarative URI shape (set your real selectors/URLs).
-
 ## Test
 
 ```bash
-pytest test_ksef_token.py -q     # masking, JS builders, keyring + 0600 dotenv store
+pytest -q     # masking, JS builders, keyring + 0600 dotenv store, plan-mode handshake
 ```
 
 > The browser/gov-site steps cannot be unit-tested here (interactive, live portal). The
