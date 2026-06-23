@@ -14,16 +14,65 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "post": {"type": "string", "description": "Text to publish on the LinkedIn feed."},
-          "port": {"type": "integer", "default": 0},
-          "env": {"type": "string", "default": "", "description": "Path to .env with route/domain/host settings."},
-          "keep_browser": {"type": "boolean", "default": false}
+          "post": {
+            "type": "string",
+            "description": "Text to publish on the LinkedIn feed."
+          },
+          "port": {
+            "type": "integer",
+            "default": 0
+          },
+          "env": {
+            "type": "string",
+            "default": "/home/tom/github/if-uri/examples/39-local-social-autonomy/.env"
+          },
+          "keep_browser": {
+            "type": "boolean",
+            "default": false
+          }
         }
       },
-      "policy": {"allowExecute": true},
+      "policy": {
+        "allowExecute": true
+      },
       "meta": {
         "label": "Publish a LinkedIn post",
-        "description": "Loads route/domain/host settings from .env, starts the site, publishes, and verifies the feed."
+        "description": "Loads host/domain settings from .env, starts the site, publishes, and verifies the feed."
+      }
+    },
+    "social://linkedin.com/session/query/active": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "nl_autonomy:check_active_session",
+      "python": {
+        "type": "python",
+        "module": "nl_autonomy",
+        "export": "check_active_session"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "List of debug ports to probe."
+          },
+          "env": {
+            "type": "string",
+            "default": "/home/tom/github/if-uri/examples/39-local-social-autonomy/.env",
+            "description": "Path to .env with LI_DEBUG_PORT settings."
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "Check for active LinkedIn browser session",
+        "description": "Probes debugging ports to find a browser tab containing a logged-in LinkedIn session."
       }
     }
   }

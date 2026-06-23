@@ -77,7 +77,8 @@ def test_binding_document_uses_env_domain_and_defaults(tmp_path):
     env = env_file_with_social_config(tmp_path)
     doc = nl_autonomy.binding_document(env)
     route = "social://linkjedin.example/post/command/publish"
-    assert list(doc["bindings"]) == [route]
+    route_session = "social://linkjedin.example/session/query/active"
+    assert set(doc["bindings"]) == {route, route_session}
     props = doc["bindings"][route]["inputSchema"]["properties"]
     assert "hostname" not in props
     assert "host" not in props
@@ -154,4 +155,47 @@ def test_nl_planner_returns_social_publish_step():
         "uri": nl_autonomy.ROUTE,
         "payload": {"post": "lokalny test"},
         "why": "NL prompt asks for a controlled social publication",
+    }]
+
+
+def test_scout_markdown_rendering():
+    import scout
+    posts = [
+        {
+            "author": "Alice",
+            "text": "Hello world from Alice",
+            "url": "https://www.linkedin.com/feed/update/urn:li:activity:1",
+            "comments": [
+                {"author": "Bob", "text": "Nice post!"}
+            ]
+        }
+    ]
+    sources = {"feed": "https://www.linkedin.com/feed/"}
+    md = scout.to_markdown(posts, sources)
+    assert "Alice" in md
+    assert "Hello world from Alice" in md
+    assert "Bob" in md
+    assert "Nice post!" in md
+    assert "link: <https://www.linkedin.com/feed/update/urn:li:activity:1>" in md
+
+
+def test_check_active_session_handles_failure():
+    res = nl_autonomy.check_active_session(ports=[9999])
+    assert res["ok"] is True
+    assert res["found"] is False
+    assert res["checked_ports"] == [9999]
+    assert len(res["details"]) == 1
+    assert res["details"][0]["port"] == 9999
+    assert "error" in res["details"][0]
+
+
+def test_nl_planner_returns_session_check_step():
+    steps = nl_autonomy.planner(
+        "sprawdz czy jest aktywna sejsja linkedin",
+        [{"uri": "social://linkedin.com/session/query/active"}]
+    )
+    assert steps == [{
+        "uri": "social://linkedin.com/session/query/active",
+        "payload": {},
+        "why": "NL prompt asks to check the active LinkedIn session or browser",
     }]

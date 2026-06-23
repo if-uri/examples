@@ -26,8 +26,11 @@ ROUTE = autonomous_browser.route_uri()
 
 
 def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> dict[str, Any]:
+    import urllib.parse
     config = autonomous_browser.autonomy_config(env_path)
     route = autonomous_browser.route_uri(env_path)
+    parsed = urllib.parse.urlparse(route)
+    route_session = f"social://{parsed.netloc}/session/query/active"
     return {
         "version": "urirun.bindings.v2",
         "bindings": {
@@ -59,6 +62,37 @@ def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> d
                     "description": "Loads host/domain settings from .env, starts the site, publishes, and verifies the feed.",
                 },
             },
+            route_session: {
+                "kind": "query",
+                "adapter": "local-function",
+                "ref": "nl_autonomy:check_active_session",
+                "python": {
+                    "type": "python",
+                    "module": "nl_autonomy",
+                    "export": "check_active_session",
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "ports": {
+                            "type": "array",
+                            "items": {"type": "integer"},
+                            "description": "List of debug ports to probe."
+                        },
+                        "env": {
+                            "type": "string",
+                            "default": str(env_path),
+                            "description": "Path to .env with LI_DEBUG_PORT settings."
+                        }
+                    },
+                },
+                "policy": {"allowExecute": True},
+                "meta": {
+                    "label": "Check for active LinkedIn browser session",
+                    "description": "Probes debugging ports to find a browser tab containing a logged-in LinkedIn session."
+                }
+            }
         },
     }
 
@@ -95,6 +129,21 @@ def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_
 
 def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Planner contract used by `urirun agent run`: (goal, action_space) -> steps."""
+    goal_lower = goal.lower()
+    if any(keyword in goal_lower for keyword in ("session", "sejsja", "przegladark", "check", "sprawdz", "query")):
+        route = next(
+            (item["uri"] for item in action_space
+             if str(item.get("uri", "")).startswith("social://")
+             and str(item.get("uri", "")).endswith("/session/query/active")),
+            None,
+        )
+        if route:
+            return [{
+                "uri": route,
+                "payload": {},
+                "why": "NL prompt asks to check the active LinkedIn session or browser",
+            }]
+
     default_route = autonomous_browser.route_uri()
     route = next(
         (item["uri"] for item in action_space
@@ -138,6 +187,64 @@ def publish_local(
         )
     finally:
         server.shutdown()
+
+
+def check_active_session(
+    ports: list[int] | None = None,
+    env: str = "",
+) -> dict[str, Any]:
+    """Check if any running browser has an active logged-in LinkedIn session."""
+    import scout
+    import urllib.parse
+    env_path = Path(env) if env else scout.DEFAULT_ENV
+    env_dict = mock_linkedin.load_env(env_path) if env_path.exists() else {}
+
+    if not ports:
+        port_val = env_dict.get("LI_DEBUG_PORT")
+        ports = [int(port_val)] if port_val else [9222]
+
+    checked = []
+    for port in ports:
+        try:
+            cdp = scout.AttachCDP(f"http://127.0.0.1:{port}")
+            cdp.connect(prefer_url_contains="linkedin.com")
+            try:
+                href = cdp.eval("location.href") or ""
+                title = cdp.eval("document.title") or ""
+
+                # Check if we are on LinkedIn and logged in
+                is_logged_in = cdp.eval("""(() => {
+                  const path = location.pathname;
+                  const hasFeed = path.includes('/feed') || path.includes('/in/') || path.includes('/my-items/');
+                  const noLoginForm = !document.querySelector('form[action*="login"]');
+                  return hasFeed && noLoginForm;
+                })()""")
+
+                if is_logged_in:
+                    return {
+                        "ok": True,
+                        "found": True,
+                        "port": port,
+                        "url": href,
+                        "title": title,
+                    }
+                checked.append({
+                    "port": port,
+                    "url": href,
+                    "title": title,
+                    "status": "No active logged-in session found on this port."
+                })
+            finally:
+                cdp.close()
+        except Exception as exc:
+            checked.append({"port": port, "error": str(exc)})
+
+    return {
+        "ok": True,
+        "found": False,
+        "checked_ports": ports,
+        "details": checked
+    }
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -60,6 +60,57 @@ Custom post:
 ```bash
 python3 autonomous_browser.py --post "Zaloguj sie"
 python3 autonomous_browser.py --post "Testowa publikacja z pelnej lokalnej autonomii."
+python3 autonomous_browser.py --post "publikacja postu na temat programowania"
+```
+
+## Read-only scout on real LinkedIn
+
+`scout.py` attaches to a Chrome session you already run with
+`--remote-debugging-port` (logged in as you) and walks the read pages: home feed,
+your recent activity, saved posts, and a hashtag/topic page. It scrolls, parses,
+de-duplicates by URL+text, and appends interesting posts to
+`.state/captures.md`. It never types, never clicks publish, and never navigates
+away from these read pages — the publish step stays a human action.
+
+Start Chrome once with a debugging port and your normal profile:
+
+```bash
+google-chrome --remote-debugging-port=9222
+```
+
+Then run the scout:
+
+```bash
+python3 scout.py
+python3 scout.py --pages feed,saved
+python3 scout.py --out .state/captures-python.md
+```
+
+Relevant `.env` keys:
+
+```dotenv
+LI_DEBUG_PORT=9222
+LI_PROFILE_PATH=/in/tom-developer/recent-activity/
+LI_HASHTAG=programming
+LI_SCROLL_STEPS=4
+LI_SCROLL_DELAY=1.5
+LI_MIN_TEXT_LEN=80
+```
+
+Expected result:
+
+```json
+{
+  "ok": true,
+  "pages": {
+    "feed": {"url": "https://www.linkedin.com/feed/", "count": 12},
+    "myposts": {"url": "https://www.linkedin.com/in/tom-developer/recent-activity/", "count": 3},
+    "saved": {"url": "https://www.linkedin.com/my-items/saved-posts/", "count": 5},
+    "hashtag": {"url": "https://www.linkedin.com/feed/hashtag/?keywords=programming", "count": 8}
+  },
+  "captured": 23,
+  "out": ".state/captures.md"
+}
 ```
 
 ## Natural Language Via urirun
@@ -118,11 +169,13 @@ The credentials are the values in `.env`.
 
 - `mock_linkedin.py` — controlled LinkedIn-like server with `/login`, `/feed`, `/post`, `/api/posts`.
 - `autonomous_browser.py` — launches Chrome, reads domain/host settings from `.env`, logs in, publishes, verifies.
+- `scout.py` — read-only scout that attaches to your logged-in Chrome (CDP) and captures interesting posts to `.state/captures.md`.
 - `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
 - `bindings.json` — default snapshot; `run_prompt.sh` renders `.state/local-social.bindings.json` from `.env`.
 - `run_prompt.sh` — one-command prompt runner around env-resolved binding generation, `urirun compile`, and `urirun agent run`.
 - `.env.example` — sample development credentials, post text, domains, hosts, ports, and mapping policy.
 - `test_local_social.py` — offline tests for the server, `.env` loading, and mapped-host scope.
+- `test_scout.py` — offline tests for the scout's dedupe, markdown rendering, and `.env` config parsing.
 
 ## Boundary
 
