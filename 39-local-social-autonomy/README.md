@@ -63,7 +63,77 @@ python3 autonomous_browser.py --post "Testowa publikacja z pelnej lokalnej auton
 python3 autonomous_browser.py --post "publikacja postu na temat programowania"
 ```
 
-## Read-only scout on real LinkedIn
+## Read-only URI command runtime
+
+`uri_runtime.py` exposes a small typed-URI command vocabulary that drives an
+attach-only CDP Chrome session: navigate, search via the site's own search,
+scroll, extract posts, extract comments, OCR low-text blocks, snapshot, and
+append a markdown capture. It reacts to what it finds on the page (DOM via
+`Runtime.evaluate` plus Tesseract OCR for image-heavy blocks) and writes only to
+local files. There is no `publish`/`comment`/`like`/`message`/`follow`/`type`/
+`click` command — by registry, not by convention. A test asserts that.
+
+Start Chrome once with a debugging port:
+
+```bash
+google-chrome --remote-debugging-port=9222
+```
+
+Run the default program (feed → search the configured phrase → scroll → extract
+posts/comments → OCR the main column → append to `.state/captures.md`):
+
+```bash
+python3 uri_runtime.py --query "system design"
+python3 uri_runtime.py --hashtag python
+```
+
+Run a custom JSON program:
+
+```bash
+python3 uri_runtime.py --program my_program.json --query " distributed systems"
+```
+
+`my_program.json`:
+
+```json
+[
+  {"uri": "chrome://scout/search?scope=posts&q=__QUERY__", "why": "search phrase"},
+  {"uri": "chrome://scout/scroll?steps=6", "why": "load results"},
+  {"uri": "chrome://scout/extract_posts", "why": "grab posts"},
+  {"uri": "chrome://scout/extract_comments", "why": "grab visible comments"},
+  {"uri": "chrome://scout/ocr?selector=main", "why": "OCR image-heavy blocks"},
+  {"uri": "chrome://scout/append_markdown?path=.state/distributed.md"}
+]
+```
+
+### Command reference
+
+| URI | params | effect |
+| --- | --- | --- |
+| `chrome://scout/navigate` | `url`, `settle` | go to an absolute http(s) URL |
+| `chrome://scout/search` | `q`, `scope=content\|posts\|people`, `settle` | use the site's own search results URL |
+| `chrome://scout/scroll` | `steps`, `delay` | scroll `steps` times by ~one viewport |
+| `chrome://scout/filter` | `q` | set/clear a client-side text filter for the next extract |
+| `chrome://scout/extract_posts` | `min_text_len` | pull posts (author/text/url) into the buffer |
+| `chrome://scout/extract_comments` | `min_text_len` | pull visible comments into the buffer |
+| `chrome://scout/ocr` | `selector` | OCR the bounding box of a CSS selector via Tesseract |
+| `chrome://scout/snapshot` | `path` | save a PNG screenshot of the current page |
+| `chrome://scout/append_markdown` | `path`, `heading` | flush buffer to markdown, then reset |
+
+Result:
+
+```json
+{
+  "ok": true,
+  "results": [
+    {"ok": true, "command": "navigate", "navigated": {"title": "Feed", "href": "https://www.linkedin.com/feed/"}},
+    {"ok": true, "command": "search", "scope": "posts", "query": "system design", "url": "..."},
+    {"ok": true, "command": "extract_posts", "count": 12},
+    {"ok": true, "command": "append_markdown", "path": ".state/captures.md", "posts": 12, "comments": 0}
+  ],
+  "captured": 12
+}
+```
 
 `scout.py` attaches to a Chrome session you already run with
 `--remote-debugging-port` (logged in as you) and walks the read pages: home feed,
