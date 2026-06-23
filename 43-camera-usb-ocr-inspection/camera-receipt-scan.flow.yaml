@@ -13,6 +13,7 @@ steps:
       output_dir: "~/.urirun/camera-scans/receipt"
       audit_log: "~/.urirun/camera-scans/receipt-audit.jsonl"
       target: "receipt"
+      deskew: true
       require_object: true
       min_chars: 12
       beep: true

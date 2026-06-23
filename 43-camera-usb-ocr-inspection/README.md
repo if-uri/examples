@@ -33,6 +33,19 @@ flow must refuse capture if the audio cue cannot be emitted.
 - `ocr://host/image/query/text`: optional richer OCR/layout backend for the
   captured image or crop.
 
+## Run the whole thing
+
+```bash
+python3 run.py            # synthetic receipt → crop+deskew+OCR, barcode decode (works offline)
+python3 run.py --camera   # capture from a real /dev/video* if one is attached
+python3 run.py --serve 8780   # also host the mobile webcam service and print the phone URL
+python3 run.py --json     # machine-readable summary
+```
+
+`run.py` drives the connectors in-process: discover the camera (`usb://`), capture or
+synthesise a frame, crop tightly to the receipt and **deskew** it before OCR (`camera://`),
+decode any QR/barcode, and optionally start the LAN mobile service (`webcam://`).
+
 ## Flows
 
 - `camera-usb-ocr.flow.yaml`: end-to-end probe + beeped OCR + inspection.

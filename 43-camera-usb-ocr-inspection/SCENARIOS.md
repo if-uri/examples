@@ -16,6 +16,10 @@ URI steps (see `camera-receipt-scan.flow.yaml`):
 bright, text-dense sheet on the darker background, so OCR sees only the receipt. Use
 `target="object"` for a 3‑D item, or `target="auto"` to let the connector decide.
 
+Add `deskew=true` when the receipt is photographed at an angle: the connector finds the four
+corners and warps the sheet **flat** (perspective correction) before OCR — OpenCV is used for
+corner detection if installed, otherwise a numpy detector; the warp is Pillow-only.
+
 Use when: a person manually places documents in front of a camera.
 
 ## 2. Known-label inspection

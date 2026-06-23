@@ -79,7 +79,7 @@ Each scan creates:
 - a `scanner://host/capture/<sha>` URI,
 - a `camera-scan` artifact in the host DB,
 - an automatic `*-receipt-crop.jpg` when the host can detect a receipt/document
-  inside the phone frame,
+  inside the phone frame, using `urirun-connector-smart-crop`
 - a chat message with the cropped receipt preview, original file path, crop box,
   size, dimensions, SHA-256 and OCR metadata.
 - after the chat request, a `dashboard://host/qr/<sha>` message with a QR-code
