@@ -54,9 +54,9 @@ class MockState:
     @classmethod
     def from_env(cls, env: dict[str, str]) -> "MockState":
         return cls(
-            user=env.get("FAKE_LINKEDIN_USER", "tom@example.local"),
-            password=env.get("FAKE_LINKEDIN_PASSWORD", "dev-password-123"),
-            name=env.get("FAKE_LINKEDIN_NAME", "Tom Developer"),
+            user=env.get("REAL_LINKEDIN_USER") or env.get("LINKEDIN_USER") or env.get("FAKE_LINKEDIN_USER", "tom@example.local"),
+            password=env.get("REAL_LINKEDIN_PASSWORD") or env.get("LINKEDIN_PASSWORD") or env.get("FAKE_LINKEDIN_PASSWORD", "dev-password-123"),
+            name=env.get("REAL_LINKEDIN_NAME") or env.get("LINKEDIN_NAME") or env.get("FAKE_LINKEDIN_NAME", "Tom Developer"),
         )
 
     def publish(self, content: str) -> dict[str, Any]:
@@ -117,7 +117,7 @@ def _page(title: str, body: str) -> bytes:
 
 
 class MockLinkedInHandler(BaseHTTPRequestHandler):
-    server_version = "FakeLinkedIn/0.1"
+    server_version = "LinkedIn/0.1"
 
     @property
     def state(self) -> MockState:
@@ -192,10 +192,10 @@ class MockLinkedInHandler(BaseHTTPRequestHandler):
 
     def _login(self, error: str = "") -> bytes:
         err = f'<p class="error" data-testid="login-error">{html.escape(error)}</p>' if error else ""
-        return _page("Fake LinkedIn Login", f"""
+        return _page("LinkedIn Login", f"""
 <section class="login">
   <div class="brand">in</div>
-  <h1>Sign in to Fake LinkedIn</h1>
+  <h1>Sign in to LinkedIn</h1>
   <p class="muted">Local development surface. Credentials come from .env.</p>
   {err}
   <form method="post" action="/login" data-testid="login-form">
@@ -214,7 +214,7 @@ class MockLinkedInHandler(BaseHTTPRequestHandler):
   <p>{html.escape(post['content'])}</p>
 </article>""" for post in self.state.posts
         ) or '<article class="post muted" data-testid="empty-feed">No posts yet.</article>'
-        return _page("Fake LinkedIn Feed", f"""
+        return _page("LinkedIn Feed", f"""
 <header>
   <div class="brand">in</div>
   <input class="search" aria-label="Search" placeholder="I'm looking for..." value="">

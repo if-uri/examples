@@ -172,7 +172,7 @@ class CDPBrowser:
     def __init__(self, chrome: str, debug_port: int, host_rule: str, resolver_target: str, start_url: str) -> None:
         self.debug_port = debug_port
         self.start_url = start_url
-        self.profile = tempfile.TemporaryDirectory(prefix="fake-linkedin-cdp-")
+        self.profile = tempfile.TemporaryDirectory(prefix="linkedin-cdp-")
         args = [
             chrome,
             f"--remote-debugging-port={debug_port}",
@@ -342,7 +342,9 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
                  keep_browser: bool = False, config: AutonomyConfig | None = None) -> dict[str, Any]:
     env = mock_linkedin.load_env(env_path)
     config = config or autonomy_config(env_path, hostname=hostname, port=port)
-    content = post or env.get("FAKE_LINKEDIN_POST", "Autonomous post.")
+    user = env.get("REAL_LINKEDIN_USER") or env.get("LINKEDIN_USER") or env.get("FAKE_LINKEDIN_USER") or "tom@example.local"
+    password = env.get("REAL_LINKEDIN_PASSWORD") or env.get("LINKEDIN_PASSWORD") or env.get("FAKE_LINKEDIN_PASSWORD") or "dev-password-123"
+    content = post or env.get("REAL_LINKEDIN_POST") or env.get("LINKEDIN_POST") or env.get("FAKE_LINKEDIN_POST") or "Autonomous post."
     target = browser_feed_url(config, port)
     mapped_hosts = (config.browser_hostname,) if config.map_browser_host else ()
     assert_local_url(target, mapped_hosts=mapped_hosts, local_suffixes=config.local_suffixes)
@@ -357,7 +359,7 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
         browser.command("Page.navigate", {"url": target})
         browser.wait_for("document.readyState === 'complete'", timeout=10)
         first = browser.eval("({title: document.title, href: location.href, body: document.body.innerText.slice(0, 300)})")
-        login_result = browser.eval(js_login(env["FAKE_LINKEDIN_USER"], env["FAKE_LINKEDIN_PASSWORD"]))
+        login_result = browser.eval(js_login(user, password))
         browser.wait_for("location.pathname === '/feed' && !!document.querySelector('[data-testid=\"post-content\"]')",
                          timeout=10)
         publish_result = browser.eval(js_publish(content))
@@ -367,7 +369,7 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
         return {
             "ok": any(post.get("content") == content for post in api.get("posts", [])),
             "url": target,
-            "user": env["FAKE_LINKEDIN_USER"],
+            "user": user,
             "firstPage": first,
             "login": login_result,
             "publish": publish_result,

@@ -79,8 +79,8 @@ def test_binding_document_uses_env_domain_and_defaults(tmp_path):
     route = "social://linkjedin.example/post/command/publish"
     assert list(doc["bindings"]) == [route]
     props = doc["bindings"][route]["inputSchema"]["properties"]
-    assert props["hostname"]["default"] == "linkjedin.example"
-    assert props["host"]["default"] == "127.0.0.1"
+    assert "hostname" not in props
+    assert "host" not in props
     assert props["port"]["default"] == 8088
 
 

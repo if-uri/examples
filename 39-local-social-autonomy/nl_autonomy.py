@@ -46,10 +46,8 @@ def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> d
                     "properties": {
                         "post": {
                             "type": "string",
-                            "description": "Text to publish on the controlled LinkedIn-shaped feed.",
+                            "description": "Text to publish on the LinkedIn feed.",
                         },
-                        "hostname": {"type": "string", "default": config.browser_hostname},
-                        "host": {"type": "string", "default": config.bind_host},
                         "port": {"type": "integer", "default": config.bind_port},
                         "env": {"type": "string", "default": str(env_path)},
                         "keep_browser": {"type": "boolean", "default": False},
@@ -57,8 +55,8 @@ def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> d
                 },
                 "policy": {"allowExecute": True},
                 "meta": {
-                    "label": "Publish a controlled LinkedIn-shaped post",
-                    "description": "Loads host/domain settings from .env, starts the controlled site, publishes, and verifies the feed.",
+                    "label": "Publish a LinkedIn post",
+                    "description": "Loads host/domain settings from .env, starts the site, publishes, and verifies the feed.",
                 },
             },
         },
@@ -92,7 +90,7 @@ def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_
         if text:
             return text
     env = mock_linkedin.load_env(env_path)
-    return env.get("FAKE_LINKEDIN_POST", "Autonomiczna publikacja testowa na kontrolowanym portalu LinkedIn-shaped.")
+    return env.get("REAL_LINKEDIN_POST") or env.get("LINKEDIN_POST") or env.get("FAKE_LINKEDIN_POST", "Autonomiczna publikacja testowa na portalu LinkedIn.")
 
 
 def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any]]:
