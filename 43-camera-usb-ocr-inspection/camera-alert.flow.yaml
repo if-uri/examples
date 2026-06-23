@@ -1,0 +1,25 @@
+version: urirun.flow.v1
+source:
+  nl: "Inspect a camera frame, persist the verdict to an audit log, and stop the flow if the expected text is not visible."
+task:
+  id: camera-alert
+  title: "Camera inspection with blocking alert + audit trail"
+steps:
+  # The inspect route persists its own verdict (inspection.json sidecar + a JSONL
+  # audit_log), so alerting needs no separate logging connector. fail_on_alert:true stops
+  # the flow before any downstream step when the rules fail.
+  - id: inspect
+    uri: camera://host/photo/query/inspect
+    payload:
+      output_dir: "~/.urirun/camera-scans/alert"
+      audit_log: "~/.urirun/camera-scans/alerts.jsonl"
+      required_text: "PASS"
+      min_chars: 4
+      require_object: true
+      brightness_min: 20
+      brightness_max: 245
+      beep: true
+      beep_on_alert: true
+      fail_on_alert: true
+      lang: "eng+pol"
+    runs_on: node

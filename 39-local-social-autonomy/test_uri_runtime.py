@@ -186,8 +186,108 @@ def test_program_files_use_known_uri_commands():
             query="system design",
             hashtag="python",
             profile_path="/in/example/recent-activity/",
+            extra={
+                "HASHTAG_A": "python",
+                "HASHTAG_B": "rust",
+                "KEYWORD_A": "release",
+                "KEYWORD_B": "security",
+            },
         )
         assert resolved, path
         for step in resolved:
             command, _ = rt.parse_uri(step["uri"])
             assert command in rt.REGISTRY, f"{path}: unknown command {command}"
+            # no placeholder may survive resolution
+            assert "__" not in step["uri"], f"{path}: unresolved placeholder in {step['uri']}"
+
+
+def test_resolve_program_accepts_extra_tokens():
+    program = [
+        {"uri": "chrome://scout/navigate?url=https://x/feed/hashtag/?keywords=__HASHTAG_A__"},
+        {"uri": "chrome://scout/filter?q=__KEYWORD_B__"},
+    ]
+    resolved = rt.resolve_program(
+        program, query=None, hashtag=None,
+        extra={"HASHTAG_A": "python ai", "KEYWORD_B": "security patch"},
+    )
+    assert "keywords=python%20ai" in resolved[0]["uri"]
+    assert "q=security%20patch" in resolved[1]["uri"]
+
+
+def test_resolve_program_accepts_already_wrapped_token():
+    program = [{"uri": "chrome://scout/filter?q=__CUSTOM__"}]
+    resolved = rt.resolve_program(
+        program, query=None, hashtag=None, extra={"__CUSTOM__": "wrapped"}
+    )
+    assert "q=wrapped" in resolved[0]["uri"]
+
+
+# --- OCR -> posts heuristic parser -------------------------------------------
+
+def test_ocr_to_posts_returns_empty_for_empty_input():
+    assert rt.ocr_to_posts("") == []
+    assert rt.ocr_to_posts("   \n\n  ") == []
+
+
+def test_ocr_to_posts_splits_real_linkedin_dump_into_sections():
+    # Verbatim OCR sample captured from a live LinkedIn search-results page
+    # on 2026-06-23 (query: "system design"). Each block here represents one
+    # real post surfaced next to a Follow / degree-badge / Connect cue.
+    sample = """Vanessa King @- src f+ Connect «+
+Designing @ Flatiron Health
+a)
+
+Hello network, I'm hiring someone to lead our amazing design systems team here at
+Flatiron!
+
+Design Manager, Design Systems ©
+Flatiron Health
+
+New York, NY
+
+$160K/yr - $220K/yr * 401(k) benefit
+
+@-~s590 34 @®
+Prasoon Soni + 2nd + Follow
+'Software Engineer @ Wells Fargo | Scalable & Distributed
+1th
+
+Spent the weekend experimenting with a different way to think about
+architecture.
+
+--more
+
+@-snoad ®
+Halliburton + Follow ++
+1®
+
+Notes from the field: "Good design is about creating systems that are intuitive,
+accessible, and built to keep operations moving."
+... more
+
+e-~ 81152 ©24 39 4 ce
+Are these results helpful? © @)
+Your Feedback helps us improve search results
+
+C2C and W2 positions/ Direct clients/ ... Join +
+Shiva Pathak * 2nd"""
+    posts = rt.ocr_to_posts(sample, min_text_len=20)
+    assert len(posts) >= 3
+    authors = " | ".join(p["author"] for p in posts)
+    assert "Vanessa King" in authors
+    assert "Prasoon Soni" in authors
+    assert "Halliburton" in authors
+    # bodies carry real post content, not chrome
+    bodies = " | ".join(p["text"] for p in posts)
+    assert "Flatiron" in bodies
+    assert "Wells Fargo" in bodies
+    assert "intuitive" in bodies
+    # page chrome must be filtered out
+    assert "Are these results helpful" not in bodies
+    assert "Your Feedback" not in bodies
+
+
+def test_ocr_to_posts_drops_pure_chrome_sections():
+    chrome_only = "LinkedIn © 2026\nAbout Accessibility Help Center\nPrivacy & Terms"
+    posts = rt.ocr_to_posts(chrome_only, min_text_len=10)
+    assert posts == []

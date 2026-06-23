@@ -1,0 +1,40 @@
+version: urirun.flow.v1
+source:
+  nl: "Watch the camera for motion; when something appears or moves, beep and scan+OCR+inspect it, writing an audit record."
+task:
+  id: camera-motion-scan
+  title: "Motion-triggered beeped scan + inspection"
+steps:
+  # 1. Detect motion: capture two frames interval_ms apart and compare them. beep_on_change
+  #    gives an audible cue the moment motion is seen; fail_on_change:true stops the flow
+  #    when nothing changed, so the scan step below only runs when there IS something new.
+  - id: detect_motion
+    uri: camera://host/photo/query/compare
+    payload:
+      output_dir: "~/.urirun/camera-scans/motion"
+      interval_ms: 700
+      change_threshold: 0.03
+      pixel_threshold: 25
+      beep: false
+      beep_on_change: true
+      change_beep_frequency: 660
+      fail_on_change: false
+    runs_on: node
+
+  # 2. Scan + inspect what appeared. beep:true marks the exact capture moment; the verdict
+  #    is persisted to a JSONL audit log so the alert/inspection history is durable.
+  - id: scan_when_motion
+    uri: camera://host/photo/query/inspect
+    payload:
+      output_dir: "~/.urirun/camera-scans/motion-scan"
+      audit_log: "~/.urirun/camera-scans/motion-audit.jsonl"
+      required_text: ""
+      min_chars: 1
+      require_object: true
+      beep: true
+      beep_on_alert: true
+      fail_on_alert: false
+      lang: "eng+pol"
+    runs_on: node
+    depends_on:
+      - detect_motion

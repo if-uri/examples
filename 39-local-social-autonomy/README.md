@@ -149,6 +149,44 @@ Result:
 }
 ```
 
+### Scenario programs
+
+`programs/*.json` are ready-to-run programs that combine the commands above into
+common read-only workflows. Each one only uses commands from the registry —
+verified by `test_program_files_use_known_uri_commands`. Run any of them with:
+
+```bash
+python3 uri_runtime.py --program programs/NN-NAME.json --query "..."
+```
+
+| program | use case | placeholders |
+| --- | --- | --- |
+| `01-feed-save.json` | archive the home feed | — |
+| `02-search-filter-save.json` | search a phrase and keep only matching posts/comments | `__QUERY__` |
+| `03-hashtag-watch.json` | follow a hashtag feed | `__HASHTAG__` |
+| `04-saved-posts-archive.json` | back up your saved posts | — |
+| `05-profile-posts-review.json` | review your own recent activity | `__PROFILE_PATH__` |
+| `06-comments-ocr-snapshot.json` | capture posts + comments + OCR + PNG | `__QUERY__` |
+| `07-people-search-bio-scan.json` | find people by skill/company, OCR their bio cards | `__QUERY__` |
+| `08-multi-hashtag-compare.json` | compare two hashtags side by side into one file | `__HASHTAG_A__`, `__HASHTAG_B__` |
+| `09-competitor-monitor.json` | track posts/comments mentioning a competitor | `__QUERY__` |
+| `10-weekly-feed-and-saved-archive.json` | weekly backup of feed + saved posts | — |
+| `11-deep-comment-thread.json` | extract a post + scroll for nested replies + OCR | `__QUERY__` |
+| `12-multi-keyword-tracker.json` | filter the same feed by two keywords sequentially | `__KEYWORD_A__`, `__KEYWORD_B__` |
+
+Multi-value placeholders are passed via repeatable `--define KEY=VALUE`:
+
+```bash
+python3 uri_runtime.py --program programs/08-multi-hashtag-compare.json \
+  --define HASHTAG_A=python --define HASHTAG_B=rust
+
+python3 uri_runtime.py --program programs/12-multi-keyword-tracker.json \
+  --define KEYWORD_A=release --define KEYWORD_B=security
+```
+
+`--define HASHTAG_A=python` replaces every `__HASHTAG_A__` in the program (both
+spelled-out and bare-key forms work). Each value is URL-encoded automatically.
+
 `scout.py` attaches to a Chrome session you already run with
 `--remote-debugging-port` (logged in as you) and walks the read pages: home feed,
 your recent activity, saved posts, and a hashtag/topic page. It scrolls, parses,

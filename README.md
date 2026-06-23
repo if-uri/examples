@@ -49,6 +49,8 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 40 | [`40-wordpress-article/`](40-wordpress-article/) | create a WordPress article over a URI via the REST API + Application Password (by reference); draft by default, no login-form password | ✅ `pytest` (fake WP) |
 | 39 | [`39-local-social-autonomy/`](39-local-social-autonomy/) | controlled LinkedIn-shaped site with `.env` login + full autonomous browser publication on locally mapped `linkedin.com:<port>` | ✅ `pytest` + local Chrome CDP |
 | 40 | [`40-local-portals-suite/`](40-local-portals-suite/) | local CRM/support/shop/docs portals for prompt-driven autonomous browser tests over `portal://*.local` | ✅ `pytest` + local Chrome CDP |
+| 43 | [`43-camera-usb-ocr-inspection/`](43-camera-usb-ocr-inspection/) | USB camera discovery + audible pre-scan beep + camera OCR/inspection/alert URI flows | ✅ `pytest` (static) + optional live node |
+| 44 | [`44-phone-webrtc-scanner-dashboard/`](44-phone-webrtc-scanner-dashboard/) | phone camera scanner through dashboard `/scanner`, chat attachments and OCR metadata | ✅ dashboard API tests |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.

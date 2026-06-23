@@ -1,0 +1,55 @@
+version: urirun.flow.v1
+source:
+  nl: "Discover a USB camera, beep before scan, capture a photo, OCR it and inspect expected text."
+task:
+  id: camera-usb-ocr-inspection
+  title: "Beeped camera OCR inspection"
+steps:
+  - id: usb_cameras
+    uri: usb://host/cameras/query/list
+    payload: {}
+    runs_on: node
+
+  - id: camera_devices
+    uri: camera://host/devices/query/list
+    payload: {}
+    runs_on: node
+
+  - id: ocr_probe
+    uri: ocr://host/backend/query/probe
+    payload: {}
+    runs_on: node
+
+  - id: scan_and_ocr
+    uri: camera://host/photo/query/analyze
+    payload:
+      output_dir: "~/.urirun/camera-scans/latest"
+      beep: true
+      beep_required: false
+      beep_frequency: 1200
+      beep_duration_ms: 180
+      crop: true
+      ocr: true
+      describe: true
+      lang: "eng+pol"
+      max_chars: 12000
+    runs_on: node
+    depends_on:
+      - usb_cameras
+      - camera_devices
+
+  - id: inspect_expected_text
+    uri: camera://host/photo/query/inspect
+    payload:
+      output_dir: "~/.urirun/camera-scans/inspection"
+      required_text: "FAKTURA"
+      min_chars: 5
+      require_object: true
+      beep: true
+      beep_on_alert: true
+      fail_on_alert: false
+      lang: "eng+pol"
+    runs_on: node
+    depends_on:
+      - scan_and_ocr
+

@@ -182,7 +182,14 @@ def cmd_ocr(cdp: AttachCDP, config: ScoutConfig, params: dict, ctx: dict[str, An
     out = ocr_element(cdp, selector)
     if out:
         ctx["last_ocr"] = out
-    return {"ok": True, "chars": len(out), "text_preview": out[:200]}
+        # When DOM extraction yields little (live LinkedIn obfuscates selectors),
+        # parse the OCR text into pseudo-posts so append_markdown still produces
+        # structured sections instead of one undifferentiated OCR blob.
+        parsed = ocr_to_posts(out, min_text_len=int(params.get("min_text_len", config.min_text_len)))
+        if parsed and len(ctx.get("posts", [])) < len(parsed):
+            ctx.setdefault("posts", []).extend(parsed)
+        return {"ok": True, "chars": len(out), "text_preview": out[:200],
+                "parsed_posts": len(parsed)}
 
 
 def cmd_snapshot(cdp: AttachCDP, config: ScoutConfig, params: dict, ctx: dict[str, Any]) -> dict[str, Any]:
@@ -244,6 +251,69 @@ def ocr_element(cdp: AttachCDP, selector: str) -> str:
     proc = subprocess.run([tesseract, "stdin", "stdout", "-l", "eng"],
                           input=png, capture_output=True)
     return proc.stdout.decode("utf-8", "replace").strip()
+
+
+# Heuristics for splitting a LinkedIn feed OCR dump into pseudo-posts.
+# These match the signals the LinkedIn UI surfaces next to each post header:
+# the Follow/Connect buttons, the degree badge (1st/2nd/3rd), and the job-line
+# marker that often starts with '@' or '·'.
+_OCR_AUTHOR_HINT = re.compile(
+    r"(?m)^\s*([^\n]{2,80}?)\s*(?:[+*•]{1,3}\s*(?:2nd|3rd|1st)\b|\bFollow\b|\bConnect\b)"
+)
+_OCR_SPLIT = re.compile(
+    r"(?m)^(?=[^\n]{0,80}(?:\bFollow\b|\bConnect\b|[+*•]{1,3}\s*(?:2nd|3rd|1st)))"
+)
+_OCR_NOISE = re.compile(
+    r"(?im)^\s*(?:Are these results helpful\??.*$|Your Feedback.*$|"
+    r"About Accessibility Help Center.*$|Privacy & Terms.*$|"
+    r"Business Services.*$|AdChoices.*$|Get the Linkedin app.*$|"
+    r"Linked(?:in|fiJ|ffiJ).*©.*$|\d+\s*(?:reactions?|comments?|reposts?)\b.*$|"
+    r"--?\s*more|\.\.\.\s*more|"
+    r"^[•·©@*+~\-\s]*$)\s*$"
+)
+
+
+def ocr_to_posts(text: str, *, min_text_len: int = 80) -> list[dict[str, str]]:
+    """Parse a raw OCR dump of a LinkedIn feed/search page into pseudo-posts.
+
+    Returns a list of {author, text, url} dicts. `url` is empty (OCR does not
+    preserve links reliably); `author` is the best-guess header line; `text` is
+    the cleaned body. Drops obvious page chrome (footers, reaction counts,
+    "Are these results helpful?" prompts).
+    """
+    if not text or not text.strip():
+        return []
+    # Remove obvious chrome lines first so they don't seed false sections.
+    cleaned = "\n".join(
+        line for line in text.splitlines()
+        if not _OCR_NOISE.match(line.strip())
+    )
+    sections: list[str] = []
+    for chunk in _OCR_SPLIT.split(cleaned):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        sections.append(chunk)
+    if not sections:
+        sections = [cleaned.strip()] if cleaned.strip() else []
+
+    posts: list[dict[str, str]] = []
+    for section in sections:
+        match = _OCR_AUTHOR_HINT.search(section)
+        author = match.group(1).strip().strip("·•-+©") if match else ""
+        body = section
+        if match:
+            body = (section[match.end():].lstrip("\n ") or section).strip()
+        body = re.sub(r"\n{3,}", "\n\n", body).strip()
+        # Drop trailing UI noise that survived the line filter.
+        body = "\n".join(
+            line for line in body.splitlines()
+            if not _OCR_NOISE.match(line.strip())
+        ).strip()
+        if len(body) < min_text_len and not author:
+            continue
+        posts.append({"author": author[:140], "text": body[:1200], "url": ""})
+    return posts
 
 
 def render_markdown(heading: str, *, posts: list[dict], comments: list[dict],

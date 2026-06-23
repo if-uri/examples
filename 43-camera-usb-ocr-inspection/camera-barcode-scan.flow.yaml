@@ -1,0 +1,19 @@
+version: urirun.flow.v1
+source:
+  nl: "Beep, photograph a parcel label, decode its QR/barcode, and stop the flow if the expected code is missing."
+task:
+  id: camera-barcode-scan
+  title: "Beeped barcode / QR scan-and-assert"
+steps:
+  # Capture and decode any barcode / QR in view. beep marks the capture moment;
+  # beep_on_read confirms a successful read; fail_if_missing stops the flow (alert) when
+  # the expected `required` substring is not present in any decoded code.
+  - id: scan_barcode
+    uri: camera://host/photo/query/barcodes
+    payload:
+      output_dir: "~/.urirun/camera-scans/barcodes"
+      required: "INV-2026-"
+      beep: true
+      beep_on_read: true
+      fail_if_missing: true
+    runs_on: node
