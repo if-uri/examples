@@ -1,0 +1,22 @@
+[
+  {
+    "uri": "chrome://scout/search?scope=people&q=__QUERY__",
+    "why": "find people matching the requested phrase (e.g. a skill or company)"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=4&delay=1.0",
+    "why": "load several result cards"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the results column; people-search cards are image-heavy and rarely expose data-testid"
+  },
+  {
+    "uri": "chrome://scout/snapshot?path=.state/people-__QUERY__.png",
+    "why": "visual snapshot of the candidate list for later human review"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/people-__QUERY__.md&heading=People%20scan%20__QUERY__",
+    "why": "save the OCR text and snapshot reference to a per-query markdown file"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/hashtag/?keywords=__HASHTAG_A__",
+    "why": "open the first hashtag feed"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=5&delay=1.0",
+    "why": "load hashtag A posts"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the hashtag A column"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/hashtag-compare.md&heading=Hashtag%20A%20__HASHTAG_A__",
+    "why": "save hashtag A capture in the shared comparison file"
+  },
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/hashtag/?keywords=__HASHTAG_B__",
+    "why": "open the second hashtag feed"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=5&delay=1.0",
+    "why": "load hashtag B posts"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the hashtag B column"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/hashtag-compare.md&heading=Hashtag%20B%20__HASHTAG_B__",
+    "why": "append hashtag B capture into the same comparison file"
+  }
+]

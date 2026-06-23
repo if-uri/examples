@@ -1,0 +1,26 @@
+[
+  {
+    "uri": "chrome://scout/search?scope=posts&q=__QUERY__",
+    "why": "search posts for the requested phrase"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=5&delay=1.0",
+    "why": "load more search results"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__QUERY__",
+    "why": "keep only posts/comments containing the same phrase"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=80",
+    "why": "extract filtered posts"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "extract filtered visible comments"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-search.md&heading=Search%20capture%20__QUERY__",
+    "why": "save the filtered search result"
+  }
+]

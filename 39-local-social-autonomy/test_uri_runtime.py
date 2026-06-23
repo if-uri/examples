@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import uri_runtime as rt
@@ -62,6 +63,7 @@ class FakeCDP:
     def __init__(self):
         self.url = "https://www.linkedin.com/feed/"
         self.eval_calls = []
+        self.scrolls = 0
 
     def command(self, method, params=None):
         if method == "Page.navigate":
@@ -83,6 +85,9 @@ class FakeCDP:
             return [{"author": "Bo", "text": "nice"}]
         return None
 
+    def scroll_down(self, delay):
+        self.scrolls += 1
+
 
 def test_run_program_executes_each_step_and_collects_results():
     cdp = FakeCDP()
@@ -96,6 +101,28 @@ def test_run_program_executes_each_step_and_collects_results():
     assert result["ok"] is True
     assert result["captured"] >= 1
     assert [r["command"] for r in result["results"]] == ["navigate", "extract_posts", "append_markdown"]
+
+
+def test_scroll_command_calls_browser_scroll():
+    cdp = FakeCDP()
+    cfg = rt.scout_config(Path(__file__).resolve().parent / ".env")
+    result = rt.run_program(cdp, cfg, [{"uri": "chrome://scout/scroll?steps=3&delay=0"}])
+    assert result["ok"] is True
+    assert cdp.scrolls == 3
+
+
+def test_filter_limits_extracted_posts():
+    cdp = FakeCDP()
+    cfg = rt.scout_config(Path(__file__).resolve().parent / ".env")
+    program = [
+        {"uri": "chrome://scout/filter?q=no-match"},
+        {"uri": "chrome://scout/extract_posts?min_text_len=10"},
+        {"uri": "chrome://scout/append_markdown?path=/tmp/test_scout_filtered_capture.md"},
+    ]
+    result = rt.run_program(cdp, cfg, program)
+    assert result["ok"] is True
+    assert result["results"][1]["count"] == 0
+    assert result["captured"] == 0
 
 
 def test_run_program_records_error_and_stops_on_required_step():
@@ -127,8 +154,40 @@ def test_resolve_program_substitutes_query_placeholder():
     assert "__QUERY__" not in search_uri
 
 
+def test_resolve_program_substitutes_hashtag_and_profile_placeholders():
+    program = [
+        {"uri": "chrome://scout/navigate?url=https://www.linkedin.com__PROFILE_PATH__"},
+        {"uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/hashtag/?keywords=__HASHTAG__"},
+    ]
+    resolved = rt.resolve_program(
+        program,
+        query=None,
+        hashtag="#python ai",
+        profile_path="/in/example/recent-activity/",
+    )
+    assert resolved[0]["uri"] == "chrome://scout/navigate?url=https://www.linkedin.com/in/example/recent-activity/"
+    assert resolved[1]["uri"].endswith("keywords=python%20ai")
+
+
 def test_registry_only_contains_read_only_commands():
     # hard assertion: there is no publish/comment/like/message/follow command
     forbidden = {"publish", "post", "comment", "like", "share", "message", "follow", "connect", "type", "click"}
     intersection = forbidden & set(rt.REGISTRY)
     assert intersection == set(), f"write commands leaked into registry: {intersection}"
+
+
+def test_program_files_use_known_uri_commands():
+    programs = sorted((Path(__file__).resolve().parent / "programs").glob("*.json"))
+    assert programs
+    for path in programs:
+        program = json.loads(path.read_text(encoding="utf-8"))
+        resolved = rt.resolve_program(
+            program,
+            query="system design",
+            hashtag="python",
+            profile_path="/in/example/recent-activity/",
+        )
+        assert resolved, path
+        for step in resolved:
+            command, _ = rt.parse_uri(step["uri"])
+            assert command in rt.REGISTRY, f"{path}: unknown command {command}"

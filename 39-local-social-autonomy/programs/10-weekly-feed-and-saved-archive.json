@@ -1,0 +1,38 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/",
+    "why": "open the home feed"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=4&delay=1.0",
+    "why": "load several feed pages"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the feed column (live LinkedIn rarely exposes data-testid selectors)"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/weekly-archive.md&heading=Feed%20weekly%20archive",
+    "why": "save the feed OCR into the weekly archive"
+  },
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/my-items/saved-posts/",
+    "why": "open saved posts"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=8&delay=1.0",
+    "why": "load the full saved-posts list"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=60",
+    "why": "extract saved posts into the buffer"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the saved-posts column as a fallback"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/weekly-archive.md&heading=Saved%20posts%20weekly%20archive",
+    "why": "append saved posts into the same weekly archive"
+  }
+]

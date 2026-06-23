@@ -1,0 +1,38 @@
+[
+  {
+    "uri": "chrome://scout/search?scope=posts&q=__QUERY__",
+    "why": "search posts for the requested phrase"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=3&delay=1.0",
+    "why": "load the first batch of results"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__QUERY__",
+    "why": "keep only posts that mention the phrase"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=80",
+    "why": "extract filtered posts into the buffer"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "capture top-level visible comments"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=4&delay=1.0",
+    "why": "load deeper into the comment thread"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "capture replies that appeared after scrolling"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the threaded discussion for any nested replies not exposed via DOM"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/thread-__QUERY__.md&heading=Deep%20comment%20thread%20__QUERY__",
+    "why": "save posts, comments, and OCR text into a per-thread file"
+  }
+]

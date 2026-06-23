@@ -1,0 +1,22 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/",
+    "why": "open the home feed"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=4&delay=1.0",
+    "why": "load several feed pages"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=80",
+    "why": "capture visible posts"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "capture visible comments"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-feed.md&heading=Feed%20capture",
+    "why": "append the result to a local markdown file"
+  }
+]

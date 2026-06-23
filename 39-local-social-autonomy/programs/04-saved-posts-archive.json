@@ -1,0 +1,22 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/my-items/saved-posts/",
+    "why": "open saved posts"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=8&delay=1.0",
+    "why": "load more saved posts"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=60",
+    "why": "extract saved posts"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "capture visible comment context"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-saved.md&heading=Saved%20posts%20archive",
+    "why": "append saved posts to a local archive"
+  }
+]

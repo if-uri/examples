@@ -1,0 +1,18 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com__PROFILE_PATH__",
+    "why": "open configured profile recent activity"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=5&delay=1.0",
+    "why": "load profile activity"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=60",
+    "why": "extract profile posts"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-profile.md&heading=Profile%20posts%20review",
+    "why": "save profile activity locally"
+  }
+]

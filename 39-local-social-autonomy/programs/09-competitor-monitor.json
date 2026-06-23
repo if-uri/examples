@@ -1,0 +1,34 @@
+[
+  {
+    "uri": "chrome://scout/search?scope=content&q=__QUERY__",
+    "why": "search for content mentioning the competitor or topic"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=6&delay=1.2",
+    "why": "load a broad sample of recent posts"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__QUERY__",
+    "why": "keep only posts/comments that mention the competitor phrase"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=60",
+    "why": "extract filtered posts into the buffer"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "extract filtered visible comments for sentiment context"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR fallback for image-heavy or DOM-obfuscated posts"
+  },
+  {
+    "uri": "chrome://scout/snapshot?path=.state/competitor-__QUERY__.png",
+    "why": "visual snapshot of the results page"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/competitor-__QUERY__.md&heading=Competitor%20monitor%20__QUERY__",
+    "why": "save posts, comments, and OCR text into a per-competitor file"
+  }
+]

@@ -110,7 +110,7 @@ def cmd_navigate(cdp: AttachCDP, config: ScoutConfig, params: dict[str, Any], ct
 
 
 def cmd_search(cdp: AttachCDP, config: ScoutConfig, params: dict[str, Any], ctx: dict[str, Any]) -> dict[str, Any]:
-    """Use the site's own search box by typing into it and pressing Enter."""
+    """Use the site's own search result URL without synthetic typing."""
     query = (params.get("q") or params.get("query") or "").strip()
     if not query:
         raise ValueError("search requires 'q'")
@@ -131,6 +131,8 @@ def cmd_search(cdp: AttachCDP, config: ScoutConfig, params: dict[str, Any], ctx:
 def cmd_scroll(cdp: AttachCDP, config: ScoutConfig, params: dict[str, Any], ctx: dict[str, Any]) -> dict[str, Any]:
     steps = int(params.get("steps", config.scroll_steps))
     delay = float(params.get("delay", config.scroll_delay))
+    for _ in range(max(0, steps)):
+        cdp.scroll_down(delay)
     return {"ok": True, "scrolled": steps, "filter": ctx.get("filter_query")}
 
 
@@ -143,6 +145,16 @@ def cmd_filter(cdp: AttachCDP, config: ScoutConfig, params: dict[str, Any], ctx:
 
 def cmd_extract_posts(cdp: AttachCDP, config: ScoutConfig, params: dict, ctx: dict[str, Any]) -> dict[str, Any]:
     posts = extract_posts(cdp, min_text_len=int(params.get("min_text_len", config.min_text_len)))
+    query = (ctx.get("filter_query") or "").lower()
+    if query:
+        posts = [
+            post for post in posts
+            if query in " ".join([
+                post.get("author", ""),
+                post.get("text", ""),
+                post.get("url", ""),
+            ]).lower()
+        ]
     ctx.setdefault("posts", []).extend(posts)
     return {"ok": True, "count": len(posts)}
 
@@ -152,6 +164,15 @@ def cmd_extract_comments(cdp: AttachCDP, config: ScoutConfig, params: dict, ctx:
     comments = value if isinstance(value, list) else []
     if int(params.get("min_text_len", 20)):
         comments = [c for c in comments if len(c.get("text", "")) >= int(params.get("min_text_len", 20))]
+    query = (ctx.get("filter_query") or "").lower()
+    if query:
+        comments = [
+            comment for comment in comments
+            if query in " ".join([
+                comment.get("author", ""),
+                comment.get("text", ""),
+            ]).lower()
+        ]
     ctx.setdefault("comments", []).extend(comments)
     return {"ok": True, "count": len(comments)}
 
@@ -323,12 +344,32 @@ DEFAULT_PROGRAM = [
 ]
 
 
-def resolve_program(program: list[dict[str, Any]], *, query: str | None, hashtag: str | None) -> list[dict[str, Any]]:
+def resolve_program(
+    program: list[dict[str, Any]],
+    *,
+    query: str | None,
+    hashtag: str | None,
+    profile_path: str | None = None,
+    extra: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
     q = (query or hashtag or "").lstrip("#")
+    tag = (hashtag or query or "").lstrip("#")
+    profile = "/" + (profile_path or "/in/tom-developer/recent-activity/").lstrip("/")
+    replacements: dict[str, str] = {
+        "__QUERY__": urllib.parse.quote(q),
+        "__HASHTAG__": urllib.parse.quote(tag),
+        "__PROFILE_PATH__": profile,
+    }
+    # extra tokens come in as bare keys (e.g. "HASHTAG_A"); we accept both
+    # "__HASHTAG_A__" and "HASHTAG_A" spellings for ergonomics.
+    for key, value in (extra or {}).items():
+        token = key if key.startswith("__") and key.endswith("__") else f"__{key}__"
+        replacements[token] = urllib.parse.quote(value)
     out = []
     for step in program:
         s = dict(step)
-        s["uri"] = s["uri"].replace("__QUERY__", urllib.parse.quote(q))
+        for key, value in replacements.items():
+            s["uri"] = s["uri"].replace(key, value)
         out.append(s)
     return out
 
@@ -340,11 +381,32 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--program", help="path to a JSON program; defaults to the built-in feed+search flow")
     parser.add_argument("--query", help="phrase to search (replaces __QUERY__ in the program)")
     parser.add_argument("--hashtag", help="hashtag to search if --query is absent")
+    parser.add_argument(
+        "--define",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="extra placeholder, e.g. --define HASHTAG_A=python --define HASHTAG_B=rust "
+             "(replaces __HASHTAG_A__ / __HASHTAG_B__ in the program)",
+    )
     args = parser.parse_args(argv)
+
+    extra: dict[str, str] = {}
+    for item in args.define:
+        if "=" not in item:
+            parser.error(f"--define expects KEY=VALUE, got: {item}")
+        k, v = item.split("=", 1)
+        extra[k.strip()] = v.strip()
 
     config = scout_config(args.env, debug_port=args.debug_port)
     program = json.loads(Path(args.program).read_text(encoding="utf-8")) if args.program else DEFAULT_PROGRAM
-    program = resolve_program(program, query=args.query, hashtag=args.hashtag or config.hashtag)
+    program = resolve_program(
+        program,
+        query=args.query,
+        hashtag=args.hashtag or config.hashtag,
+        profile_path=config.profile_path,
+        extra=extra,
+    )
 
     cdp = AttachCDP(config.base)
     cdp.connect()

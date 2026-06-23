@@ -1,0 +1,26 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/hashtag/?keywords=__HASHTAG__",
+    "why": "open the hashtag page"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=6&delay=1.0",
+    "why": "load hashtag posts"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__HASHTAG__",
+    "why": "keep posts mentioning the hashtag phrase"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=80",
+    "why": "extract hashtag posts"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the main column if posts contain image-heavy text"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-hashtag.md&heading=Hashtag%20capture%20__HASHTAG__",
+    "why": "save hashtag captures"
+  }
+]

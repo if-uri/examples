@@ -106,6 +106,20 @@ python3 uri_runtime.py --program my_program.json --query " distributed systems"
 ]
 ```
 
+Ready-to-run scenarios live in [`SCENARIOS.md`](SCENARIOS.md) and
+[`programs/`](programs/). They cover feed capture, search+filter+save, hashtag
+watching, saved-post archiving, profile activity review, and comments/OCR/
+snapshot capture:
+
+```bash
+python3 uri_runtime.py --program programs/01-feed-save.json
+python3 uri_runtime.py --program programs/02-search-filter-save.json --query "system design"
+python3 uri_runtime.py --program programs/03-hashtag-watch.json --hashtag python
+python3 uri_runtime.py --program programs/04-saved-posts-archive.json
+python3 uri_runtime.py --program programs/05-profile-posts-review.json
+python3 uri_runtime.py --program programs/06-comments-ocr-snapshot.json --query "agentic workflow"
+```
+
 ### Command reference
 
 | URI | params | effect |
@@ -279,6 +293,8 @@ The credentials are the values in `.env`.
 - `scout.py` — read-only scout that attaches to your logged-in Chrome (CDP) and captures interesting posts to `.state/captures.md`.
 - `uri_runtime.py` — read-only URI command runtime: navigate/search/scroll/extract/ocr/snapshot/append-markdown over attach-CDP. Registry-only, no write commands.
 - `session_probe.py` — read-only URI handler that finds which existing CDP browser has a LinkedIn session.
+- `SCENARIOS.md` — ready-to-run search/filter/save/OCR/snapshot scenarios.
+- `programs/*.json` — URI programs used by `uri_runtime.py`.
 - `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
 - `session-probe.bindings.json` — static snapshot for `browser://local/linkedin/session/query/find`.
 - `bindings.json` — default snapshot; `run_prompt.sh` renders `.state/local-social.bindings.json` from `.env`.

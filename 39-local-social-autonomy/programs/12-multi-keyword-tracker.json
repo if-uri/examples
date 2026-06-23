@@ -1,0 +1,34 @@
+[
+  {
+    "uri": "chrome://scout/navigate?url=https://www.linkedin.com/feed/",
+    "why": "open the home feed"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=3&delay=1.0",
+    "why": "load the initial feed"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__KEYWORD_A__",
+    "why": "set the first keyword filter"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR matching content for keyword A"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/keyword-tracker.md&heading=Keyword%20A%20__KEYWORD_A__",
+    "why": "save the keyword A capture"
+  },
+  {
+    "uri": "chrome://scout/filter?q=__KEYWORD_B__",
+    "why": "switch to the second keyword filter on the same loaded feed"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR matching content for keyword B"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/keyword-tracker.md&heading=Keyword%20B%20__KEYWORD_B__",
+    "why": "append the keyword B capture into the same tracker file"
+  }
+]

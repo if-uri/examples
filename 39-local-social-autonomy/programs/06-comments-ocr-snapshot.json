@@ -1,0 +1,30 @@
+[
+  {
+    "uri": "chrome://scout/search?scope=posts&q=__QUERY__",
+    "why": "search posts for the requested phrase"
+  },
+  {
+    "uri": "chrome://scout/scroll?steps=4&delay=1.0",
+    "why": "load posts and visible discussions"
+  },
+  {
+    "uri": "chrome://scout/extract_posts?min_text_len=80",
+    "why": "extract posts"
+  },
+  {
+    "uri": "chrome://scout/extract_comments?min_text_len=20",
+    "why": "extract visible comments"
+  },
+  {
+    "uri": "chrome://scout/ocr?selector=main",
+    "why": "OCR the current main column"
+  },
+  {
+    "uri": "chrome://scout/snapshot?path=.state/scout-search-snapshot.png",
+    "why": "save a local visual snapshot"
+  },
+  {
+    "uri": "chrome://scout/append_markdown?path=.state/captures-comments-ocr.md&heading=Comments%20and%20OCR%20capture%20__QUERY__",
+    "why": "save posts, comments, and OCR text"
+  }
+]
