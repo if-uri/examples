@@ -26,4 +26,12 @@ if [[ -n "${TLS_CERT:-}" && -n "${TLS_KEY:-}" ]]; then
   args+=(--tls-cert "$TLS_CERT" --tls-key "$TLS_KEY")
 fi
 
+if [[ -n "${QR_URL:-}" ]]; then
+  args+=(--qr-url "$QR_URL")
+fi
+
+if [[ "${STARTUP_QR:-0}" == "1" ]]; then
+  args+=(--startup-qr)
+fi
+
 exec "$URIRUN" "${args[@]}"

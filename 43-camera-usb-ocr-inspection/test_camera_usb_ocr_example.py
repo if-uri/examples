@@ -28,6 +28,11 @@ def test_flows_reference_expected_uri_surface():
     assert "camera://host/photo/query/barcodes" in barcode
     assert "fail_if_missing: true" in barcode
 
+    # mobile/browser flow: host the LAN webcam service and review captures
+    mobile = (ROOT / "camera-mobile-web.flow.yaml").read_text(encoding="utf-8")
+    assert "webcam://host/server/command/start" in mobile
+    assert "webcam://host/captures/query/list" in mobile
+
 
 def test_no_flow_references_missing_log_connector():
     for flow in ROOT.glob("*.flow.yaml"):

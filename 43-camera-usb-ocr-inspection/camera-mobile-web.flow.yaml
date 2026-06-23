@@ -1,0 +1,35 @@
+version: urirun.flow.v1
+source:
+  nl: "Host a LAN web service so a phone's browser camera scans documents/labels into this node's OCR/barcode/inspection pipeline."
+task:
+  id: camera-mobile-web
+  title: "Mobile browser camera over the LAN"
+steps:
+  # Start the LAN service on the node near the scan desk. The phone opens the returned
+  # openUrl, uses its rear camera (getUserMedia) and posts frames to /ingest, which runs
+  # the chosen action via urirun-connector-camera. token gates access on an untrusted LAN.
+  - id: start_webcam_service
+    uri: webcam://host/server/command/start
+    payload:
+      port: 8780
+      action: "inspect"
+      title: "ifURI scan desk"
+      token: "scan-desk"
+      lang: "eng+pol"
+    runs_on: node
+
+  - id: webcam_status
+    uri: webcam://host/server/query/status
+    payload: {}
+    runs_on: node
+    depends_on:
+      - start_webcam_service
+
+  # After phones have scanned, review what was captured (OCR text, codes, verdicts).
+  - id: list_mobile_captures
+    uri: webcam://host/captures/query/list
+    payload:
+      limit: 20
+    runs_on: node
+    depends_on:
+      - webcam_status

@@ -126,3 +126,26 @@ Returns every code as `{type, data, rect}`. `required` matches an expected subst
 flow (alert) when the expected code is not visible. Needs `pyzbar` + system `libzbar0`;
 without them the route returns `found=false` with a clear `decodeError`.
 
+## 9. Mobile / browser camera over the LAN
+
+Goal: no USB camera on the node? Use a phone. Host a small web service and let any phone's
+browser camera scan into the same pipeline.
+
+URI steps (see `camera-mobile-web.flow.yaml`):
+
+1. `webcam://host/server/command/start` — `{port, action, token}` → returns `openUrl`.
+2. Open `openUrl` on the phone (same Wi‑Fi), allow the camera, pick the action, tap **Scan**.
+   The page uses `getUserMedia` (rear camera) and posts each frame to `/ingest`, which runs
+   `camera://host/upload/command/ingest` (analyze | inspect | barcodes | ocr | describe).
+3. `webcam://host/captures/query/list` — review the captured frames + their results.
+4. `webcam://host/server/command/stop` — stop the service.
+
+Notes:
+
+- Browsers grant the camera only on a secure context — `http://localhost` or `https://…`.
+  On a plain `http://<lan-ip>` some mobile browsers block it; tunnel via HTTPS or allowlist
+  the origin. (`webcam://` README has details.)
+- Pass `token` to require a shared secret on an untrusted LAN.
+- Frames are processed by `urirun-connector-camera`, so OCR/barcode/inspection/scene work
+  identically whether the frame came from `/dev/video*` or a phone.
+

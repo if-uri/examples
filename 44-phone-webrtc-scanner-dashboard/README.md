@@ -13,9 +13,24 @@ phone browser /scanner
   -> chat message with preview + metadata + OCR result when available
 ```
 
+The scanner is created on demand from the dashboard chat. Open the dashboard,
+switch to Chat and write a natural-language request such as:
+
+```text
+uruchom skaner telefonu i pokaz QR
+```
+
+The dashboard starts the HTTPS scanner service, detects the LAN IP, then appends
+a chat message with the scanner URL and a QR-code attachment.
+
+When the phone opens `/scanner`, it posts a lightweight session event back to the
+dashboard, so the chat shows `Phone scanner opened`. Starting the camera adds a
+second `Phone scanner camera started` message with user-agent and viewport
+metadata.
+
 ## Run on LAN
 
-For desktop-only testing:
+Start the operator dashboard:
 
 ```bash
 cd /home/tom/github/if-uri/urirun
@@ -32,40 +47,30 @@ Open:
 
 ```text
 http://127.0.0.1:8194/
-http://127.0.0.1:8194/scanner
 ```
 
-For a phone, most mobile browsers require HTTPS before camera access is allowed.
-Generate a local certificate and serve HTTPS:
-
-```bash
-mkdir -p ~/.urirun/certs
-openssl req -x509 -newkey rsa:2048 -nodes \
-  -keyout ~/.urirun/certs/urirun-dashboard.key \
-  -out ~/.urirun/certs/urirun-dashboard.crt \
-  -days 365 \
-  -subj "/CN=urirun-dashboard.local"
-
-cd /home/tom/github/if-uri/urirun
-./venv/bin/urirun host dashboard serve \
-  --project . \
-  --db ~/.urirun/host.db \
-  --node-url lenovo=http://192.168.188.201:8765 \
-  --identity ~/.ssh/id_ed25519 \
-  --host 0.0.0.0 \
-  --port 8194 \
-  --tls-cert ~/.urirun/certs/urirun-dashboard.crt \
-  --tls-key ~/.urirun/certs/urirun-dashboard.key
-```
-
-Then open this from the phone on the same Wi-Fi:
+Then ask from the dashboard Chat:
 
 ```text
-https://<HOST_LAN_IP>:8194/scanner
+uruchom skaner telefonu i pokaz QR
 ```
 
-Accept the local certificate warning if needed. For a cleaner setup, install a
-trusted local CA certificate or use `mkcert`.
+The service starts on HTTPS, usually:
+
+```text
+https://<HOST_LAN_IP>:8196/scanner
+```
+
+Most mobile browsers require HTTPS before camera access is allowed. urirun creates
+a local self-signed certificate in `~/.urirun/certs` when needed. Accept the local
+certificate warning on the phone. For a cleaner setup, install a trusted local CA
+certificate or use `mkcert`.
+
+Advanced: the old startup QR path is still available when explicitly requested:
+
+```bash
+STARTUP_QR=1 QR_URL=https://<HOST_LAN_IP>:8196/scanner ./run.sh
+```
 
 ## What appears in dashboard chat
 
@@ -73,10 +78,16 @@ Each scan creates:
 
 - a `scanner://host/capture/<sha>` URI,
 - a `camera-scan` artifact in the host DB,
-- a chat message with image preview, file path, size, dimensions, SHA-256 and OCR
-  metadata.
+- an automatic `*-receipt-crop.jpg` when the host can detect a receipt/document
+  inside the phone frame,
+- a chat message with the cropped receipt preview, original file path, crop box,
+  size, dimensions, SHA-256 and OCR metadata.
+- after the chat request, a `dashboard://host/qr/<sha>` message with a QR-code
+  attachment for the phone scanner service.
+- when the phone connects, a `scanner://host/session/<sha>` chat message with
+  browser metadata.
 
-If `tesseract` is installed on the host, the scanner message includes OCR text.
-Without it, the image still appears as an attachment and OCR metadata says what
-backend is missing.
-
+If `tesseract` is installed on the host, OCR runs on the cropped receipt image.
+Without it, the cropped image still appears as an attachment and OCR metadata says
+what backend is missing. If the receipt cannot be detected reliably, urirun keeps
+the original frame and records the crop reason in metadata.
