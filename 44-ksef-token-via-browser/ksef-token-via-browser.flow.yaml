@@ -1,0 +1,48 @@
+version: urirun.flow.v1
+source:
+  nl: "On the Lenovo: open the KSeF web app, let the user log in via Profil Zaufany, then read the generated authorization token from the DOM and store it as a secret reference."
+task:
+  id: ksef-token-via-browser
+  title: "Assisted KSeF token capture (browser → keyring)"
+# Human-in-the-loop: the Profil Zaufany login (step 2) is interactive and is NOT a flow step.
+# Run on the node that has the browser; the token value is captured into the OS keyring and
+# only a secret:// REFERENCE leaves this flow.
+steps:
+  - id: launch
+    uri: browser://cdp/session/command/launch
+    payload:
+      browser: "chrome"
+      url: "https://ksef-test.mf.gov.pl/web/login"
+      headless: false
+    runs_on: node
+
+  # --- manual gate: log in with Profil Zaufany in the opened browser, then continue ---
+
+  - id: check_login
+    uri: browser://cdp/page/query/eval
+    payload:
+      # returns "true" once a logged-in-only element is present (set your real selector)
+      expr: "(!!document.querySelector('[data-test=\"logout\"]')).toString()"
+    runs_on: node
+    depends_on:
+      - launch
+
+  - id: open_tokens
+    uri: browser://cdp/page/command/navigate
+    payload:
+      url: "https://ksef-test.mf.gov.pl/web/tokens"
+    runs_on: node
+    depends_on:
+      - check_login
+
+  # --- manual gate: click "Generuj token" so the token value is shown on the page ---
+
+  - id: read_token
+    uri: browser://cdp/page/query/eval
+    payload:
+      # read the token value element (set your real selector); the value is then stored to
+      # keyring by run_token_capture.py — keep it out of logs/screenshots.
+      expr: "(function(){var e=document.querySelector('#token-value');return e?(e.value||e.innerText||'').trim():'';})()"
+    runs_on: node
+    depends_on:
+      - open_tokens
