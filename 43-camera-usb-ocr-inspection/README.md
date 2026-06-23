@@ -42,8 +42,10 @@ flow must refuse capture if the audio cue cannot be emitted.
   what appeared, recording an audit record.
 - `camera-barcode-scan.flow.yaml`: beep + decode a label's QR/barcode and stop on a missing
   expected code.
+- `camera-receipt-scan.flow.yaml`: scan a receipt (paragon) with `target=receipt` — crop
+  tightly to the sheet, OCR it, audit the verdict.
 - `camera-mobile-web.flow.yaml`: host a LAN web service (`webcam://`) so a phone's browser
-  camera scans into the same pipeline; review the mobile captures.
+  camera scans into the same pipeline (with a crop-target selector); review the mobile captures.
 
 ## Live run
 

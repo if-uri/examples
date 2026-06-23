@@ -1,14 +1,20 @@
 # Camera/USB/OCR scenarios
 
-## 1. Desk document OCR
+## 1. Desk document / receipt (paragon) OCR
 
-Goal: put a receipt, invoice or shipping label under a webcam and read it.
+Goal: put a receipt, invoice or shipping label under a webcam and read it — cropped to the
+sheet, not the whole desk.
 
-URI steps:
+URI steps (see `camera-receipt-scan.flow.yaml`):
 
 1. `usb://host/cameras/query/list`
-2. `camera://host/photo/query/analyze` with `beep=true`, `crop=true`, `ocr=true`
+2. `camera://host/photo/query/analyze` (or `inspect`) with `beep=true`, `crop=true`,
+   `target="receipt"`, `ocr=true`
 3. inspect `ocr.text` and save the result to a local report
+
+`target="receipt"` (aka `document`/`paragon`) runs a numpy projection detector that hugs the
+bright, text-dense sheet on the darker background, so OCR sees only the receipt. Use
+`target="object"` for a 3‑D item, or `target="auto"` to let the connector decide.
 
 Use when: a person manually places documents in front of a camera.
 

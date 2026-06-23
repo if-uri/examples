@@ -33,6 +33,11 @@ def test_flows_reference_expected_uri_surface():
     assert "webcam://host/server/command/start" in mobile
     assert "webcam://host/captures/query/list" in mobile
 
+    # receipt flow: crop to the sheet (paragon) before OCR
+    receipt = (ROOT / "camera-receipt-scan.flow.yaml").read_text(encoding="utf-8")
+    assert "camera://host/photo/query/inspect" in receipt
+    assert 'target: "receipt"' in receipt
+
 
 def test_no_flow_references_missing_log_connector():
     for flow in ROOT.glob("*.flow.yaml"):

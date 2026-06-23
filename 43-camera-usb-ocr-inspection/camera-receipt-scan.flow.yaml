@@ -1,0 +1,22 @@
+version: urirun.flow.v1
+source:
+  nl: "Beep, photograph a receipt (paragon), crop tightly to the sheet and OCR it; flag if the total is missing."
+task:
+  id: camera-receipt-scan
+  title: "Receipt (paragon) scan: crop to the sheet + OCR"
+steps:
+  # target=receipt makes the connector crop to the bright text-dense sheet (the paragon)
+  # and trim the desk away before OCR, so the read is about the receipt, not the background.
+  - id: scan_receipt
+    uri: camera://host/photo/query/inspect
+    payload:
+      output_dir: "~/.urirun/camera-scans/receipt"
+      audit_log: "~/.urirun/camera-scans/receipt-audit.jsonl"
+      target: "receipt"
+      require_object: true
+      min_chars: 12
+      beep: true
+      beep_on_alert: true
+      fail_on_alert: false
+      lang: "pol+eng"
+    runs_on: node
