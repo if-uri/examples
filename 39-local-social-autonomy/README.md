@@ -277,6 +277,7 @@ The credentials are the values in `.env`.
 - `mock_linkedin.py` — controlled LinkedIn-like server with `/login`, `/feed`, `/post`, `/api/posts`.
 - `autonomous_browser.py` — launches Chrome, reads domain/host settings from `.env`, logs in, publishes, verifies.
 - `scout.py` — read-only scout that attaches to your logged-in Chrome (CDP) and captures interesting posts to `.state/captures.md`.
+- `uri_runtime.py` — read-only URI command runtime: navigate/search/scroll/extract/ocr/snapshot/append-markdown over attach-CDP. Registry-only, no write commands.
 - `session_probe.py` — read-only URI handler that finds which existing CDP browser has a LinkedIn session.
 - `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
 - `session-probe.bindings.json` — static snapshot for `browser://local/linkedin/session/query/find`.
@@ -286,6 +287,7 @@ The credentials are the values in `.env`.
 - `.env.example` — sample development credentials, post text, domains, hosts, ports, and mapping policy.
 - `test_local_social.py` — offline tests for the server, `.env` loading, and mapped-host scope.
 - `test_scout.py` — offline tests for the scout's dedupe, markdown rendering, and `.env` config parsing.
+- `test_uri_runtime.py` — offline tests for URI parsing, program execution, markdown rendering, and the read-only registry invariant.
 - `test_session_probe.py` — offline tests for CDP endpoint parsing and session-cookie detection.
 
 ## Boundary
