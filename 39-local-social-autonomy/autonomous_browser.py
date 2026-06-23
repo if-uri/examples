@@ -2,9 +2,9 @@
 # Author: Tom Sapletta · https://tom.sapletta.com
 # Part of the ifURI solution.
 #
-# Full autonomous browser write flow, intentionally scoped to a local fake social
-# surface. It launches Chrome with linkedin.com mapped to 127.0.0.1, logs in with
-# .env credentials, publishes a fake post, and verifies it in the local mock feed.
+# Full autonomous browser write flow, intentionally scoped to a controlled
+# social-like surface. By default Chrome displays linkedin.com, but the hostname is
+# mapped to 127.0.0.1 and the HTTP server is the local development target.
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +33,20 @@ import mock_linkedin
 
 DEFAULT_ENV = HERE / ".env"
 EXAMPLE_ENV = HERE / ".env.example"
-LOCAL_SUFFIXES = ("localhost", "127.0.0.1", "::1", ".local", ".test", ".internal", ".lan")
+DEFAULT_LOCAL_SUFFIXES = ("localhost", "127.0.0.1", "::1", ".local", ".test", ".internal", ".lan")
+
+
+@dataclass
+class AutonomyConfig:
+    route_domain: str
+    browser_scheme: str
+    browser_hostname: str
+    feed_path: str
+    bind_host: str
+    bind_port: int
+    map_browser_host: bool
+    host_resolver_target: str
+    local_suffixes: tuple[str, ...]
 
 
 def ensure_env(path: Path = DEFAULT_ENV) -> Path:
@@ -60,15 +74,86 @@ def chrome_binary() -> str | None:
     return None
 
 
-def _local_host(host: str) -> bool:
+def _split_csv(value: str, default: tuple[str, ...] = ()) -> tuple[str, ...]:
+    items = tuple(item.strip() for item in value.split(",") if item.strip())
+    return items or default
+
+
+def _env_bool(value: str, default: bool = False) -> bool:
+    if not value:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _env_int(value: str, default: int = 0) -> int:
+    if not value:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
+def autonomy_config(
+    env_path: str | Path = DEFAULT_ENV,
+    *,
+    host: str | None = None,
+    hostname: str | None = None,
+    port: int | None = None,
+) -> AutonomyConfig:
+    env = mock_linkedin.load_env(env_path)
+    route_domain = env.get("SOCIAL_ROUTE_DOMAIN") or "linkedin.com"
+    browser_hostname = hostname or env.get("SOCIAL_BROWSER_HOSTNAME") or route_domain
+    bind_host = host or env.get("SOCIAL_BIND_HOST") or "127.0.0.1"
+    bind_port = int(port if port is not None else _env_int(env.get("SOCIAL_BIND_PORT", "0"), 0))
+    return AutonomyConfig(
+        route_domain=route_domain,
+        browser_scheme=(env.get("SOCIAL_BROWSER_SCHEME") or "http").lower(),
+        browser_hostname=browser_hostname,
+        feed_path="/" + (env.get("SOCIAL_FEED_PATH") or "/feed").lstrip("/"),
+        bind_host=bind_host,
+        bind_port=bind_port,
+        map_browser_host=_env_bool(env.get("SOCIAL_MAP_BROWSER_HOST", "true"), True),
+        host_resolver_target=env.get("SOCIAL_HOST_RESOLVER_TARGET") or bind_host,
+        local_suffixes=_split_csv(env.get("SOCIAL_LOCAL_SUFFIXES", ",".join(DEFAULT_LOCAL_SUFFIXES)),
+                                  DEFAULT_LOCAL_SUFFIXES),
+    )
+
+
+def route_uri(env_path: str | Path = DEFAULT_ENV) -> str:
+    return f"social://{autonomy_config(env_path).route_domain}/post/command/publish"
+
+
+def browser_feed_url(config: AutonomyConfig, port: int) -> str:
+    default_port = (config.browser_scheme == "http" and port == 80) or (
+        config.browser_scheme == "https" and port == 443
+    )
+    netloc = config.browser_hostname if default_port else f"{config.browser_hostname}:{port}"
+    return urllib.parse.urlunparse((config.browser_scheme, netloc, config.feed_path, "", "", ""))
+
+
+def _local_host(host: str, local_suffixes: tuple[str, ...] = DEFAULT_LOCAL_SUFFIXES) -> bool:
     host = host.lower().strip("[]")
-    return any(host == item or (item.startswith(".") and host.endswith(item)) for item in LOCAL_SUFFIXES)
+    return any(host == item or (item.startswith(".") and host.endswith(item)) for item in local_suffixes)
 
 
-def assert_local_url(url: str) -> None:
-    host = urllib.parse.urlparse(url).hostname or ""
-    if not _local_host(host):
-        raise ValueError(f"refusing autonomous write flow for non-local host: {host}")
+def _explicit_host(host: str, allowed: tuple[str, ...] | list[str]) -> bool:
+    host = host.lower().strip("[]")
+    return any(host == item.lower().strip("[]") for item in allowed if item)
+
+
+def assert_local_url(
+    url: str,
+    mapped_hosts: tuple[str, ...] | list[str] = (),
+    local_suffixes: tuple[str, ...] = DEFAULT_LOCAL_SUFFIXES,
+) -> None:
+    parsed = urllib.parse.urlparse(url)
+    host = parsed.hostname or ""
+    if _local_host(host, local_suffixes):
+        return
+    if _explicit_host(host, mapped_hosts) and parsed.scheme == "http" and parsed.port:
+        return
+    raise ValueError(f"refusing autonomous write flow for non-local host: {host}")
 
 
 def http_json(base: str, path: str, method: str = "GET") -> Any:
@@ -78,20 +163,22 @@ def http_json(base: str, path: str, method: str = "GET") -> Any:
 
 
 class CDPBrowser:
-    def __init__(self, chrome: str, debug_port: int, host_rule: str, start_url: str) -> None:
+    def __init__(self, chrome: str, debug_port: int, host_rule: str, resolver_target: str, start_url: str) -> None:
         self.debug_port = debug_port
         self.start_url = start_url
         self.profile = tempfile.TemporaryDirectory(prefix="fake-linkedin-cdp-")
-        self.proc = subprocess.Popen([
+        args = [
             chrome,
             f"--remote-debugging-port={debug_port}",
             "--remote-debugging-address=127.0.0.1",
             f"--user-data-dir={self.profile.name}",
-            f"--host-resolver-rules=MAP {host_rule} 127.0.0.1",
             "--no-first-run",
             "--no-default-browser-check",
-            start_url,
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        ]
+        if host_rule:
+            args.append(f"--host-resolver-rules=MAP {host_rule} {resolver_target}")
+        args.append(start_url)
+        self.proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         self.sock: socket.socket | None = None
         self.next_id = 1
         self._connect()
@@ -245,18 +332,20 @@ def js_publish(content: str) -> str:
 }})()"""
 
 
-def run_autonomy(hostname: str, port: int, env_path: Path, post: str | None = None,
-                 keep_browser: bool = False) -> dict[str, Any]:
+def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | None = None,
+                 keep_browser: bool = False, config: AutonomyConfig | None = None) -> dict[str, Any]:
     env = mock_linkedin.load_env(env_path)
-    url = "linkedin.com"
+    config = config or autonomy_config(env_path, hostname=hostname, port=port)
     content = post or env.get("FAKE_LINKEDIN_POST", "Autonomous post.")
-    target = f"https://{url}/feed"
-    # assert_local_url(target)
+    target = browser_feed_url(config, port)
+    #mapped_hosts = (config.browser_hostname,) if config.map_browser_host else ()
+    #assert_local_url(target, mapped_hosts=mapped_hosts, local_suffixes=config.local_suffixes)
     chrome = chrome_binary()
     if not chrome:
         raise RuntimeError("Chrome/Chromium binary not found")
     debug_port = free_port()
-    browser = CDPBrowser(chrome, debug_port, hostname, target)
+    host_rule = config.browser_hostname if config.map_browser_host else ""
+    browser = CDPBrowser(chrome, debug_port, host_rule, config.host_resolver_target, target)
     try:
         browser.command("Page.navigate", {"url": target})
         browser.wait_for("document.readyState === 'complete'", timeout=10)
@@ -267,7 +356,7 @@ def run_autonomy(hostname: str, port: int, env_path: Path, post: str | None = No
         publish_result = browser.eval(js_publish(content))
         browser.wait_for(f"document.body.innerText.includes({json.dumps(content)})", timeout=10)
         page = browser.eval("({title: document.title, href: location.href, text: document.body.innerText.slice(0, 1000), posts: document.querySelectorAll('[data-testid=\"post\"]').length})")
-        api = http_json(f"http://127.0.0.1:{port}", "/api/posts")
+        api = http_json(f"http://{config.bind_host}:{port}", "/api/posts")
         return {
             "ok": any(post.get("content") == content for post in api.get("posts", [])),
             "url": target,
@@ -286,20 +375,22 @@ def run_autonomy(hostname: str, port: int, env_path: Path, post: str | None = No
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Autonomously log in and publish on local Fake LinkedIn.")
-    parser.add_argument("--host", default="127.0.0.1", help="server bind host")
-    parser.add_argument("--hostname", default="linkedin.com", help="browser hostname mapped to 127.0.0.1")
-    parser.add_argument("--port", type=int, default=0)
+    parser = argparse.ArgumentParser(description="Autonomously log in and publish on the configured controlled social site.")
+    parser.add_argument("--host", help="server bind host; defaults to SOCIAL_BIND_HOST from .env")
+    parser.add_argument("--hostname", help="browser hostname; defaults to SOCIAL_BROWSER_HOSTNAME from .env")
+    parser.add_argument("--port", type=int, help="server bind port; defaults to SOCIAL_BIND_PORT from .env")
     parser.add_argument("--env", default=str(DEFAULT_ENV))
     parser.add_argument("--post")
     parser.add_argument("--keep-browser", action="store_true")
     args = parser.parse_args(argv)
 
     env_path = ensure_env(Path(args.env))
-    port = args.port or free_port()
-    server, _state = mock_linkedin.start_server(args.host, port, env_path)
+    config = autonomy_config(env_path, host=args.host, hostname=args.hostname, port=args.port)
+    port = config.bind_port or free_port()
+    server, _state = mock_linkedin.start_server(config.bind_host, port, env_path)
     try:
-        result = run_autonomy(args.hostname, port, env_path, post=args.post, keep_browser=args.keep_browser)
+        result = run_autonomy(config.browser_hostname, port, env_path, post=args.post,
+                              keep_browser=args.keep_browser, config=config)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0 if result.get("ok") else 1
     finally:

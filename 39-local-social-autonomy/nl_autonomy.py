@@ -2,7 +2,7 @@
 # Author: Tom Sapletta · https://tom.sapletta.com
 # Part of the ifURI solution.
 #
-# Natural-language planner + URI handler for the local fake LinkedIn example.
+# Natural-language planner + URI handler for the controlled LinkedIn-shaped example.
 # This is intentionally small: it plugs into `urirun agent run` as
 # `--planner nl_autonomy:planner` and exposes a typed local-function route.
 
@@ -22,7 +22,51 @@ import autonomous_browser
 import mock_linkedin
 
 
-ROUTE = "social://linkedin.com/post/command/publish"
+ROUTE = autonomous_browser.route_uri()
+
+
+def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> dict[str, Any]:
+    config = autonomous_browser.autonomy_config(env_path)
+    route = autonomous_browser.route_uri(env_path)
+    return {
+        "version": "urirun.bindings.v2",
+        "bindings": {
+            route: {
+                "kind": "command",
+                "adapter": "local-function",
+                "ref": "nl_autonomy:publish_local",
+                "python": {
+                    "type": "python",
+                    "module": "nl_autonomy",
+                    "export": "publish_local",
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "post": {
+                            "type": "string",
+                            "description": "Text to publish on the controlled LinkedIn-shaped feed.",
+                        },
+                        "hostname": {"type": "string", "default": config.browser_hostname},
+                        "host": {"type": "string", "default": config.bind_host},
+                        "port": {"type": "integer", "default": config.bind_port},
+                        "env": {"type": "string", "default": str(env_path)},
+                        "keep_browser": {"type": "boolean", "default": False},
+                    },
+                },
+                "policy": {"allowExecute": True},
+                "meta": {
+                    "label": "Publish a controlled LinkedIn-shaped post",
+                    "description": "Loads host/domain settings from .env, starts the controlled site, publishes, and verifies the feed.",
+                },
+            },
+        },
+    }
+
+
+def write_bindings(path: str | Path, env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> None:
+    Path(path).write_text(json.dumps(binding_document(env_path), indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> str:
@@ -48,48 +92,68 @@ def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_
         if text:
             return text
     env = mock_linkedin.load_env(env_path)
-    return env.get("FAKE_LINKEDIN_POST", "Autonomiczna publikacja testowa na lokalnym mocku LinkedIn.")
+    return env.get("FAKE_LINKEDIN_POST", "Autonomiczna publikacja testowa na kontrolowanym portalu LinkedIn-shaped.")
 
 
 def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Planner contract used by `urirun agent run`: (goal, action_space) -> steps."""
-    route = next((item["uri"] for item in action_space if item.get("uri") == ROUTE), ROUTE)
+    default_route = autonomous_browser.route_uri()
+    route = next(
+        (item["uri"] for item in action_space
+         if str(item.get("uri", "")).startswith("social://")
+         and str(item.get("uri", "")).endswith("/post/command/publish")),
+        default_route,
+    )
     return [{
         "uri": route,
         "payload": {"post": extract_post(goal)},
-        "why": "NL prompt asks for a local fake social publication",
+        "why": "NL prompt asks for a controlled social publication",
     }]
 
 
 def publish_local(
     post: str = "",
-    hostname: str = "linkedin.com",
-    host: str = "127.0.0.1",
+    hostname: str = "",
+    host: str = "",
     port: int = 0,
     env: str = "",
     keep_browser: bool = False,
 ) -> dict[str, Any]:
-    """URI handler: start the local mock, log in, publish, verify."""
+    """URI handler: start the controlled site, log in, publish, verify."""
     env_path = autonomous_browser.ensure_env(Path(env) if env else autonomous_browser.DEFAULT_ENV)
-    bind_port = int(port or autonomous_browser.free_port())
-    server, _state = mock_linkedin.start_server(host, bind_port, env_path)
+    config = autonomous_browser.autonomy_config(
+        env_path,
+        host=host or None,
+        hostname=hostname or None,
+        port=int(port) if port else None,
+    )
+    bind_port = config.bind_port or autonomous_browser.free_port()
+    server, _state = mock_linkedin.start_server(config.bind_host, bind_port, env_path)
     try:
         return autonomous_browser.run_autonomy(
-            hostname=hostname,
+            hostname=config.browser_hostname,
             port=bind_port,
             env_path=env_path,
             post=post or None,
             keep_browser=keep_browser,
+            config=config,
         )
     finally:
         server.shutdown()
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Run local fake LinkedIn autonomy from an NL prompt.")
-    parser.add_argument("prompt", nargs="+")
+    parser = argparse.ArgumentParser(description="Run controlled LinkedIn-shaped autonomy from an NL prompt.")
+    parser.add_argument("--env", default=str(autonomous_browser.DEFAULT_ENV))
+    parser.add_argument("--write-bindings", help="write an env-resolved binding document and exit")
+    parser.add_argument("prompt", nargs="*")
     args = parser.parse_args(argv)
-    result = publish_local(post=extract_post(" ".join(args.prompt)))
+    if args.write_bindings:
+        write_bindings(args.write_bindings, args.env)
+        return 0
+    if not args.prompt:
+        parser.error("prompt is required unless --write-bindings is used")
+    result = publish_local(post=extract_post(" ".join(args.prompt), args.env), env=args.env)
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result.get("ok") else 1
 

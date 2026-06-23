@@ -47,7 +47,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 38 | [`38-self-managing/`](38-self-managing/) | proposal + self-managing urirun: capability→connector resolver + a loop that installs a missing connector mid-run (gap→resolve→provision→re-plan) | ✅ `pytest` + `resolver.py` |
 | 39 | [`39-browser-observe/`](39-browser-observe/) | autonomous READ-ONLY browser observation: gillm portal screen-capture + vision-LLM as URIs; hard gate refuses publish/DM/login/payment | ✅ live (gillm capture + vision) |
 | 40 | [`40-wordpress-article/`](40-wordpress-article/) | create a WordPress article over a URI via the REST API + Application Password (by reference); draft by default, no login-form password | ✅ `pytest` (fake WP) |
-| 39 | [`39-local-social-autonomy/`](39-local-social-autonomy/) | local fake LinkedIn with `.env` login + full autonomous browser publication on `linkedin.local` only | ✅ `pytest` + local Chrome CDP |
+| 39 | [`39-local-social-autonomy/`](39-local-social-autonomy/) | controlled LinkedIn-shaped site with `.env` login + full autonomous browser publication on locally mapped `linkedin.com:<port>` | ✅ `pytest` + local Chrome CDP |
 | 40 | [`40-local-portals-suite/`](40-local-portals-suite/) | local CRM/support/shop/docs portals for prompt-driven autonomous browser tests over `portal://*.local` | ✅ `pytest` + local Chrome CDP |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM

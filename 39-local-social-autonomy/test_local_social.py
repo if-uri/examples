@@ -32,10 +32,54 @@ def env_file(tmp_path: Path) -> Path:
     return path
 
 
+def env_file_with_social_config(tmp_path: Path) -> Path:
+    path = env_file(tmp_path)
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(
+            "SOCIAL_ROUTE_DOMAIN=linkjedin.example\n"
+            "SOCIAL_BROWSER_SCHEME=http\n"
+            "SOCIAL_BROWSER_HOSTNAME=linkjedin.example\n"
+            "SOCIAL_FEED_PATH=/custom-feed\n"
+            "SOCIAL_BIND_HOST=127.0.0.1\n"
+            "SOCIAL_BIND_PORT=8088\n"
+            "SOCIAL_VERIFY_HOST=127.0.0.1\n"
+            "SOCIAL_MAP_BROWSER_HOST=true\n"
+            "SOCIAL_HOST_RESOLVER_TARGET=127.0.0.1\n"
+            "SOCIAL_LOCAL_SUFFIXES=localhost,127.0.0.1,.example\n"
+        )
+    return path
+
+
 def test_load_env_reads_fake_credentials(tmp_path):
     env = mock_linkedin.load_env(env_file(tmp_path))
     assert env["FAKE_LINKEDIN_USER"] == "agent@example.local"
     assert env["FAKE_LINKEDIN_PASSWORD"] == "secret"
+
+
+def test_autonomy_config_reads_domain_and_host_values_from_env(tmp_path):
+    env = env_file_with_social_config(tmp_path)
+    config = auto.autonomy_config(env)
+    assert config.route_domain == "linkjedin.example"
+    assert config.browser_hostname == "linkjedin.example"
+    assert config.feed_path == "/custom-feed"
+    assert config.bind_host == "127.0.0.1"
+    assert config.bind_port == 8088
+    assert config.verify_host == "127.0.0.1"
+    assert config.host_resolver_target == "127.0.0.1"
+    assert ".example" in config.local_suffixes
+    assert auto.route_uri(env) == "social://linkjedin.example/post/command/publish"
+    assert auto.browser_feed_url(config, config.bind_port) == "http://linkjedin.example:8088/custom-feed"
+
+
+def test_binding_document_uses_env_domain_and_defaults(tmp_path):
+    env = env_file_with_social_config(tmp_path)
+    doc = nl_autonomy.binding_document(env)
+    route = "social://linkjedin.example/post/command/publish"
+    assert list(doc["bindings"]) == [route]
+    props = doc["bindings"][route]["inputSchema"]["properties"]
+    assert props["hostname"]["default"] == "linkjedin.example"
+    assert props["host"]["default"] == "127.0.0.1"
+    assert props["port"]["default"] == 8088
 
 
 def test_mock_server_login_and_post(tmp_path):
@@ -65,8 +109,30 @@ def test_autonomous_write_scope_rejects_public_host():
         raise AssertionError("public host should be rejected")
 
 
-def test_autonomous_write_scope_allows_linkedin_local():
-    auto.assert_local_url("http://linkedin.local:8080/feed")
+def test_autonomous_write_scope_allows_local_dev_suffix():
+    auto.assert_local_url("http://portal.local:8080/feed")
+
+
+def test_autonomous_write_scope_allows_explicit_mapped_linkedin_com():
+    auto.assert_local_url("http://linkedin.com:8080/feed", mapped_hosts=("linkedin.com",))
+
+
+def test_autonomous_write_scope_rejects_unmapped_linkedin_com():
+    try:
+        auto.assert_local_url("http://linkedin.com/feed")
+    except ValueError as exc:
+        assert "non-local host" in str(exc)
+    else:
+        raise AssertionError("public-looking host should require an explicit local mapping")
+
+
+def test_autonomous_write_scope_rejects_real_https_linkedin_even_when_mapped():
+    try:
+        auto.assert_local_url("https://linkedin.com/feed", mapped_hosts=("linkedin.com",))
+    except ValueError as exc:
+        assert "non-local host" in str(exc)
+    else:
+        raise AssertionError("real https LinkedIn should not be accepted by the local write scope")
 
 
 def test_js_helpers_embed_values_safely():
@@ -85,5 +151,5 @@ def test_nl_planner_returns_social_publish_step():
     assert steps == [{
         "uri": nl_autonomy.ROUTE,
         "payload": {"post": "lokalny test"},
-        "why": "NL prompt asks for a local fake social publication",
+        "why": "NL prompt asks for a controlled social publication",
     }]

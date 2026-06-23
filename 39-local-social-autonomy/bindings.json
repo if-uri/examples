@@ -14,18 +14,18 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "post": {"type": "string", "description": "Text to publish on the local fake LinkedIn feed."},
-          "hostname": {"type": "string", "default": "linkedin.com"},
-          "host": {"type": "string", "default": "127.0.0.1"},
+          "post": {"type": "string", "description": "Text to publish on the controlled LinkedIn-shaped feed."},
+          "hostname": {"type": "string", "default": "", "description": "Browser hostname; empty loads SOCIAL_BROWSER_HOSTNAME from .env."},
+          "host": {"type": "string", "default": "", "description": "Server bind host; empty loads SOCIAL_BIND_HOST from .env."},
           "port": {"type": "integer", "default": 0},
-          "env": {"type": "string", "default": ""},
+          "env": {"type": "string", "default": "", "description": "Path to .env with route/domain/host settings."},
           "keep_browser": {"type": "boolean", "default": false}
         }
       },
       "policy": {"allowExecute": true},
       "meta": {
-        "label": "Publish a fake local LinkedIn post",
-        "description": "Starts the local mock, logs in with .env credentials, publishes, and verifies the local feed."
+        "label": "Publish a controlled LinkedIn-shaped post",
+        "description": "Loads route/domain/host settings from .env, starts the controlled development site, publishes, and verifies the feed."
       }
     }
   }
