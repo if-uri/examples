@@ -43,10 +43,11 @@ def test_flows_reference_expected_uri_surface():
     parse = (ROOT / "camera-receipt-parse.flow.yaml").read_text(encoding="utf-8")
     assert "camera://host/receipt/query/parse" in parse
 
-    # receipt → invoice draft: bridge into the invoice/KSeF flow
+    # receipt → invoice draft → KSeF FA(2) XML: the full office chain
     bridge = (ROOT / "receipt-to-invoice.flow.yaml").read_text(encoding="utf-8")
     assert "camera://host/receipt/query/parse" in bridge
     assert "invoice://host/receipt/query/draft" in bridge
+    assert "invoice://host/ksef/query/build" in bridge
 
 
 def test_no_flow_references_missing_log_connector():
