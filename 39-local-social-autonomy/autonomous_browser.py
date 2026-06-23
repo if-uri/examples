@@ -44,6 +44,7 @@ class AutonomyConfig:
     feed_path: str
     bind_host: str
     bind_port: int
+    verify_host: str
     map_browser_host: bool
     host_resolver_target: str
     local_suffixes: tuple[str, ...]
@@ -105,6 +106,7 @@ def autonomy_config(
     route_domain = env.get("SOCIAL_ROUTE_DOMAIN") or "linkedin.com"
     browser_hostname = hostname or env.get("SOCIAL_BROWSER_HOSTNAME") or route_domain
     bind_host = host or env.get("SOCIAL_BIND_HOST") or "127.0.0.1"
+    verify_host = env.get("SOCIAL_VERIFY_HOST") or ("127.0.0.1" if bind_host == "0.0.0.0" else bind_host)
     bind_port = int(port if port is not None else _env_int(env.get("SOCIAL_BIND_PORT", "0"), 0))
     return AutonomyConfig(
         route_domain=route_domain,
@@ -113,6 +115,7 @@ def autonomy_config(
         feed_path="/" + (env.get("SOCIAL_FEED_PATH") or "/feed").lstrip("/"),
         bind_host=bind_host,
         bind_port=bind_port,
+        verify_host=verify_host,
         map_browser_host=_env_bool(env.get("SOCIAL_MAP_BROWSER_HOST", "true"), True),
         host_resolver_target=env.get("SOCIAL_HOST_RESOLVER_TARGET") or bind_host,
         local_suffixes=_split_csv(env.get("SOCIAL_LOCAL_SUFFIXES", ",".join(DEFAULT_LOCAL_SUFFIXES)),
@@ -125,10 +128,13 @@ def route_uri(env_path: str | Path = DEFAULT_ENV) -> str:
 
 
 def browser_feed_url(config: AutonomyConfig, port: int) -> str:
-    default_port = (config.browser_scheme == "http" and port == 80) or (
-        config.browser_scheme == "https" and port == 443
-    )
-    netloc = config.browser_hostname if default_port else f"{config.browser_hostname}:{port}"
+    if config.map_browser_host:
+        netloc = config.browser_hostname
+    else:
+        default_port = (config.browser_scheme == "http" and port == 80) or (
+            config.browser_scheme == "https" and port == 443
+        )
+        netloc = config.browser_hostname if default_port else f"{config.browser_hostname}:{port}"
     return urllib.parse.urlunparse((config.browser_scheme, netloc, config.feed_path, "", "", ""))
 
 
@@ -151,7 +157,7 @@ def assert_local_url(
     host = parsed.hostname or ""
     if _local_host(host, local_suffixes):
         return
-    if _explicit_host(host, mapped_hosts) and parsed.scheme == "http" and parsed.port:
+    if _explicit_host(host, mapped_hosts) and parsed.scheme == "http":
         return
     raise ValueError(f"refusing autonomous write flow for non-local host: {host}")
 
@@ -338,14 +344,15 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
     config = config or autonomy_config(env_path, hostname=hostname, port=port)
     content = post or env.get("FAKE_LINKEDIN_POST", "Autonomous post.")
     target = browser_feed_url(config, port)
-    #mapped_hosts = (config.browser_hostname,) if config.map_browser_host else ()
-    #assert_local_url(target, mapped_hosts=mapped_hosts, local_suffixes=config.local_suffixes)
+    mapped_hosts = (config.browser_hostname,) if config.map_browser_host else ()
+    assert_local_url(target, mapped_hosts=mapped_hosts, local_suffixes=config.local_suffixes)
     chrome = chrome_binary()
     if not chrome:
         raise RuntimeError("Chrome/Chromium binary not found")
     debug_port = free_port()
     host_rule = config.browser_hostname if config.map_browser_host else ""
-    browser = CDPBrowser(chrome, debug_port, host_rule, config.host_resolver_target, target)
+    resolver_target = f"{config.host_resolver_target}:{port}" if config.map_browser_host else config.host_resolver_target
+    browser = CDPBrowser(chrome, debug_port, host_rule, resolver_target, target)
     try:
         browser.command("Page.navigate", {"url": target})
         browser.wait_for("document.readyState === 'complete'", timeout=10)
@@ -356,7 +363,7 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
         publish_result = browser.eval(js_publish(content))
         browser.wait_for(f"document.body.innerText.includes({json.dumps(content)})", timeout=10)
         page = browser.eval("({title: document.title, href: location.href, text: document.body.innerText.slice(0, 1000), posts: document.querySelectorAll('[data-testid=\"post\"]').length})")
-        api = http_json(f"http://{config.bind_host}:{port}", "/api/posts")
+        api = http_json(f"http://{config.verify_host}:{port}", "/api/posts")
         return {
             "ok": any(post.get("content") == content for post in api.get("posts", [])),
             "url": target,
@@ -376,9 +383,9 @@ def run_autonomy(hostname: str | None, port: int, env_path: Path, post: str | No
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Autonomously log in and publish on the configured controlled social site.")
-    parser.add_argument("--host", help="server bind host; defaults to SOCIAL_BIND_HOST from .env")
+    parser.add_argument("--host", help="server bind host; defaults to 127.0.0.1")
     parser.add_argument("--hostname", help="browser hostname; defaults to SOCIAL_BROWSER_HOSTNAME from .env")
-    parser.add_argument("--port", type=int, help="server bind port; defaults to SOCIAL_BIND_PORT from .env")
+    parser.add_argument("--port", type=int, help="server bind port; defaults to a free port")
     parser.add_argument("--env", default=str(DEFAULT_ENV))
     parser.add_argument("--post")
     parser.add_argument("--keep-browser", action="store_true")

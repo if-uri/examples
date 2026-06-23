@@ -68,7 +68,9 @@ def test_autonomy_config_reads_domain_and_host_values_from_env(tmp_path):
     assert config.host_resolver_target == "127.0.0.1"
     assert ".example" in config.local_suffixes
     assert auto.route_uri(env) == "social://linkjedin.example/post/command/publish"
-    assert auto.browser_feed_url(config, config.bind_port) == "http://linkjedin.example:8088/custom-feed"
+    assert auto.browser_feed_url(config, 8088) == "http://linkjedin.example/custom-feed"
+    config.map_browser_host = False
+    assert auto.browser_feed_url(config, 8088) == "http://linkjedin.example:8088/custom-feed"
 
 
 def test_binding_document_uses_env_domain_and_defaults(tmp_path):

@@ -38,9 +38,6 @@ SOCIAL_ROUTE_DOMAIN=linkedin.com
 SOCIAL_BROWSER_SCHEME=http
 SOCIAL_BROWSER_HOSTNAME=linkedin.com
 SOCIAL_FEED_PATH=/feed
-SOCIAL_BIND_HOST=127.0.0.1
-SOCIAL_BIND_PORT=0
-SOCIAL_VERIFY_HOST=127.0.0.1
 SOCIAL_MAP_BROWSER_HOST=true
 SOCIAL_HOST_RESOLVER_TARGET=127.0.0.1
 SOCIAL_LOCAL_SUFFIXES=localhost,127.0.0.1,::1,.local,.test,.internal,.lan
@@ -51,7 +48,7 @@ Expected result:
 ```json
 {
   "ok": true,
-  "url": "http://linkedin.com:<port>/feed",
+  "url": "http://linkedin.com:/feed",
   "login": {"ok": true},
   "publish": {"ok": true},
   "apiPosts": [{"content": "..."}]
