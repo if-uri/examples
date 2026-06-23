@@ -46,7 +46,7 @@ python3 autonomous_browser.py --post "Testowa publikacja z pelnej lokalnej auton
 The shortest prompt-driven command is:
 
 ```bash
-./run_prompt.sh 'opublikuj "Testowa publikacja z promptu NL przez urirun agent run"'
+./run_prompt.sh 'opublikuj "publikacja z promptu NL przez urirun agent run"'
 ```
 
 That script uses built-in urirun pieces:

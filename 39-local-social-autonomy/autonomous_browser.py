@@ -3,7 +3,7 @@
 # Part of the ifURI solution.
 #
 # Full autonomous browser write flow, intentionally scoped to a local fake social
-# surface. It launches Chrome with linkedin.local mapped to 127.0.0.1, logs in with
+# surface. It launches Chrome with linkedin.com mapped to 127.0.0.1, logs in with
 # .env credentials, publishes a fake post, and verifies it in the local mock feed.
 
 from __future__ import annotations
@@ -288,7 +288,7 @@ def run_autonomy(hostname: str, port: int, env_path: Path, post: str | None = No
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Autonomously log in and publish on local Fake LinkedIn.")
     parser.add_argument("--host", default="127.0.0.1", help="server bind host")
-    parser.add_argument("--hostname", default="linkedin.local", help="browser hostname mapped to 127.0.0.1")
+    parser.add_argument("--hostname", default="linkedin.com", help="browser hostname mapped to 127.0.0.1")
     parser.add_argument("--port", type=int, default=0)
     parser.add_argument("--env", default=str(DEFAULT_ENV))
     parser.add_argument("--post")

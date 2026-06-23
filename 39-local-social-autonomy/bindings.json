@@ -1,7 +1,7 @@
 {
   "version": "urirun.bindings.v2",
   "bindings": {
-    "social://linkedin.local/post/command/publish": {
+    "social://linkedin.com/post/command/publish": {
       "kind": "command",
       "adapter": "local-function",
       "ref": "nl_autonomy:publish_local",
@@ -15,7 +15,7 @@
         "additionalProperties": false,
         "properties": {
           "post": {"type": "string", "description": "Text to publish on the local fake LinkedIn feed."},
-          "hostname": {"type": "string", "default": "linkedin.local"},
+          "hostname": {"type": "string", "default": "linkedin.com"},
           "host": {"type": "string", "default": "127.0.0.1"},
           "port": {"type": "integer", "default": 0},
           "env": {"type": "string", "default": ""},
