@@ -119,6 +119,13 @@ def main() -> int:
             "ksefReady": draft.get("ksefReady"), "net": draft.get("net"),
             "vat": draft.get("vat"), "gross": draft.get("gross"), "currency": draft.get("currency"),
         }
+        # build the KSeF FA(2) XML draft from the invoice draft
+        xml_path = os.path.join(out_dir, "faktura-fa2.xml")
+        ksef = _value(inv.ksef_build(draft_json=json.dumps(draft), number="FV/PAR/2026/001",
+                                     output_path=xml_path))
+        summary["steps"]["ksefXml"] = {"ok": ksef.get("ok"), "variant": ksef.get("variant"),
+                                       "path": ksef.get("path"),
+                                       "reparsedGross": (ksef.get("parsed") or {}).get("gross")}
     except Exception as exc:  # noqa: BLE001
         summary["steps"]["invoiceDraft"] = {"error": str(exc)}
 
@@ -151,6 +158,9 @@ def main() -> int:
     if "error" not in idr:
         print(f"invoice draft : net={idr['net']} vat={idr['vat']} gross={idr['gross']} {idr['currency']} "
               f"ksefReady={idr['ksefReady']}")
+    if "ksefXml" in s and s["ksefXml"].get("ok"):
+        kx = s["ksefXml"]
+        print(f"ksef FA({kx['variant']})  : {kx['path']}  (re-parsed gross={kx['reparsedGross']})")
     if "webcam" in s:
         w = s["webcam"]
         print(f"mobile service: {'open ' + w['openUrl'] if w.get('ok') else 'failed: ' + str(w.get('error'))}")

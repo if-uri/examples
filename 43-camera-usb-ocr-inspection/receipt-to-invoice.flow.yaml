@@ -26,3 +26,15 @@ steps:
     runs_on: node
     depends_on:
       - parse_receipt
+
+  # 3. build the KSeF FA(2) XML draft from the invoice draft and write it to disk. This is
+  #    what the ksef:// API connector submits. (Validate against the official FA(2) XSD first.)
+  - id: ksef_xml
+    uri: invoice://host/ksef/query/build
+    payload:
+      draft_json: "${invoice_draft.result.value.draft}"
+      number: "FV/PAR/2026/001"
+      output_path: "~/.urirun/camera-scans/receipt-invoice/faktura.xml"
+    runs_on: node
+    depends_on:
+      - invoice_draft
