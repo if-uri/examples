@@ -55,8 +55,12 @@ decode any QR/barcode, and optionally start the LAN mobile service (`webcam://`)
   what appeared, recording an audit record.
 - `camera-barcode-scan.flow.yaml`: beep + decode a label's QR/barcode and stop on a missing
   expected code.
-- `camera-receipt-scan.flow.yaml`: scan a receipt (paragon) with `target=receipt` — crop
-  tightly to the sheet, OCR it, audit the verdict.
+- `camera-receipt-scan.flow.yaml`: scan a receipt (paragon) with `target=receipt` + `deskew`
+  — crop tightly to the sheet, flatten it, OCR it, audit the verdict.
+- `camera-receipt-parse.flow.yaml`: parse a receipt into structured JSON (items, total,
+  currency, date, NIP) for the invoice/KSeF flow.
+- `receipt-to-invoice.flow.yaml`: bridge a scanned receipt into `invoice://host/receipt/query/draft`
+  — derive net/VAT/gross at 23% and emit a KSeF-ready invoice draft.
 - `camera-mobile-web.flow.yaml`: host a LAN web service (`webcam://`) so a phone's browser
   camera scans into the same pipeline (with a crop-target selector); review the mobile captures.
 

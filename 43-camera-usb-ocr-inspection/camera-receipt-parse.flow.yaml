@@ -1,0 +1,17 @@
+version: urirun.flow.v1
+source:
+  nl: "Photograph a receipt, crop+deskew the sheet, OCR it and return structured JSON (items, total, NIP, date)."
+task:
+  id: camera-receipt-parse
+  title: "Receipt → structured JSON (items, total, NIP)"
+steps:
+  # crop to the sheet (target=receipt) and deskew before OCR, then parse the text into
+  # line items + total + currency + date + NIP. Feed `total`/`nip` into the invoice/KSeF flow.
+  - id: parse_receipt
+    uri: camera://host/receipt/query/parse
+    payload:
+      output_dir: "~/.urirun/camera-scans/receipt-parse"
+      target: "receipt"
+      deskew: true
+      lang: "pol+eng"
+    runs_on: node

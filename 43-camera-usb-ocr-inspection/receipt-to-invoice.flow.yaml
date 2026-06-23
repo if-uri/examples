@@ -1,0 +1,28 @@
+version: urirun.flow.v1
+source:
+  nl: "Photograph a receipt, parse it to JSON, and turn it into a KSeF-ready invoice draft (net/VAT/gross)."
+task:
+  id: receipt-to-invoice
+  title: "Receipt (paragon) → invoice draft"
+steps:
+  # 1. camera scans the receipt: crop to the sheet, deskew, OCR, parse items/total/NIP/date.
+  - id: parse_receipt
+    uri: camera://host/receipt/query/parse
+    payload:
+      output_dir: "~/.urirun/camera-scans/receipt-invoice"
+      target: "receipt"
+      deskew: true
+      lang: "pol+eng"
+    runs_on: node
+
+  # 2. bridge into the invoice/KSeF flow: derive net+VAT from the gross at 23% and emit an
+  #    invoice draft. Pass step 1's JSON (items/total/nip/date/currency) as receipt_json.
+  #    The draft's net/vat/gross + NIP are what invoice://host/ksef/folder/register consumes.
+  - id: invoice_draft
+    uri: invoice://host/receipt/query/draft
+    payload:
+      receipt_json: "${parse_receipt.result.value}"
+      vat_rate: 23
+    runs_on: node
+    depends_on:
+      - parse_receipt

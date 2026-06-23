@@ -37,6 +37,16 @@ def test_flows_reference_expected_uri_surface():
     receipt = (ROOT / "camera-receipt-scan.flow.yaml").read_text(encoding="utf-8")
     assert "camera://host/photo/query/inspect" in receipt
     assert 'target: "receipt"' in receipt
+    assert "deskew: true" in receipt
+
+    # receipt-parse flow: structured JSON out of the paragon
+    parse = (ROOT / "camera-receipt-parse.flow.yaml").read_text(encoding="utf-8")
+    assert "camera://host/receipt/query/parse" in parse
+
+    # receipt → invoice draft: bridge into the invoice/KSeF flow
+    bridge = (ROOT / "receipt-to-invoice.flow.yaml").read_text(encoding="utf-8")
+    assert "camera://host/receipt/query/parse" in bridge
+    assert "invoice://host/receipt/query/draft" in bridge
 
 
 def test_no_flow_references_missing_log_connector():

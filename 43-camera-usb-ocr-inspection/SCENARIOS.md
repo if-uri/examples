@@ -158,4 +158,28 @@ Notes:
 - Pass `token` to require a shared secret on an untrusted LAN.
 - Frames are processed by `urirun-connector-camera`, so OCR/barcode/inspection/scene work
   identically whether the frame came from `/dev/video*` or a phone.
+- For the camera to work on a plain LAN IP, start the service with `--https` (self-signed
+  cert auto-generated): `urirun-webcam start --port 8780 --action receipt --https`. The phone
+  opens `https://<lan-ip>:8780/`, accepts the one-time certificate warning, then scans.
+
+## 10. Receipt → structured JSON (items, total, NIP)
+
+Goal: turn a photographed paragon into data for the invoice / KSeF flow, not just text.
+
+URI step (see `camera-receipt-parse.flow.yaml`):
+
+`camera://host/receipt/query/parse` with `target="receipt"`, `deskew=true` — captures (or
+takes `image`/`bytes_b64`/`text`), crops to the sheet, deskews, OCRs, and returns:
+
+```json
+{
+  "items": [{"name": "Chleb razowy", "price": 4.99}, ...],
+  "itemCount": 3, "total": 38.39, "totalSource": "total-line",
+  "itemsSum": 38.39, "currency": "PLN", "date": "2026-06-23", "nip": "1234563218"
+}
+```
+
+Pass `text` to parse an OCR string you already have. `total` falls back to the largest amount
+when no SUMA/RAZEM/TOTAL line is found (`totalSource: "max-item"`). Feed `total`/`nip`/`date`
+straight into `invoice://` or the KSeF connector.
 

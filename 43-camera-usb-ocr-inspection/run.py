@@ -29,20 +29,30 @@ def _value(res: dict) -> dict:
 
 
 def _synthetic_receipt(path: str) -> None:
-    """Draw a tilted bright receipt on a dark desk with a QR code — a stand-in for a photo."""
-    from PIL import Image, ImageDraw
-    img = Image.new("RGB", (640, 480), (60, 70, 65))
+    """Draw a bright, readable receipt on a dark desk with a QR code — a stand-in for a photo.
+    Uses a real TTF font when available so the demo's OCR actually reads the numbers."""
+    from PIL import Image, ImageDraw, ImageFont
+    img = Image.new("RGB", (760, 560), (55, 62, 58))
     d = ImageDraw.Draw(img)
-    d.polygon([(230, 70), (430, 110), (400, 420), (210, 380)], fill=(248, 248, 248))
-    d.text((250, 130), "SKLEP IFURI", fill=(15, 15, 15))
-    d.text((250, 170), "PARAGON FISKALNY", fill=(15, 15, 15))
-    for i, y in enumerate(range(210, 330, 26)):
-        d.text((250, y), f"TOWAR {i + 1} .... {i * 7 + 3},99", fill=(15, 15, 15))
-    d.text((250, 350), "SUMA PLN 123,45", fill=(15, 15, 15))
+    d.rectangle([150, 40, 600, 520], fill=(252, 252, 250))      # upright bright sheet
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
+        big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
+    except OSError:
+        font = big = ImageFont.load_default()
+    d.text((185, 60), "SKLEP IFURI", font=big, fill=(10, 10, 10))
+    d.text((185, 100), "NIP 778-14-22-455", font=font, fill=(10, 10, 10))
+    d.text((185, 132), "2026-06-23", font=font, fill=(10, 10, 10))
+    lines = [("Chleb razowy", "4,99"), ("Mleko 2%", "3,50"), ("Kawa ziarnista", "29,90")]
+    for i, (name, price) in enumerate(lines):
+        y = 180 + i * 36
+        d.text((185, y), name, font=font, fill=(10, 10, 10))
+        d.text((460, y), price, font=font, fill=(10, 10, 10))
+    d.text((185, 320), "SUMA PLN 38,39", font=big, fill=(10, 10, 10))
     try:
         import qrcode
-        qr = qrcode.make("https://ifuri.com/receipt/INV-2026-0042").convert("RGB").resize((90, 90))
-        img.paste(qr, (470, 60))
+        qr = qrcode.make("https://ifuri.com/receipt/INV-2026-0042").convert("RGB").resize((110, 110))
+        img.paste(qr, (185, 380))
     except Exception:  # noqa: BLE001 - QR is a bonus
         pass
     img.save(path)
@@ -97,6 +107,21 @@ def main() -> int:
     summary["steps"]["barcodes"] = {"backend": bc.get("barcodeBackend"),
                                     "codes": [c.get("data") for c in bc.get("codes", [])]}
 
+    # 4b. parse the receipt and bridge it into an invoice draft (net/VAT/gross) for KSeF
+    parsed = _value(cam.receipt_parse(image=photo, output_dir=out_dir, lang="pol+eng"))
+    summary["steps"]["receiptParse"] = {"total": parsed.get("total"),
+                                        "items": parsed.get("itemCount"), "nip": parsed.get("nip")}
+    try:
+        import urirun_connector_invoice.core as inv
+        rj = json.dumps({k: parsed.get(k) for k in ("items", "total", "currency", "date", "nip")})
+        draft = _value(inv.receipt_draft(receipt_json=rj, vat_rate=23)).get("draft", {})
+        summary["steps"]["invoiceDraft"] = {
+            "ksefReady": draft.get("ksefReady"), "net": draft.get("net"),
+            "vat": draft.get("vat"), "gross": draft.get("gross"), "currency": draft.get("currency"),
+        }
+    except Exception as exc:  # noqa: BLE001
+        summary["steps"]["invoiceDraft"] = {"error": str(exc)}
+
     # 5. optionally host the LAN mobile service
     if args.serve:
         try:
@@ -121,6 +146,11 @@ def main() -> int:
     print(f"OCR ({r['ocrChars']} chars): {r['ocrPreview'] or '(no text read)'}")
     print(f"description   : {r['description']}")
     print(f"barcodes      : backend={s['barcodes']['backend']} codes={s['barcodes']['codes'] or '(none)'}")
+    rp, idr = s["receiptParse"], s["invoiceDraft"]
+    print(f"receipt parse : total={rp['total']} items={rp['items']} nip={rp['nip']}")
+    if "error" not in idr:
+        print(f"invoice draft : net={idr['net']} vat={idr['vat']} gross={idr['gross']} {idr['currency']} "
+              f"ksefReady={idr['ksefReady']}")
     if "webcam" in s:
         w = s["webcam"]
         print(f"mobile service: {'open ' + w['openUrl'] if w.get('ok') else 'failed: ' + str(w.get('error'))}")
