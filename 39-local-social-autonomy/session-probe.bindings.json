@@ -1,0 +1,30 @@
+{
+  "version": "urirun.bindings.v2",
+  "bindings": {
+    "browser://local/linkedin/session/query/find": {
+      "kind": "query",
+      "adapter": "local-function",
+      "ref": "session_probe:find_linkedin_session",
+      "python": {
+        "type": "python",
+        "module": "session_probe",
+        "export": "find_linkedin_session"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "env": {"type": "string", "default": ""},
+          "endpoints": {"type": "string", "default": "", "description": "CSV: chrome=http://127.0.0.1:9222,brave=http://127.0.0.1:9223"},
+          "debug_ports": {"type": "string", "default": "", "description": "CSV fallback: 9222,9223"},
+          "cookie_names": {"type": "string", "default": "li_at"}
+        }
+      },
+      "policy": {"allowExecute": false},
+      "meta": {
+        "label": "Find an existing browser with a LinkedIn session",
+        "description": "Read-only CDP probe; does not launch, navigate, type, click, or expose cookie values."
+      }
+    }
+  }
+}

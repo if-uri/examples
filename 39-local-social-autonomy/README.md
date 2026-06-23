@@ -90,6 +90,8 @@ Relevant `.env` keys:
 
 ```dotenv
 LI_DEBUG_PORT=9222
+LI_DEBUG_PORTS=9222,9223,9224
+LI_CDP_ENDPOINTS=chrome=http://127.0.0.1:9222,brave=http://127.0.0.1:9223,chromium=http://127.0.0.1:9224
 LI_PROFILE_PATH=/in/tom-developer/recent-activity/
 LI_HASHTAG=programming
 LI_SCROLL_STEPS=4
@@ -112,6 +114,41 @@ Expected result:
   "out": ".state/captures.md"
 }
 ```
+
+## Find the Existing LinkedIn Session via URI
+
+Before scouting, ask urirun which already-running browser/profile has the
+LinkedIn session. This is read-only and does not launch a browser.
+
+Start candidate browsers with separate CDP ports:
+
+```bash
+google-chrome --remote-debugging-port=9222
+brave-browser --remote-debugging-port=9223
+chromium --remote-debugging-port=9224
+```
+
+Set endpoints in `.env`:
+
+```dotenv
+LI_CDP_ENDPOINTS=chrome=http://127.0.0.1:9222,brave=http://127.0.0.1:9223,chromium=http://127.0.0.1:9224
+```
+
+Run the URI query:
+
+```bash
+./run_session_probe.sh
+```
+
+The script compiles and runs:
+
+```text
+browser://local/linkedin/session/query/find
+```
+
+The result reports the browser label, CDP endpoint, browser version, LinkedIn
+tabs, and whether the `li_at` session cookie exists. Cookie values are never
+printed.
 
 ## Natural Language Via urirun
 
@@ -170,12 +207,16 @@ The credentials are the values in `.env`.
 - `mock_linkedin.py` — controlled LinkedIn-like server with `/login`, `/feed`, `/post`, `/api/posts`.
 - `autonomous_browser.py` — launches Chrome, reads domain/host settings from `.env`, logs in, publishes, verifies.
 - `scout.py` — read-only scout that attaches to your logged-in Chrome (CDP) and captures interesting posts to `.state/captures.md`.
+- `session_probe.py` — read-only URI handler that finds which existing CDP browser has a LinkedIn session.
 - `nl_autonomy.py` — NL planner + URI handler for `urirun agent run`.
+- `session-probe.bindings.json` — static snapshot for `browser://local/linkedin/session/query/find`.
 - `bindings.json` — default snapshot; `run_prompt.sh` renders `.state/local-social.bindings.json` from `.env`.
 - `run_prompt.sh` — one-command prompt runner around env-resolved binding generation, `urirun compile`, and `urirun agent run`.
+- `run_session_probe.sh` — compiles and runs the LinkedIn session probe URI.
 - `.env.example` — sample development credentials, post text, domains, hosts, ports, and mapping policy.
 - `test_local_social.py` — offline tests for the server, `.env` loading, and mapped-host scope.
 - `test_scout.py` — offline tests for the scout's dedupe, markdown rendering, and `.env` config parsing.
+- `test_session_probe.py` — offline tests for CDP endpoint parsing and session-cookie detection.
 
 ## Boundary
 
