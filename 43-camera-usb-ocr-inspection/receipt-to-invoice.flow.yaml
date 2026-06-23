@@ -38,3 +38,14 @@ steps:
     runs_on: node
     depends_on:
       - invoice_draft
+
+  # 4. validate the FA(2) XML. With KSEF_FA2_XSD set (official schema from crd.gov.pl) this
+  #    is a full XSD check; otherwise structural + arithmetic. Gate real submission on valid=true.
+  - id: ksef_validate
+    uri: invoice://host/ksef/query/validate
+    payload:
+      path: "~/.urirun/camera-scans/receipt-invoice/faktura.xml"
+      xsd_path: "${env:KSEF_FA2_XSD}"
+    runs_on: node
+    depends_on:
+      - ksef_xml

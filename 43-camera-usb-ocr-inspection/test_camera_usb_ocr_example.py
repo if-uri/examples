@@ -48,6 +48,7 @@ def test_flows_reference_expected_uri_surface():
     assert "camera://host/receipt/query/parse" in bridge
     assert "invoice://host/receipt/query/draft" in bridge
     assert "invoice://host/ksef/query/build" in bridge
+    assert "invoice://host/ksef/query/validate" in bridge
 
 
 def test_no_flow_references_missing_log_connector():

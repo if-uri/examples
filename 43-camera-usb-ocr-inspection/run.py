@@ -126,6 +126,11 @@ def main() -> int:
         summary["steps"]["ksefXml"] = {"ok": ksef.get("ok"), "variant": ksef.get("variant"),
                                        "path": ksef.get("path"),
                                        "reparsedGross": (ksef.get("parsed") or {}).get("gross")}
+        # validate the FA(2) XML (full XSD when KSEF_FA2_XSD is set, else structural)
+        val = _value(inv.ksef_validate(xml=ksef.get("xml", "")))
+        summary["steps"]["ksefValidate"] = {"checkedWith": val.get("checkedWith"),
+                                            "valid": val.get("valid"),
+                                            "errors": val.get("errors", [])[:3]}
     except Exception as exc:  # noqa: BLE001
         summary["steps"]["invoiceDraft"] = {"error": str(exc)}
 
@@ -161,6 +166,10 @@ def main() -> int:
     if "ksefXml" in s and s["ksefXml"].get("ok"):
         kx = s["ksefXml"]
         print(f"ksef FA({kx['variant']})  : {kx['path']}  (re-parsed gross={kx['reparsedGross']})")
+    if "ksefValidate" in s:
+        kv = s["ksefValidate"]
+        print(f"ksef validate : {kv['checkedWith']} → valid={kv['valid']}"
+              + (f"  errors={kv['errors']}" if kv.get("errors") else ""))
     if "webcam" in s:
         w = s["webcam"]
         print(f"mobile service: {'open ' + w['openUrl'] if w.get('ok') else 'failed: ' + str(w.get('error'))}")
