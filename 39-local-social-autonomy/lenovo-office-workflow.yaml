@@ -1,0 +1,39 @@
+version: urirun.flow.v1
+source:
+  nl: "Uruchom komunikator Teams, edytor OnlyOffice, przeglądarkę Chrome na Google, a na końcu wykonaj zrzut ekranu w celu weryfikacji stanowiska pracy."
+  generator:
+    by: antigravity
+task:
+  id: lenovo-office-workflow
+  title: "Zautomatyzowane przygotowanie stanowiska pracy biurowej na node laptop (.201)"
+steps:
+  - id: launch_teams
+    uri: app://laptop/desktop/command/launch
+    payload:
+      app: "com.github.IsmaelMartinez.teams_for_linux"
+      settle: 5
+    depends_on: []
+  - id: launch_onlyoffice
+    uri: app://laptop/desktop/command/launch
+    payload:
+      app: "org.onlyoffice.desktopeditors"
+      settle: 5
+    depends_on: [launch_teams]
+  - id: launch_chrome
+    uri: browser://laptop/cdp/session/command/launch
+    payload:
+      url: "https://www.google.com"
+      headless: false
+    depends_on: [launch_onlyoffice]
+  - id: extract_invoices
+    uri: email://laptop/local/thunderbird/query/extract_invoices
+    payload:
+      start_date: "2026-03-01"
+      end_date: "2026-06-01"
+      downloads_dir: "~/Downloads"
+      profile_dir: "~/.var/app/org.mozilla.Thunderbird/.thunderbird/ax819b7g.default-release"
+    depends_on: []
+  - id: screen_audit
+    uri: screen://laptop/portal/query/capture
+    payload: {}
+    depends_on: [launch_chrome]
