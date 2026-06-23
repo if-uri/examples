@@ -24,6 +24,25 @@ sys.path.insert(0, str(HERE.parents[1] / "urirun" / "adapters" / "python"))
 from urirun.node import mesh
 from urirun.node.client import NodeClient
 
+
+def _load_env(path: Path) -> None:
+    """Tiny KEY=VALUE loader for example .env files; existing env wins."""
+    if not path.exists():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_env(HERE.parent / ".env")
+_load_env(HERE / ".env")
+
 NODE = os.environ.get("NODE_URL", "http://192.168.188.201:8766")
 NODE_NAME = os.environ.get("NODE", "laptop")
 MODEL = os.environ.get("LLM_MODEL") or os.environ.get("URIRUN_LLM_MODEL")

@@ -74,6 +74,39 @@
         "label": "Check for active LinkedIn browser session",
         "description": "Probes debugging ports to find a browser tab containing a logged-in LinkedIn session."
       }
+    },
+    "social://linkedin.com/scout/command/capture": {
+      "kind": "command",
+      "adapter": "local-function",
+      "ref": "nl_autonomy:scout_capture",
+      "python": {
+        "type": "python",
+        "module": "nl_autonomy",
+        "export": "scout_capture"
+      },
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "default": 1,
+            "description": "Index of the post to capture (1-based)."
+          },
+          "env": {
+            "type": "string",
+            "default": "/home/tom/github/if-uri/examples/39-local-social-autonomy/.env",
+            "description": "Path to .env file."
+          }
+        }
+      },
+      "policy": {
+        "allowExecute": true
+      },
+      "meta": {
+        "label": "Capture LinkedIn post by index",
+        "description": "Attaches to the active browser session, extracts the feed, and appends the post at the given index to the captures file."
+      }
     }
   }
 }

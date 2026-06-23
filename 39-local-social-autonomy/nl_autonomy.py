@@ -12,6 +12,7 @@ import argparse
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +32,7 @@ def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> d
     route = autonomous_browser.route_uri(env_path)
     parsed = urllib.parse.urlparse(route)
     route_session = f"social://{parsed.netloc}/session/query/active"
+    route_capture = f"social://{parsed.netloc}/scout/command/capture"
     return {
         "version": "urirun.bindings.v2",
         "bindings": {
@@ -92,6 +94,37 @@ def binding_document(env_path: str | Path = autonomous_browser.DEFAULT_ENV) -> d
                     "label": "Check for active LinkedIn browser session",
                     "description": "Probes debugging ports to find a browser tab containing a logged-in LinkedIn session."
                 }
+            },
+            route_capture: {
+                "kind": "command",
+                "adapter": "local-function",
+                "ref": "nl_autonomy:scout_capture",
+                "python": {
+                    "type": "python",
+                    "module": "nl_autonomy",
+                    "export": "scout_capture",
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "index": {
+                            "type": "integer",
+                            "default": 1,
+                            "description": "Index of the post to capture (1-based)."
+                        },
+                        "env": {
+                            "type": "string",
+                            "default": str(env_path),
+                            "description": "Path to .env file."
+                        }
+                    },
+                },
+                "policy": {"allowExecute": True},
+                "meta": {
+                    "label": "Capture LinkedIn post by index",
+                    "description": "Attaches to the active browser session, extracts the feed, and appends the post at the given index to the captures file."
+                }
             }
         },
     }
@@ -127,10 +160,18 @@ def extract_post(prompt: str, env_path: str | Path = autonomous_browser.DEFAULT_
     return env.get("REAL_LINKEDIN_POST") or env.get("LINKEDIN_POST") or env.get("FAKE_LINKEDIN_POST", "Autonomiczna publikacja testowa na portalu LinkedIn.")
 
 
+def _nl_key(text: str) -> str:
+    """Normalize Polish diacritics/typos enough for the tiny keyword planner."""
+    plain = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    return " ".join(plain.lower().split())
+
+
 def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Planner contract used by `urirun agent run`: (goal, action_space) -> steps."""
-    goal_lower = goal.lower()
-    if any(keyword in goal_lower for keyword in ("session", "sejsja", "przegladark", "check", "sprawdz", "query")):
+    goal_lower = _nl_key(goal)
+    if any(keyword in goal_lower for keyword in (
+        "session", "sesja", "sejsja", "zalogowan", "przegladark", "check", "sprawdz", "query"
+    )):
         route = next(
             (item["uri"] for item in action_space
              if str(item.get("uri", "")).startswith("social://")
@@ -143,6 +184,27 @@ def planner(goal: str, action_space: list[dict[str, Any]]) -> list[dict[str, Any
                 "payload": {},
                 "why": "NL prompt asks to check the active LinkedIn session or browser",
             }]
+
+    if any(keyword in goal_lower for keyword in ("scout", "capture", "zapisz", "feed")):
+        route = next(
+            (item["uri"] for item in action_space
+             if str(item.get("uri", "")).startswith("social://")
+             and str(item.get("uri", "")).endswith("/scout/command/capture")),
+            None,
+        )
+        if route:
+            count = 10
+            match = re.search(r"(\d+)", goal_lower)
+            if match:
+                count = int(match.group(1))
+            steps = []
+            for i in range(count):
+                steps.append({
+                    "uri": route,
+                    "payload": {"index": i + 1},
+                    "why": f"Krokowo zapisujemy post nr {i + 1} z LinkedIn feed",
+                })
+            return steps
 
     default_route = autonomous_browser.route_uri()
     route = next(
@@ -245,6 +307,59 @@ def check_active_session(
         "checked_ports": ports,
         "details": checked
     }
+
+
+def scout_capture(index: int = 1, env: str = "") -> dict[str, Any]:
+    """Capture a single post from the active LinkedIn feed browser without logging in."""
+    import scout
+    import time
+    env_path = Path(env) if env else scout.DEFAULT_ENV
+    config = scout.scout_config(env_path)
+    cdp = scout.AttachCDP(config.base)
+    cdp.connect(prefer_url_contains="linkedin.com")
+    try:
+        # Check if we are on feed, if not navigate
+        href = cdp.eval("location.href") or ""
+        if "linkedin.com/feed" not in href:
+            cdp.command("Page.navigate", {"url": "https://www.linkedin.com/feed/"})
+            time.sleep(3.0)
+
+        # Scroll down slightly to trigger loading more posts or ensure we are positioned
+        cdp.scroll_down(config.scroll_delay)
+
+        posts = scout.extract_posts(cdp)
+        if not posts or len(posts) < index:
+            # Scroll more to find it
+            for _ in range(3):
+                cdp.scroll_down(config.scroll_delay)
+                posts = scout.extract_posts(cdp)
+                if len(posts) >= index:
+                    break
+
+        if not posts:
+            return {"ok": False, "error": "No posts found on page"}
+
+        # Target the post at index - 1 (clamped to available posts)
+        target_idx = min(index - 1, len(posts) - 1)
+        post = posts[target_idx]
+
+        # Format and write to captures
+        md = scout.to_markdown([post], {"feed": href})
+        out_path = scout.CAPTURES
+        scout.write_captures(out_path, md)
+
+        return {
+            "ok": True,
+            "index": index,
+            "captured_post": {
+                "author": post.get("author"),
+                "text": (post.get("text") or "")[:100] + "...",
+                "url": post.get("url")
+            },
+            "out": str(out_path)
+        }
+    finally:
+        cdp.close()
 
 
 def main(argv: list[str] | None = None) -> int:

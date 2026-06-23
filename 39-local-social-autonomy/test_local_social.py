@@ -78,7 +78,8 @@ def test_binding_document_uses_env_domain_and_defaults(tmp_path):
     doc = nl_autonomy.binding_document(env)
     route = "social://linkjedin.example/post/command/publish"
     route_session = "social://linkjedin.example/session/query/active"
-    assert set(doc["bindings"]) == {route, route_session}
+    route_capture = "social://linkjedin.example/scout/command/capture"
+    assert set(doc["bindings"]) == {route, route_session, route_capture}
     props = doc["bindings"][route]["inputSchema"]["properties"]
     assert "hostname" not in props
     assert "host" not in props
@@ -199,3 +200,31 @@ def test_nl_planner_returns_session_check_step():
         "payload": {},
         "why": "NL prompt asks to check the active LinkedIn session or browser",
     }]
+
+
+def test_nl_planner_handles_polish_session_prompt_with_diacritics():
+    steps = nl_autonomy.planner(
+        "sprawdź czy istnieje aktywna zalogowana sesja LinkedIn w przeglądarce",
+        [
+            {"uri": "social://linkedin.com/post/command/publish"},
+            {"uri": "social://linkedin.com/session/query/active"},
+        ],
+    )
+    assert steps == [{
+        "uri": "social://linkedin.com/session/query/active",
+        "payload": {},
+        "why": "NL prompt asks to check the active LinkedIn session or browser",
+    }]
+
+
+def test_nl_planner_returns_capture_steps():
+    steps = nl_autonomy.planner(
+        "zapisz 10 kolejnych postow z feedu",
+        [
+            {"uri": "social://linkedin.com/scout/command/capture"},
+        ],
+    )
+    assert len(steps) == 10
+    for i, step in enumerate(steps):
+        assert step["uri"] == "social://linkedin.com/scout/command/capture"
+        assert step["payload"] == {"index": i + 1}

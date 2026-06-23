@@ -34,7 +34,7 @@ REFUSED = ("/command/", "publish", "form/command/submit", "message", "/send", "d
 ## Example commands — the autonomous loop
 
 ```bash
-# 0) LLM config from .env (no manual `set -a; . .env`):
+# 0) LLM config from ../.env or ./.env (no manual `set -a; . .env`):
 #    LLM_MODEL=openrouter/google/gemini-3.1-flash-image-preview   (a VISION model)
 #    OPENROUTER_API_KEY=sk-or-...
 
@@ -52,6 +52,94 @@ URIRUN_DOTENV=1 urirun host ask laptop "is LinkedIn open and logged in" --execut
 NODE_URL=http://192.168.188.201:8766 NODE=laptop \
   python3 ../38-self-managing/run_live.py "capture the screen and tell me what app is open"
 ```
+
+## Live node smoke test
+
+Current `laptop` state can be checked without guessing:
+
+```bash
+curl -fsS --max-time 6 http://192.168.188.201:8766/health
+curl -fsS --max-time 6 http://192.168.188.201:8766/routes
+```
+
+On 2026-06-23 the node was up as `laptop`, running urirun `0.4.56`. Before
+`observe.py` provisioned screen capture it served five CDP routes:
+
+```text
+browser://laptop/cdp/session/command/launch
+browser://laptop/cdp/page/command/navigate
+browser://laptop/cdp/page/query/eval
+browser://laptop/cdp/page/query/screenshot
+browser://laptop/cdp/page/query/tabs
+```
+
+After `observe.py` ran, it merged the portal-capture route too:
+
+```text
+screen://laptop/portal/query/capture
+```
+
+That surface is enough to test real browser control over URI:
+
+```bash
+cd /home/tom/github/if-uri/examples
+NODE_URL=http://192.168.188.201:8766 NODE=laptop \
+  /home/tom/github/if-uri/urirun/venv/bin/python3 \
+  36-remote-browser-cdp/drive_cdp.py https://www.linkedin.com/feed/
+```
+
+Observed result on `laptop`:
+
+```text
+6/6 CDP browser steps ok on laptop
+title: LinkedIn Login, Sign in | LinkedIn
+links: 24
+screenshot: 27879-byte PNG
+tabs: LinkedIn Login, Sign in | LinkedIn
+```
+
+This confirms that urirun controls the node browser through `browser://.../cdp/*`.
+It also shows that this route launches/uses the CDP profile, not necessarily the
+physical browser profile where a human is already logged in.
+
+The real monitor capture path was also tested:
+
+```bash
+cd /home/tom/github/if-uri/examples/39-browser-observe
+NODE_URL=http://192.168.188.201:8766 NODE=laptop \
+  /home/tom/github/if-uri/urirun/venv/bin/python3 observe.py
+```
+
+Observed result without a configured vision model in the shell:
+
+```json
+{
+  "ok": true,
+  "captured_bytes": 538550,
+  "note": "set LLM_MODEL (vision) to analyse the image"
+}
+```
+
+Observed result with `LLM_MODEL`/`OPENROUTER_API_KEY` loaded from `../.env`:
+
+```text
+captured_bytes: 538328
+observation: terminal application open on a Linux desktop; urirun startup output
+             visible, including port 8766 and security warnings.
+```
+
+For full monitor-based autonomy (`real desktop screenshot -> OCR/vision -> decision`)
+the node needs one screen/KVM route such as:
+
+```text
+screen://laptop/portal/query/capture
+browser://laptop/kvm/screen/query/inspect
+```
+
+Without one of those, `observe.py` self-provisions the `screen://` capture handler
+when `/deploy` is enabled and the node desktop has `python3-dbus` and
+`python3-gobject`. The CDP smoke test above remains the fallback proof that URI
+browser control itself works.
 
 ## What it will and won't do
 
