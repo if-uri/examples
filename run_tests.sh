@@ -85,6 +85,8 @@ run "13 python connector defaults" "cd 13-simple_defaults && $PY python_connecto
 if [ "$HAVE_NODE" = 1 ]; then
   run "13 js connector defaults"  "cd 13-simple_defaults && node js/example.mjs > /tmp/defaults_js_$$.json && $PY -m urirun.v2 validate /tmp/defaults_js_$$.json"
 else skip "13 js connector defaults" "no node"; fi
+echo "== 46-connect-anything (adopt:// inspect/plan/scan) =="
+run "46 connect-anything pytest"  "cd 46-connect-anything && $PY -m pytest test_connect_anything.py -q"
 
 rm -f /tmp/ex_$$.log
 echo
