@@ -1,0 +1,19 @@
+task:
+  id: inspect-device-node
+  title: Inspect a configured multi-interface device node
+steps:
+  - id: panel-status
+    uri: device://rpi-camera/panel/query/status
+    payload: {}
+  - id: stream-route
+    uri: media://rpi-camera/stream/query/stream
+    payload: {}
+  - id: files-route
+    uri: fs://rpi-camera/share/query/list
+    payload:
+      path: /
+  - id: shell-route
+    uri: ssh://rpi-camera/ssh/command/run
+    payload:
+      command: uptime
+

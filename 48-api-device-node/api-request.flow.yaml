@@ -1,0 +1,21 @@
+task:
+  id: call-configured-api-node
+  title: Call a configured API node through URI
+steps:
+  - id: status
+    uri: configured://host/node-api/query/status
+    payload:
+      node: crm-api
+      apiId: main
+  - id: request
+    uri: configured://host/node-api/command/request
+    payload:
+      node: crm-api
+      apiId: main
+      method: GET
+      path: /accounts
+      query:
+        limit: 10
+    depends_on:
+      - status
+
