@@ -166,3 +166,13 @@ steps:
 `adopt://` discovers and plans. It should not run unknown software. After
 inspection, generate or select a concrete connector/service, attach a realization
 contract, then execute through a domain URI route.
+
+## Verify
+
+```bash
+# live demo against real local repos (tellmesh / wronai / semcod):
+bash run_examples.sh
+
+# self-contained, no external checkouts (CI-safe) — inspect + plan + scan on tmp fixtures:
+python -m pytest examples/46-connect-anything/test_connect_anything.py -q
+```
