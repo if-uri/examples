@@ -1,0 +1,123 @@
+{
+  "version": "urirun.bindings.v2",
+  "comment": "Bindings for Nexus 7 Android device via ADB. Set ADB_SERIAL=TABLET_IP:5555 before use.",
+  "bindings": {
+    "adb://nexus7/devices/query/list": {
+      "uri": "adb://nexus7/devices/query/list",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "devices_list"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "List connected ADB devices" },
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false }
+    },
+    "adb://nexus7/screen/query/capture": {
+      "uri": "adb://nexus7/screen/query/capture",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "screen_capture"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "Capture Nexus 7 screen" },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "output": { "type": "string", "default": "nexus7-screen.png", "title": "Output PNG path" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adb://nexus7/screen/query/info": {
+      "uri": "adb://nexus7/screen/query/info",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "screen_info"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "Get Nexus 7 screen resolution" },
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false }
+    },
+    "adb://nexus7/input/command/tap": {
+      "uri": "adb://nexus7/input/command/tap",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "input_tap"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "Tap Nexus 7 screen" },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": { "type": "integer", "default": 0, "title": "X coordinate" },
+          "y": { "type": "integer", "default": 0, "title": "Y coordinate" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adb://nexus7/input/command/key": {
+      "uri": "adb://nexus7/input/command/key",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "input_key"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "Send keyevent to Nexus 7" },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keycode": { "type": "string", "default": "HOME",
+                       "title": "Android keycode (HOME, BACK, ENTER, POWER, etc.)" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adb://nexus7/fs/query/list": {
+      "uri": "adb://nexus7/fs/query/list",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "fs_list"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "List files on Nexus 7" },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "default": "/sdcard/", "title": "Directory path" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adb://nexus7/sys/query/info": {
+      "uri": "adb://nexus7/sys/query/info",
+      "kind": "local-function",
+      "adapter": "local-function-subprocess",
+      "python": {
+        "type": "python",
+        "module": "urirun_connector_adb.core",
+        "export": "sys_info"
+      },
+      "policy": { "allowExecute": true },
+      "meta": { "connector": "adb", "label": "Get Nexus 7 device info" },
+      "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false }
+    }
+  }
+}
