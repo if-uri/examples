@@ -1,9 +1,12 @@
 name: otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro
 description: "otwórz iana.org i zrób zrzut ekranu strony"
 steps:
-  - uri: browser://laptop/main/page/command/open
-    payload: {"url": "https://iana.org"}
-    why: "Otwieram stronę iana.org w przeglądarce."
-  - uri: browser://laptop/main/page/command/screenshot
-    payload: {"url": "https://iana.org"}
-    why: "Robię zrzut ekranu otwartej strony iana.org."
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "google-chrome", args: ["https://iana.org"]}
+    why: "Launch Chrome with iana.org"
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "IANA", timeout: 10}
+    why: "Wait for page to load"
+  - uri: kvm://{host}/screen/query/capture
+    payload: {}
+    why: "Take a screenshot of the loaded page"

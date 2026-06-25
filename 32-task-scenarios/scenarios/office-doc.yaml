@@ -1,14 +1,21 @@
 name: office-doc
-description: Open a document, render text into it, export to PDF (urioffice).
+description: Open a document, type text into it, save, and verify.
 steps:
-  - uri: urioffice://{host}/query/status
-    why: check the office backend (mock / libreoffice)
-  - uri: urioffice://{host}/document/command/open
-    payload: {path: "/tmp/raport.txt", title: "Raport 07/2026"}
-    why: open (or create) the document
-  - uri: urioffice://{host}/writer/command/render
-    payload: {text: "Faktura 07/2026 — zatwierdzona", title: "raport", format: "pdf"}
-    why: render text into the document
-  - uri: urioffice://{host}/document/command/export-pdf
-    payload: {path: "/tmp/raport.pdf"}
-    why: export to PDF
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "gnome-text-editor", args: ["/tmp/raport.txt"]}
+    why: launch the text editor with a new report file
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "raport.txt", timeout: 8}
+    why: wait for the editor window to open
+  - uri: kvm://{host}/input/command/type
+    payload: {text: "Faktura 07/2026 -- zatwierdzona"}
+    why: type the invoice text
+  - uri: kvm://{host}/input/command/key
+    payload: {keys: "ctrl+s"}
+    why: save the document
+  - uri: kvm://{host}/ui/query/verify
+    payload: {expect: "Faktura 07/2026"}
+    why: verify the text is present in the editor
+  - uri: kvm://{host}/input/command/key
+    payload: {keys: "ctrl+q"}
+    why: close the editor

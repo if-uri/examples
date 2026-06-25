@@ -1,6 +1,12 @@
 name: przeczytaj-tekst-ze-strony-https-example
 description: "przeczytaj tekst ze strony https://example.com"
 steps:
-  - uri: browser://chrome/page/query/text
-    payload: {"url": "https://example.com"}
-    why: "Używam tej akcji, aby pobrać tekst ze strony https://example.com, co jest bezpośrednią realizacją celu."
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "google-chrome", args: ["https://example.com"]}
+    why: "Otwieram stronę example.com w przeglądarce Chrome."
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "Example Domain", timeout: 10}
+    why: "Czekam, aż strona example.com się załaduje i tekst będzie widoczny."
+  - uri: kvm://{host}/ui/query/verify
+    payload: {expect: "More information..."}
+    why: "Weryfikuję obecność tekstu na stronie."

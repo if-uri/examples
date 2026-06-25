@@ -45,8 +45,9 @@ browser://{node}/desktop/page/command/open {"url"}               open a URL in t
 
 SYSTEM = (
     "You convert a natural-language desktop task into a STRICT JSON plan of URI steps for "
-    "the ifURI urirun mesh. Output ONLY JSON: {\"steps\":[{\"uri\":..., \"payload\":{...}, "
-    "\"why\":\"short\"}]}. Use the perceive->act->verify discipline: prefer ui/command/* "
+    "the ifURI urirun mesh. Output ONLY valid JSON: {\"steps\":[{\"uri\":..., \"payload\":{...}, "
+    "\"why\":\"short\"}]}. Every key and value MUST be a separate double-quoted string. "
+    "Use the perceive->act->verify discipline: prefer ui/command/* "
     "(which locate by accessible role/name, not coordinates), insert ui/query/wait before "
     "acting on something that must appear, and ui/query/verify to confirm a result. Target "
     "elements by their visible text or accessibility role (entry/push button/frame/section). "
@@ -59,6 +60,7 @@ SYSTEM = (
 
 def plan(task: str, node: str) -> dict:
     import litellm
+    import re
     model = os.getenv("URIRUN_LLM_MODEL") or os.getenv("LLM_MODEL")
     if not model:
         raise SystemExit("LLM_MODEL not set (examples/.env)")
@@ -76,8 +78,30 @@ def plan(task: str, node: str) -> dict:
         resp = litellm.completion(model=model, messages=msgs, temperature=0,
                                   response_format={"type": "json_object"})
     text = resp.choices[0].message.content
+    
+    # Clean up markdown code blocks
+    if "```" in text:
+        m = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.S)
+        if m:
+            text = m.group(1)
+            
     start, end = text.find("{"), text.rfind("}")
-    return json.loads(text[start:end + 1])
+    if start == -1 or end == -1:
+        raise ValueError(f"No JSON object found in response: {text!r}")
+        
+    cleaned = text[start:end + 1]
+    # Repair common LLM key-value quoting issues (e.g., "why: message" -> "why": "message")
+    cleaned = re.sub(r'"(why|uri|payload):\s*([^"]+)"', r'"\1": "\2"', cleaned)
+    # Remove trailing commas before closing braces/brackets
+    cleaned = re.sub(r",\s*([\]}])", r"\1", cleaned)
+    
+    try:
+        return json.loads(cleaned)
+    except Exception as exc:
+        sys.stderr.write(f"Failed to parse cleaned JSON:\n{cleaned}\nOriginal text was:\n{text}\n")
+        raise
+
+
 
 
 def run_uri(node_url: str, uri: str, payload: dict, identity: str, timeout: float = 40) -> dict:

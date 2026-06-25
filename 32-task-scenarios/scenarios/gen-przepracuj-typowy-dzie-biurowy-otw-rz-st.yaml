@@ -1,9 +1,15 @@
 name: przepracuj-typowy-dzie-biurowy-otw-rz-st
-description: "przepracuj typowy dzień biurowy: otwórz stronę logowania, sprawdź stronę informacyjną iana.org i zrób zrzut ekranu"
+description: "przepracuj typowy dzien biurowy otwórz stronę, napisz notatkę, wypisz procesy"
 steps:
-  - uri: browser://laptop/main/page/command/open
-    payload: {"url": "https://www.iana.org/"}
-    why: "Otwieram stronę główną IANA, aby sprawdzić informacje."
-  - uri: browser://laptop/main/page/command/screenshot
-    payload: {"url": "https://www.iana.org/"}
-    why: "Robię zrzut ekranu strony głównej IANA."
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "google-chrome", args: ["https://example.com"]}
+    why: "Otwieram stronę example.com w Chrome na początek dnia pracy."
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "Example Domain", timeout: 10}
+    why: "Czekam, aż strona się załaduje."
+  - uri: log://{host}/session/command/write
+    payload: {text: "Rozpoczęto dzień biurowy: strona załadowana."}
+    why: "Zapisuję notatkę o rozpoczęciu dnia pracy."
+  - uri: proc://{host}/process/query/list
+    payload: {limit: 5}
+    why: "Wypisuję listę procesów pod koniec cyklu."

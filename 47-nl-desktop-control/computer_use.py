@@ -148,6 +148,7 @@ GROUND_SYS = (
 
 def ground(png: bytes, goal: str, history: list) -> dict:
     import litellm
+    import re
     model = os.getenv("URIRUN_LLM_MODEL") or os.getenv("LLM_MODEL")
     data_url = "data:image/png;base64," + base64.b64encode(png).decode()
     litellm.suppress_debug_info = True
@@ -159,7 +160,29 @@ def ground(png: bytes, goal: str, history: list) -> dict:
                 {"type": "text", "text": f"GOAL: {goal}\nDONE SO FAR: {history[-4:]}"},
                 {"type": "image_url", "image_url": {"url": data_url}}]}])
     t = resp.choices[0].message.content
-    return json.loads(t[t.find("{"):t.rfind("}") + 1])
+    
+    # Clean up markdown code blocks
+    if "```" in t:
+        m = re.search(r"```(?:json)?\s*(.*?)\s*```", t, re.S)
+        if m:
+            t = m.group(1)
+            
+    start, end = t.find("{"), t.rfind("}")
+    if start == -1 or end == -1:
+        raise ValueError(f"No JSON object found in response: {t!r}")
+        
+    cleaned = t[start:end + 1]
+    # Repair common LLM key-value quoting issues (e.g., "why: message" -> "why": "message")
+    cleaned = re.sub(r'"(name|x|y|text|keys|intent):\s*([^"]+)"', r'"\1": "\2"', cleaned)
+    # Remove trailing commas before closing braces/brackets
+    cleaned = re.sub(r",\s*([\]}])", r"\1", cleaned)
+    
+    try:
+        return json.loads(cleaned)
+    except Exception as exc:
+        sys.stderr.write(f"Failed to parse cleaned JSON:\n{cleaned}\nOriginal text was:\n{t}\n")
+        raise
+
 
 
 def execute(act: dict, sw: int, sh: int, confirm: bool) -> bool:

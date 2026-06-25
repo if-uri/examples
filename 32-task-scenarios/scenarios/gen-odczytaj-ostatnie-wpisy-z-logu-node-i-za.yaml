@@ -1,9 +1,12 @@
 name: odczytaj-ostatnie-wpisy-z-logu-node-i-za
 description: "odczytaj ostatnie wpisy z logu node i zapisz podsumowanie"
 steps:
-  - uri: log://laptop/session/query/recent
+  - uri: log://{host}/session/query/recent
     payload: {"limit": 50}
     why: "Odczytuję ostatnie wpisy z logu sesji, aby znaleźć informacje o procesach node."
-  - uri: log://laptop/session/command/write
+  - uri: log://{host}/session/command/write
     payload: {"text": "Podsumowanie logów node: $ref:0.logs"}
     why: "Zapisuję podsumowanie odczytanych logów z powrotem do logu sesji."
+  - uri: log://{host}/session/query/recent
+    payload: {"limit": 5}
+    why: "Verify the summary was successfully written to the log"

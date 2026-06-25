@@ -1,21 +1,24 @@
 name: web-login
-description: Log into a website and capture the result (needs the office node — browser/him).
+description: Log into a website and capture the result (using KVM + Chrome).
 steps:
-  - uri: browser://{host}/page/command/open
-    payload: {url: "https://example.com/login"}
-    why: open the login page
-  - uri: him://{host}/keyboard/command/type-text
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "google-chrome", args: ["https://example.com/login"]}
+    why: open the login page in Chrome
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "Login", timeout: 10}
+    why: wait for the login page to load
+  - uri: kvm://{host}/input/command/type
     payload: {text: "jan@firma.pl"}
-    why: type the e-mail into the focused field
-  - uri: him://{host}/keyboard/command/key
-    payload: {key: "tab"}
+    why: type the email
+  - uri: kvm://{host}/input/command/key
+    payload: {keys: "tab"}
     why: move to the password field
-  - uri: him://{host}/keyboard/command/type-text
+  - uri: kvm://{host}/input/command/type
     payload: {text: "tajneHaslo"}
     why: type the password
-  - uri: browser://{host}/form/command/submit
-    payload: {form_id: "login", fields: {session_key: "jan@firma.pl", session_password: "tajneHaslo"}}
-    why: submit the login form
-  - uri: browser://{host}/page/command/screenshot
+  - uri: kvm://{host}/input/command/key
+    payload: {keys: "enter"}
+    why: submit the login
+  - uri: kvm://{host}/screen/query/capture
     payload: {}
     why: capture the page after login

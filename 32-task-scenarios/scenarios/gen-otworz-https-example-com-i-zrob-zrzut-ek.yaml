@@ -1,8 +1,12 @@
 name: otworz-https-example-com-i-zrob-zrzut-ek
 description: "otworz https://example.com i zrob zrzut ekranu"
 steps:
-  - uri: env://laptop/runtime/query/health
-    why: "check node health"
-  - uri: log://laptop/session/command/write
-    payload: {"text": "otworz https://example.com i zrob zrzut "}
-    why: "log a note"
+  - uri: app://{host}/desktop/command/launch
+    payload: {app: "google-chrome", args: ["https://example.com"]}
+    why: "Launch Chrome with example.com"
+  - uri: kvm://{host}/ui/query/wait
+    payload: {text: "Example Domain", timeout: 10}
+    why: "Wait for page to load"
+  - uri: kvm://{host}/screen/query/capture
+    payload: {}
+    why: "Take a screenshot of the loaded page"

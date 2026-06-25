@@ -1,17 +1,19 @@
 name: desktop-control
-description: Drive the desktop — screenshot, OCR-click a label, type, hotkey (kvm + him).
+description: Drive the desktop — screenshot, OCR-click a label, type, hotkey (kvm).
 steps:
-  - uri: kvm://{host}/monitor/query/list
-    why: enumerate monitors
-  - uri: kvm://{host}/monitor/{monitor}/query/screenshot
+  - uri: kvm://{host}/screen/query/capture
     payload: {}
     why: capture the primary monitor
-  - uri: kvm://{host}/task/command/click-text
-    payload: {text: "Plik"}
-    why: click the on-screen label "Plik" (OCR-located)
-  - uri: him://{host}/keyboard/command/type-text
-    payload: {text: "raport.txt"}
-    why: type a filename
-  - uri: him://{host}/keyboard/command/hotkey
-    payload: {keys: ["ctrl", "s"]}
-    why: save with Ctrl+S
+  - uri: kvm://{host}/ui/command/click-text
+    payload: {text: "Messaging"}
+    why: click the on-screen label "Messaging" (OCR-located)
+  - uri: kvm://{host}/input/command/type
+    payload: {text: "hello"}
+    why: type some text
+  - uri: kvm://{host}/input/command/key
+    payload: {keys: "ctrl+a"}
+    why: select all with Ctrl+A
+  - uri: kvm://{host}/ui/query/verify
+    payload: {expect: "hello"}
+    why: verify that the typed text "hello" is on the screen
+
