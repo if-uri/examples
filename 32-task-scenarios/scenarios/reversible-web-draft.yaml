@@ -1,0 +1,26 @@
+name: reversible-web-draft
+description: >
+  The full autonomy loop on a real flow: open a page over CDP, fill a draft, and verify the
+  GOAL STATE (not just that each step returned ok). On failure — including a green run that did
+  NOT reach the goal — auto-COMPENSATE: unwind the mutations LIFO over the inverses the
+  connector registered (navigate⟂navigate(prev), fill⟂fill(prev)). Demonstrates
+  preflight → execute(self-heal) → verify(goal) → compensate(saga rollback).
+rollbackOnFailure: true
+verification:
+  require_ok: true
+  goal:
+    uri: kvm://{host}/cdp/page/query/eval
+    payload: {expr: "location.href"}
+    path: value
+    contains: "/feed"          # the goal STATE: we must end up on the feed, not /login
+  scan_uri: kvm://{host}/env/query/profile   # connector scan -> {state}, for the rollback re-scan proof
+steps:
+  - uri: kvm://{host}/cdp/session/command/ensure
+    payload: {url: "https://www.linkedin.com/feed/"}
+    why: preflight — make the CDP surface available (idempotent, not a mutation)
+  - uri: kvm://{host}/cdp/page/command/navigate
+    payload: {url: "https://www.linkedin.com/feed/"}
+    why: mutation — connector returns inverse navigate(prev-url)
+  - uri: kvm://{host}/ui/command/fill
+    payload: {role: "textbox", value: "Draft via the reversible loop"}
+    why: mutation — connector returns inverse fill(prev-value)
