@@ -39,8 +39,7 @@ kvm://{node}/ui/query/verify   {"expect"}                        assert text is 
 kvm://{node}/input/command/type {"text"}                         type into the focused field
 kvm://{node}/input/command/key  {"keys": "ctrl+l"|"enter"|...}   a key / hotkey
 kvm://{node}/screen/query/capture {}                             screenshot (for observation)
-app://{node}/desktop/command/launch {"app": "gnome-terminal"|...} launch a desktop app
-browser://{node}/desktop/page/command/open {"url"}               open a URL in the browser
+app://{node}/desktop/command/launch {"app": "google-chrome"|"gnome-terminal"|..., "args"?: []} launch a desktop app or open a URL in Chrome (e.g. app: google-chrome, args: [url])
 """.strip()
 
 SYSTEM = (

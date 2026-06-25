@@ -58,7 +58,7 @@ def test_run_scenario_against_a_fake_node():
     report = rs.run_scenario(n, scenario)
     assert report["total"] == len(scenario["steps"])
     assert report["ok"] == report["total"]          # fake node accepts every step
-    assert calls[0][0] == "browser://lab/page/command/open"  # placeholder resolved, order kept
+    assert calls[0][0] == "app://lab/desktop/command/launch"  # placeholder resolved, order kept
 
 
 def test_nl_scenario_generation_and_markdown():

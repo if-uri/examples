@@ -5,5 +5,5 @@ steps:
     payload: {"limit": 5}
     why: "Pobieram listę 5 procesów, które zużywają najwięcej zasobów (są 'najcięższe')."
   - uri: log://{host}/session/command/write
-    payload: {"text": "$ref:0.output"}
+    payload: {"text": "Procesy: $ref:0.processes"}
     why: "Wypisuję pobraną listę procesów do logu sesji."
