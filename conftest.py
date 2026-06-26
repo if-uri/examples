@@ -1,16 +1,52 @@
-"""Root conftest: add every example directory to sys.path at startup.
+"""Root conftest for if-uri/examples.
 
-Ensures local helper modules (transport_lib, flow, etc.) are importable
-whether --import-mode=importlib or default prepend mode is active.
+importlib mode prevents same-basename test file collisions. Each example dir
+also needs its directory on sys.path so local helper modules (run, flow,
+transport_lib ...) are importable. Problem: sys.modules caches 'run' from
+example A and returns it to example B. Fix: evict example-local module entries
+before entering a new example directory during collection.
 """
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
 
-# Pre-add every first-level example directory so local imports work in all tests.
-for _d in sorted(_HERE.iterdir()):
-    if _d.is_dir() and not _d.name.startswith(".") and _d.name != "_site":
-        _s = str(_d)
-        if _s not in sys.path:
-            sys.path.insert(0, _s)
+
+def _example_key(p: Path) -> str:
+    try:
+        return p.relative_to(_HERE).parts[0]
+    except (ValueError, IndexError):
+        return ""
+
+
+_state: dict = {"cur_example": "", "modules_before": set(sys.modules)}
+
+
+def pytest_collect_file(parent, file_path: Path):
+    if file_path.suffix != ".py":
+        return None
+
+    dir_str = str(file_path.parent)
+    ex_key = _example_key(file_path)
+
+    if ex_key and ex_key != _state["cur_example"]:
+        # Leaving previous example: evict any module that was freshly imported
+        # from files inside _HERE (local helper modules, not installed packages).
+        new_mods = set(sys.modules) - _state["modules_before"]
+        for name in list(new_mods):
+            mod = sys.modules.get(name)
+            f = getattr(mod, "__file__", None) or ""
+            if f and str(_HERE) in f:
+                del sys.modules[name]
+        # Record stable baseline (installed packages, stdlib) for next eviction pass
+        _state["modules_before"] = set(sys.modules)
+        _state["cur_example"] = ex_key
+
+    # Put this example's dir at the FRONT so local imports resolve here first.
+    if dir_str in sys.path:
+        sys.path.remove(dir_str)
+    sys.path.insert(0, dir_str)
+
+    return None
