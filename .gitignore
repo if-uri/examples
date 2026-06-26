@@ -7,6 +7,8 @@ Thumbs.db
 __pycache__/
 .pytest_cache/
 .venv/
+.urirun
+.benchmarks
 node_modules/
 .run/
 dist/
