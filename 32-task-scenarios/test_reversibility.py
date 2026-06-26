@@ -98,7 +98,7 @@ def test_scenario_drives_full_loop_goal_fail_then_compensate(monkeypatch):
             "fill": {"result": {"value": {"ok": True, "inverse": {"uri": "kvm://laptop/ui/command/fill", "args": {"value": "OLD"}}}}},
         }}
     monkeypatch.setattr(F, "execute_flow", lambda *a, **k: execution)
-    monkeypatch.setattr(F, "normalize_flow", lambda d, uris: {"steps": d.get("steps", [])})
+    monkeypatch.setattr(F, "normalize_flow", lambda d, uris, **_: {"steps": d.get("steps", [])})
 
     inverse_calls = []
     def fake_call(uri, payload, registry, mode="execute"):
