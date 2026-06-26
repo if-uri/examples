@@ -317,7 +317,11 @@ def llm_messages(prompt: str, routes: list[dict], devices: list[dict]) -> list[d
         "You generate safe urirun URI workflows for a multi-device local network. "
         "Return strict JSON only. Use only allowedRoutes. Do not invent URI routes. "
         "Never use sudo, apt upgrade, arbitrary shell, KVM, OCR, RDP, STT, or terminal run unless it is explicitly present in allowedRoutes. "
-        "Prefer health, process list/find, safe shell which/uname/date, browser open, notes, and logs."
+        "Prefer health, process list/find, safe shell which/uname/date, browser open, notes, and logs.\n"
+        "CRITICAL INSTRUCTIONS FOR DECLARATIVE FLOW:\n"
+        "1. Break down the task into very detailed, atomic declarative steps.\n"
+        "2. Add validation steps (e.g., using verify/status routes) after actions to ensure correctness.\n"
+        "3. When using routes like 'cdp/page/query/ready' or 'cdp/page/command/navigate', ALWAYS explicitly set a high timeout (e.g. timeout: 30.0 or ready_timeout: 30.0) to avoid deadline exceeded errors on heavy pages."
     )
     user = {
         "userRequest": prompt,
