@@ -16,7 +16,12 @@ _HERE = Path(__file__).resolve().parent
 
 def _example_key(p: Path) -> str:
     try:
-        return p.relative_to(_HERE).parts[0]
+        parts = p.relative_to(_HERE).parts
+        # _site/* subdirs need a two-part key; otherwise all _site/ examples share one key
+        # and modules from _site/19-all-connectors contaminate _site/20-runtime-transport-matrix.
+        if parts[0] == "_site" and len(parts) > 1:
+            return f"_site/{parts[1]}"
+        return parts[0]
     except (ValueError, IndexError):
         return ""
 
