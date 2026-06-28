@@ -75,6 +75,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 47 | [`47-nl-desktop-control/`](47-nl-desktop-control/) | NL → `ui://` plan → execute (autonomous desktop control via `kvm://.../ui/*`) | scripts; needs node |
 | 48 | [`48-api-device-node/`](48-api-device-node/) | register external APIs and multi-interface devices as nodes | demo scripts |
 | 49 | [`49-linkedin-compose-cdp/`](49-linkedin-compose-cdp/) | compose a LinkedIn post over Chrome DevTools Protocol (`run.py`) | demo `run.py` |
+| 50 | [`50-contract-guarded-flow/`](50-contract-guarded-flow/) | reuse a connector in a flow, its **contract** guards every step (honest passes, drift caught); same `contracts.json` drives the JS/Go SDK guards | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
@@ -112,17 +113,24 @@ reported as skipped until its package exists.
 ## Run tests
 
 ```bash
+make connectors    # one-time: install urirun + every sibling connector editable
 make test          # fast smoke, or: ./run_tests.sh
 make test-all      # full host pytest suite
 make audit         # show smoke coverage gaps
 ```
+
+`make test-all` imports the sibling connector packages (e.g. `urirun_declarative`,
+`urirun_connector_invoice`, `urirun_connector_time_tools`), so run `make connectors`
+once first — or point `PYTHON=` at an already-provisioned venv such as `examples/venv`.
+Without them those example modules fail to import (collection errors), even though the
+examples themselves are fine.
 
 `make test` auto-detects a Python with `urirun` (prefers `../app/.venv`;
 override with `PYTHON=...`) and skips the Docker-only demos (08, 11 and the
 full 09 flow). It is a smoke runner, not a complete sweep of every pytest-based
 example; the built-in audit reports that distinction. Current smoke run:
 **21 passed, 0 failed, 4 skipped** (Docker-only demos skipped). Current full
-host pytest run: **270 passed, 2 skipped**.
+host pytest run: **271 passed, 2 skipped**.
 
 ## Related repositories
 

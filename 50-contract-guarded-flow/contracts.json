@@ -1,0 +1,39 @@
+{
+  "contracts": {
+    "entry/command/append": {
+      "version": "v1",
+      "effect": "command",
+      "reversible": false,
+      "inp": { "text": "?str", "tag": "?str" },
+      "out": {
+        "ok": "const:true", "connector": "const:notes", "action": "const:append",
+        "id": "str", "text": "str", "tag": "?str", "count": "int"
+      },
+      "errors": ["precondition-unmet"],
+      "examples": [
+        {
+          "payload": { "text": "buy milk" },
+          "result": { "ok": true, "connector": "notes", "action": "append", "id": "n0", "text": "buy milk", "tag": "", "count": 1 }
+        }
+      ]
+    },
+    "entry/query/list": {
+      "version": "v1",
+      "effect": "query",
+      "reversible": false,
+      "inp": { "tag": "?str" },
+      "out": {
+        "ok": "const:true", "connector": "const:notes", "action": "const:list",
+        "entries": "list", "count": "int"
+      },
+      "errors": [],
+      "examples": [
+        {
+          "payload": {},
+          "result": { "ok": true, "connector": "notes", "action": "list", "entries": [], "count": 0 }
+        }
+      ]
+    }
+  },
+  "wires": []
+}
