@@ -74,7 +74,7 @@ MESH = {"nodes": [{"name": "lenovo", "url": "http://192.168.188.201:8765"}]}
 
 def agent_plan(goal: str, rogue: bool) -> list[dict]:
     """The 'autonomous decision': a goal -> an ordered plan of URI actions. (Deterministic
-    here so the example runs offline; swap for an LLM decider — see example 37.)"""
+    here so the example runs offline; ``--live`` swaps in a real LLM decider below.)"""
     target = "ghost" if rogue else "host"   # rogue: a node the mesh does not know
     plan = [{"uri": "audit://host/sys/query/info", "payload": {}}]
     if "process" in goal or "audit" in goal:
@@ -83,16 +83,62 @@ def agent_plan(goal: str, rogue: bool) -> list[dict]:
     return plan
 
 
+def _loads_llm_json(resp: dict):
+    """Robust parse of the model's JSON reply — tolerate ```json fences / prose (see example 37)."""
+    import re
+    content = (((resp.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+    fence = re.search(r"```(?:json)?\s*(.+?)\s*```", content, re.DOTALL)
+    if fence:
+        content = fence.group(1).strip()
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        s = content.find("[")
+        if s == -1:
+            s = content.find("{")
+        if s != -1:
+            depth, openc = 0, content[s]
+            closec = "]" if openc == "[" else "}"
+            for i in range(s, len(content)):
+                depth += (content[i] == openc) - (content[i] == closec)
+                if depth == 0:
+                    return json.loads(content[s:i + 1])
+        raise ValueError(f"model did not return JSON: {content[:160]!r}")
+
+
+def llm_plan(goal: str, model: str) -> list[dict]:
+    """LIVE autonomous decision: the model picks the URI plan from the available routes + targets."""
+    from urirun.host.task_planner import quiet_completion
+    routes = [u for u in audit.bindings()["bindings"]] + ["kvm://<node>/screen/query/capture"]
+    targets = ["host"] + [n["name"] for n in MESH["nodes"]]
+    system = ("You plan a node audit as URI steps. Return STRICT JSON: a list of "
+              "{\"uri\":str,\"payload\":obj}. Use ONLY the given routes; the target after :// "
+              "must be 'host' or a known node. Keep it minimal.")
+    resp = quiet_completion(model=model, temperature=0,
+                            messages=[{"role": "system", "content": system},
+                                      {"role": "user", "content": json.dumps(
+                                          {"goal": goal, "routes": routes, "targets": targets})}])
+    plan = _loads_llm_json(resp)
+    if isinstance(plan, dict):
+        plan = plan.get("steps") or plan.get("plan") or [plan]
+    return [{"uri": s["uri"], "payload": s.get("payload", {})} for s in plan if isinstance(s, dict) and s.get("uri")]
+
+
 def _route_of(uri: str) -> str:
     return uri.split("://host/", 1)[1] if "://host/" in uri else ""
 
 
-def run(rogue: bool = False) -> int:
+def run(rogue: bool = False, live: bool = False) -> int:
     conform(CONTRACTS)
     goal = "audit this node: capture OS, top processes, then a screenshot"
-    plan = agent_plan(goal, rogue)
-    print(f"agent goal: {goal}")
-    print(f"agent decided {len(plan)} step(s){' [ROGUE target]' if rogue else ''}\n")
+    if live:
+        model = os.environ.get("LLM_MODEL", "openrouter/deepseek/deepseek-chat")
+        print(f"agent goal: {goal}\nautonomous decider: LIVE {model}")
+        plan = llm_plan(goal, model)
+    else:
+        plan = agent_plan(goal, rogue)
+        print(f"agent goal: {goal}")
+    print(f"agent decided {len(plan)} step(s){' [ROGUE target]' if rogue and not live else ''}\n")
 
     # ── GATE 1: ROUTER — where does each step run? block if any is unroutable ──
     diag = router.diagnose_plan(plan, MESH)
@@ -127,13 +173,14 @@ def run(rogue: bool = False) -> int:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Router+contract-guarded autonomous plan")
     ap.add_argument("--rogue", action="store_true", help="agent picks an unroutable node; router blocks it")
+    ap.add_argument("--live", action="store_true", help="use a real LLM to decide the plan (needs LLM_MODEL + key)")
     ap.add_argument("--both", action="store_true")
     args = ap.parse_args(argv)
     if args.both:
         print("══ routable plan ══"); a = run(False)
         print("\n══ rogue plan (router blocks) ══"); b = run(True)
         return a or b
-    return run(args.rogue)
+    return run(args.rogue, live=args.live)
 
 
 if __name__ == "__main__":
