@@ -86,7 +86,8 @@ def setup_polyglot_bin() -> None:
 def emit_bindings(c) -> dict:
     cdir = ROOT / f"urirun-connector-{c['n']}"
     if c["lang"] == "py":
-        env = dict(os.environ, PYTHONPATH=f"{UP}{os.pathsep}{cdir}")
+        py_path = os.pathsep.join(p for p in (UP, str(cdir), os.environ.get("PYTHONPATH", "")) if p)
+        env = dict(os.environ, PYTHONPATH=py_path)
         code = f"import json,{c['pkg']} as m;print(json.dumps(m.urirun_bindings()))"
         out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env, timeout=60)
     else:

@@ -79,9 +79,10 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
 
-All host-runnable checks pass with `urirun` installed (e.g. from
-`github.com/if-uri/urirun`). Docker-based demos (08, 11 and the full 09 flow)
-require Docker.
+The fast host smoke passes with `urirun` installed (e.g. from
+`github.com/if-uri/urirun`). The full host pytest suite covers the broader
+offline examples. Docker-based demos (08, 11 and the full 09 flow) require
+Docker.
 
 The noVNC LAN flow now has a full four-computer smoke test:
 
@@ -108,16 +109,20 @@ A2A skills. Current connector Docker coverage is `planfile`, `sqlite-context`,
 `browser-control` and `grpc-transport`; planned catalog entry `mqtt` is
 reported as skipped until its package exists.
 
-## Run all tests
+## Run tests
 
 ```bash
-make test          # or: ./run_tests.sh
+make test          # fast smoke, or: ./run_tests.sh
+make test-all      # full host pytest suite
+make audit         # show smoke coverage gaps
 ```
 
-Runs the host-runnable check for every `NN-*` example and prints a summary.
-It auto-detects a Python with `urirun` (prefers `../app/.venv`; override with
-`PYTHON=...`) and skips the Docker-only demos (08, 11 and the full 09 flow).
-Current host run: **21 passed, 0 failed, 4 skipped** (Docker-only demos skipped).
+`make test` auto-detects a Python with `urirun` (prefers `../app/.venv`;
+override with `PYTHON=...`) and skips the Docker-only demos (08, 11 and the
+full 09 flow). It is a smoke runner, not a complete sweep of every pytest-based
+example; the built-in audit reports that distinction. Current smoke run:
+**21 passed, 0 failed, 4 skipped** (Docker-only demos skipped). Current full
+host pytest run: **270 passed, 2 skipped**.
 
 ## Related repositories
 

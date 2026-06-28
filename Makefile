@@ -6,9 +6,10 @@ endif
 
 .PHONY: connectors
 connectors: ## Install urirun + sibling libs + every Python connector editable (examples then run with no PYTHONPATH juggling)
+	pip install -e ../urirun-contract
 	pip install -e ../urirun/adapters/python
 	@for d in ../urirun-*/; do \
-	  case "$$d" in */urirun-connector-*) continue;; esac; \
+	  case "$$d" in */urirun-contract/|*/urirun-connector-*) continue;; esac; \
 	  if [ -f "$$d/pyproject.toml" ]; then echo "installing lib $$d"; pip install -q -e "$$d" --no-deps || exit 1; fi; \
 	done
 	@for d in ../urirun-connector-*/; do \
@@ -16,8 +17,16 @@ connectors: ## Install urirun + sibling libs + every Python connector editable (
 	done
 
 .PHONY: test
-test: ## Run host-runnable checks for every NN-* example (Docker demos skipped)
+test: ## Run the fast host smoke (Docker demos skipped; not every pytest example)
 	./run_tests.sh
+
+.PHONY: test-all
+test-all: ## Run the full host pytest suite for examples/
+	PYTHONPATH=../urirun/adapters/python python -m pytest -q .
+
+.PHONY: audit
+audit: ## Report examples test coverage versus the smoke runner
+	python scripts/audit_test_coverage.py --verbose
 
 .PHONY: test-connectors
 test-connectors: ## Run pytest for every sibling Python connector with a tests/ dir (runs all, reports the failures)
