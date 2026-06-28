@@ -76,13 +76,14 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 48 | [`48-api-device-node/`](48-api-device-node/) | register external APIs and multi-interface devices as nodes | demo scripts |
 | 49 | [`49-linkedin-compose-cdp/`](49-linkedin-compose-cdp/) | compose a LinkedIn post over Chrome DevTools Protocol (`run.py`) | demo `run.py` |
 | 50 | [`50-contract-guarded-flow/`](50-contract-guarded-flow/) | reuse a connector in a flow, its **contract** guards every step (honest passes, drift caught); same `contracts.json` drives the JS/Go SDK guards | ✅ `pytest` |
+| 51 | [`51-router-guarded-autonomy/`](51-router-guarded-autonomy/) | the autonomy safety stack: agent decides a plan → **router** diagnoses WHERE each step runs (blocks unroutable pre-flight) → **contract** guards executed envelopes | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
 
 The fast host smoke passes with `urirun` installed (e.g. from
 `github.com/if-uri/urirun`). The full host pytest suite covers the broader
-offline examples. Docker-based demos (08, 11 and the full 09 flow) require
+offline examples. Docker-based demos (08, 11 and the full 09/12 flows) require
 Docker.
 
 The noVNC LAN flow now has a full four-computer smoke test:
@@ -127,7 +128,7 @@ examples themselves are fine.
 
 `make test` auto-detects a Python with `urirun` (prefers `../app/.venv`;
 override with `PYTHON=...`) and skips the Docker-only demos (08, 11 and the
-full 09 flow). It is a smoke runner, not a complete sweep of every pytest-based
+full 09/12 flows). It is a smoke runner, not a complete sweep of every pytest-based
 example; the built-in audit reports that distinction. Current smoke run:
 **21 passed, 0 failed, 4 skipped** (Docker-only demos skipped). Current full
 host pytest run: **271 passed, 2 skipped**.
@@ -137,7 +138,7 @@ host pytest run: **271 passed, 2 skipped**.
 - `github.com/if-uri/app`
 - `github.com/if-uri/docs`
 - `github.com/if-uri/connect.ifuri.com`
-- `github.com/if-uri/get`
+- `github.com/if-uri/get-ifuri-com`
 - `github.com/if-uri/urirun-connector-browser-control`
 - `github.com/if-uri/urirun-connector-http-check`
 - `github.com/if-uri/urirun-connector-time-tools`
