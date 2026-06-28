@@ -14,7 +14,7 @@ NL request ──► action space = 26 MCP tools (URIs + JSON Schemas)
           ──► verify(state): did the task really happen?
 ```
 
-Six tasks, each a **≥10-step** flow that drives "the whole computer" — opening
+Eight tasks, each a **≥10-step** flow that drives "the whole computer" — opening
 apps and windows, a browser, an email client, the file system, the calendar:
 
 | # | task | what it does (verified) |
@@ -25,11 +25,13 @@ apps and windows, a browser, an email client, the file system, the calendar:
 | `invoice`  | OCR → web form | OCR an invoice image, fill 3 fields, submit, save record → **form submitted + record saved** |
 | `meeting`  | schedule + invites | create a calendar event, compose & send 2 invites → **1 event, 2 mails sent** |
 | `backup`   | daily backup | write 3 docs, copy each to `backup/`, list & read back → **3 files in backup/** |
+| `expenses` | receipts → finance | OCR 2 receipts, write a reconciliation, email finance with the summary → **summary saved, 1 mail to finance, 1 attachment** |
+| `approval` | decide → reply → schedule | read the inbox, record a decision, reply to the boss, schedule a follow-up → **decision saved, 1 reply sent, 1 event** |
 
 ## Run
 
 ```bash
-python3 run.py                 # all 6 scenarios, deterministic plans, with verification
+python3 run.py                 # all 8 scenarios, deterministic plans, with verification
 python3 run.py --scenario invoice
 python3 run.py --json          # machine-readable
 ```
@@ -39,7 +41,7 @@ office MCP tool surface: 26 URI tools (schemes: app, browser, calendar, clipboar
 ✓ [report] 11 steps — Prepare a Q2 report and email it to the boss with attachments
     executed 11/11 ok=True  ·  verified: True (sent=1 attachments=2)
 ...
-RESULT: 6/6 office tasks completed AND verified
+RESULT: 8/8 office tasks completed AND verified
 ```
 
 ## Plan with a real LLM
@@ -78,7 +80,7 @@ a capable model produces.
 ## Files
 
 - `office_system.py` — the office computer simulator + the 26-route MCP tool surface.
-- `scenarios.py` — the 6 NL tasks: request, the ≥10-step flow, and `verify(state)`.
+- `scenarios.py` — the 8 NL tasks: request, the ≥10-step flow, and `verify(state)`.
 - `run.py` — planner (deterministic or `--llm`) → execute → verify → report.
 - `test_office.py` — every task plans ≥10 steps, executes, and verifies (offline).
 

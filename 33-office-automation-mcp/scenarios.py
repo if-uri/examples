@@ -157,4 +157,55 @@ BACKUP = {
         f"backup_files={sum(1 for p in s['files'] if p.startswith('backup/'))}"),
 }
 
-SCENARIOS = [REPORT, RESEARCH, TIDY, INVOICE, MEETING, BACKUP]
+# --- 7. reconcile expenses from receipts (OCR -> summary -> email finance) ---
+EXPENSES = {
+    "id": "expenses",
+    "title": "OCR two receipts, write an expense reconciliation and email it to finance",
+    "nl": "Rozlicz wydatki: odczytaj dwa paragony/faktury (OCR), policz sumę, zapisz zestawienie i wyślij je do księgowości.",
+    "steps": [
+        _step("fs://office/file/command/write", path="incoming/receipt.png", content="<image bytes>"),
+        _step("screen://office/ocr/query/text", image="receipt.png"),
+        _step("fs://office/file/command/write", path="incoming/invoice.png", content="<image bytes>"),
+        _step("screen://office/ocr/query/text", image="invoice.png"),
+        _step("app://office/launch/command/open", app="editor"),
+        _step("fs://office/file/command/write", path="reports/expenses.txt", content="Wydatki: paragon 42,00 PLN + faktura 199,00 PLN = 241,00 PLN."),
+        _step("fs://office/file/query/read", path="reports/expenses.txt"),
+        _step("app://office/launch/command/open", app="email"),
+        _step("email://office/message/command/compose", to="finance@corp", subject="Rozliczenie wydatków", body="W załączeniu zestawienie wydatków."),
+        _step("email://office/message/command/attach", path="reports/expenses.txt"),
+        _step("email://office/message/command/send"),
+        _step("notify://office/desktop/command/send", message="Zestawienie wydatków wysłane do księgowości"),
+    ],
+    "verify": lambda s: (
+        "reports/expenses.txt" in s["files"]
+        and len(s["email"]["sent"]) == 1 and s["email"]["sent"][0]["to"] == "finance@corp"
+        and len(s["email"]["sent"][0]["attachments"]) == 1,
+        f"summary={'reports/expenses.txt' in s['files']} sent={len(s['email']['sent'])}"),
+}
+
+# --- 8. approval workflow: read a request, decide, reply, schedule follow-up -
+APPROVAL = {
+    "id": "approval",
+    "title": "Read the boss's request, record a decision, reply, and schedule a follow-up",
+    "nl": "Znajdź w skrzynce prośbę o raport, zapisz decyzję o akceptacji, odpisz szefowi i zaplanuj spotkanie kontrolne.",
+    "steps": [
+        _step("app://office/launch/command/open", app="email"),
+        _step("email://office/inbox/query/list"),
+        _step("email://office/inbox/query/search", q="report"),
+        _step("fs://office/file/command/write", path="decisions/q2-approve.txt", content="Decyzja: raport Q2 zatwierdzony do wysyłki."),
+        _step("email://office/message/command/compose", to="boss@corp", subject="Re: Q2 report?", body="Zatwierdzone — raport wychodzi dziś."),
+        _step("email://office/message/command/attach", path="decisions/q2-approve.txt"),
+        _step("email://office/message/command/send"),
+        _step("app://office/launch/command/open", app="calendar"),
+        _step("calendar://office/event/command/create", title="Kontrola raportu Q2", when="2026-07-01 09:00", invitees="boss@corp"),
+        _step("calendar://office/event/query/list"),
+        _step("notify://office/desktop/command/send", message="Decyzja zapisana, odpowiedź wysłana, kontrola zaplanowana"),
+    ],
+    "verify": lambda s: (
+        "decisions/q2-approve.txt" in s["files"]
+        and len(s["email"]["sent"]) == 1 and s["email"]["sent"][0]["to"] == "boss@corp"
+        and len(s["calendar"]) == 1,
+        f"decision={'decisions/q2-approve.txt' in s['files']} sent={len(s['email']['sent'])} events={len(s['calendar'])}"),
+}
+
+SCENARIOS = [REPORT, RESEARCH, TIDY, INVOICE, MEETING, BACKUP, EXPENSES, APPROVAL]

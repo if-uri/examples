@@ -1,0 +1,6 @@
+.vm_office_state.json
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+generated/
+.urirun-novnc

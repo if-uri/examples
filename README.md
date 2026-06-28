@@ -77,6 +77,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 49 | [`49-linkedin-compose-cdp/`](49-linkedin-compose-cdp/) | compose a LinkedIn post over Chrome DevTools Protocol (`run.py`) | demo `run.py` |
 | 50 | [`50-contract-guarded-flow/`](50-contract-guarded-flow/) | reuse a connector in a flow, its **contract** guards every step (honest passes, drift caught); same `contracts.json` drives the JS/Go SDK guards | ✅ `pytest` |
 | 51 | [`51-router-guarded-autonomy/`](51-router-guarded-autonomy/) | the autonomy safety stack: agent decides a plan → **router** diagnoses WHERE each step runs (blocks unroutable pre-flight) → **contract** guards executed envelopes | ✅ `pytest` |
+| 52 | [`52-office-vm-rdp-novnc/`](52-office-vm-rdp-novnc/) | office work on a **virtual machine over RDP**, surfaced through a **noVNC** HTML5 canvas: NL → ≥10-step flow (vm/rdp/novnc/desktop/fs/clipboard) → verify the task happened **and** RDP/noVNC tore down cleanly; `--live` drives a real noVNC desktop | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.

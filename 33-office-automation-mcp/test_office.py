@@ -26,8 +26,8 @@ def test_mcp_tool_surface_has_schemas():
     assert set(compose["required"]) == {"to", "subject", "body"}
 
 
-def test_six_scenarios_each_at_least_10_steps():
-    assert len(SCENARIOS) == 6
+def test_each_scenario_at_least_10_steps():
+    assert len(SCENARIOS) == 8
     for scn in SCENARIOS:
         assert len(scn["steps"]) >= 10, f"{scn['id']} has only {len(scn['steps'])} steps"
 
