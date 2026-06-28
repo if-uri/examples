@@ -21,8 +21,8 @@ services:
 
   tester:
     build:
-      context: .
-      dockerfile: tester/Dockerfile
+      context: ../..
+      dockerfile: examples/09-docker_uri_flow/tester/Dockerfile
     image: urirun-v2-flow-tester:local
     depends_on:
       - python-worker

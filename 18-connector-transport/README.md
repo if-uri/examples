@@ -32,8 +32,8 @@ Three services: **target** (an nginx site to monitor), **node** (serves the conn
 over HTTP), **client** (calls it, no connector installed). Expected:
 
 ```
-node /routes    == 8 connector routes exposed over HTTP
-node /mcp/tools == 8 MCP tools (same registry)
+node /routes    == 6 connector routes exposed over HTTP
+node /mcp/tools == 6 MCP tools (same registry)
 monitor://host/http/query/status OVER HTTP: ok=True | http status: 200
 browser route (not in --allow): refused   ← transport security boundary
 ```

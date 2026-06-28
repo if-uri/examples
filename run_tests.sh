@@ -30,7 +30,11 @@ HAVE_GCC=0;  command -v gcc  >/dev/null 2>&1 && HAVE_GCC=1
 PASS=0; FAIL=0; SKIP=0; FAILED=()
 run() { # name, command
   printf '  %-40s ' "$1"
-  if ( eval "$2" ) >/tmp/ex_$$.log 2>&1; then echo "PASS"; PASS=$((PASS+1));
+  ( eval "$2" ) >/tmp/ex_$$.log 2>&1; rc=$?
+  # pytest exit 5 = "no tests collected" (whole module importorskip'd, e.g. an optional
+  # connector is absent). That is a skip, not a failure — don't red the smoke for it.
+  if [ "$rc" = 0 ]; then echo "PASS"; PASS=$((PASS+1));
+  elif [ "$rc" = 5 ]; then echo "SKIP (no tests collected — optional dep absent)"; SKIP=$((SKIP+1));
   else echo "FAIL"; FAIL=$((FAIL+1)); FAILED+=("$1"); sed 's/^/      /' /tmp/ex_$$.log | tail -6; fi
 }
 skip() { printf '  %-40s SKIP (%s)\n' "$1" "$2"; SKIP=$((SKIP+1)); }

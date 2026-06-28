@@ -3,6 +3,7 @@ VENV_BIN := $(wildcard venv/bin)
 ifneq ($(VENV_BIN),)
 export PATH := $(abspath $(VENV_BIN)):$(PATH)
 endif
+INSTALL_CONNECTOR_TEST_DEPS ?= 1
 
 .PHONY: connectors
 connectors: ## Install urirun + sibling libs + every Python connector editable (examples then run with no PYTHONPATH juggling)
@@ -34,6 +35,9 @@ test-connectors: ## Run pytest for every sibling Python connector with a tests/ 
 	for d in ../urirun-connector-*/; do \
 	  if [ -d "$$d/tests" ]; then \
 	    n=$$((n+1)); echo "== $$d =="; \
+	    if [ "$(INSTALL_CONNECTOR_TEST_DEPS)" = "1" ] && [ -f "$$d/pyproject.toml" ]; then \
+	      ( cd "$$d" && python -m pip install -q -e ".[test]" ) || { fail=1; failed="$$failed $$(basename $$d):install"; continue; }; \
+	    fi; \
 	    ( cd "$$d" && PYTHONPATH=. python -m pytest tests -q ) || { fail=1; failed="$$failed $$(basename $$d)"; }; \
 	  fi; \
 	done; \

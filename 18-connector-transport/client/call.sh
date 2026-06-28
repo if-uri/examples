@@ -2,7 +2,12 @@
 # The client side: has urirun but NOT the connector. Drives the connector purely
 # over the URI + HTTP contract.
 set -euo pipefail
-cp -r /src/urirun /tmp/urirun && rm -rf /tmp/urirun/{build,dist,*.egg-info} && pip install --quiet /tmp/urirun
+rm -rf /tmp/urirun-contract /tmp/urirun
+cp -r /src/urirun-contract /tmp/urirun-contract && cp -r /src/urirun /tmp/urirun
+rm -rf /tmp/urirun-contract/{build,dist,*.egg-info} /tmp/urirun/{build,dist,*.egg-info}
+pip install --quiet --force-reinstall /tmp/urirun-contract
+pip install --quiet "jsonschema>=4.18" "pydantic>=2"
+pip install --quiet --force-reinstall --no-deps /tmp/urirun
 python - <<'PY'
 import json, time, urllib.request
 NODE = "http://node:8765"
@@ -34,12 +39,21 @@ print("== node /mcp/tools==", len(get("/mcp/tools")["tools"]), "MCP tools (same 
 
 print("\n== drive monitor://host/http/query/status OVER HTTP (no connector on this client) ==")
 res = run("monitor://host/http/query/status", {"domain": "target", "url": "http://target/"})
-out = json.loads(res["result"]["stdout"]) if res.get("ok") else res
+result = res.get("result") or {}
+if res.get("ok") and isinstance(result.get("value"), dict):
+    out = result["value"]
+elif res.get("ok") and "stdout" in result:
+    out = json.loads(result["stdout"])
+else:
+    out = res
 print("  ok:", res.get("ok"), "| domain:", out.get("domain"), "| http status:", (out.get("http") or {}).get("status"), "| elapsedMs:", (out.get("http") or {}).get("elapsedMs"))
 
 print("\n== a route outside the node's --allow is refused (transport security boundary) ==")
 res2 = run("browser://host/page/command/screenshot", {"url": "http://target/"})
-print("  browser allowed:", res2.get("decision", {}).get("allowed"), "(blocked: not in node --allow)")
+browser_allowed = res2.get("decision", {}).get("allowed")
+print("  browser allowed:", browser_allowed, "(blocked: not in node --allow)")
+if browser_allowed is not False:
+    raise SystemExit(f"browser route should be denied by node --allow, got: {res2}")
 
 print("\nCLIENT DONE — connector invoked across the network with zero local install")
 PY

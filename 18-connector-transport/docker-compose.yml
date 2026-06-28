@@ -14,6 +14,7 @@ services:
     image: python:3.13-slim
     working_dir: /app
     volumes:
+      - ../../urirun-contract:/src/urirun-contract:ro
       - ../../urirun/adapters/python:/src/urirun:ro      # local urirun (has node serve --allow)
       - ../../urirun-connector-domain-monitor:/src/connector:ro
       - ./node:/app:ro
@@ -25,6 +26,7 @@ services:
     image: python:3.13-slim
     working_dir: /app
     volumes:
+      - ../../urirun-contract:/src/urirun-contract:ro
       - ../../urirun/adapters/python:/src/urirun:ro
       - ./client:/app:ro
     command: ["bash", "call.sh"]
