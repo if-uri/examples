@@ -6,12 +6,25 @@ Plus: the in-process Python CONTRACTS and the neutral `contracts.json` (which dr
 JS/Go SDK guards) declare the SAME shape — one source of truth, any language."""
 import json
 import os
+import sys
 
 import pytest
 
 import run as ex
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+@pytest.fixture(autouse=True)
+def _pin_run_module():
+    """Several examples ship a `run.py`; with pytest's importlib import-mode, `sys.modules['run']`
+    ends up pointing at whichever example's `run.py` was collected LAST (e.g. 51-router-guarded-
+    autonomy). The connector binding resolves its handler by module name (`module: 'run'`), so the
+    flow would execute a DIFFERENT instance than this test's `ex` — and the in-process `_DRIFT` toggle
+    set here would not be seen by the executed handler. Pin this example's module so the flow runs the
+    same instance the test mutates. (No-op in production: each connector is its own uniquely-named module.)"""
+    sys.modules["run"] = ex
+    yield
 
 
 def test_honest_flow_conforms():
