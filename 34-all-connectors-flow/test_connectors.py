@@ -11,12 +11,17 @@ from __future__ import annotations
 import io
 import json
 import contextlib
+import importlib.util
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
 
-import run as sweep
+_RUN_SPEC = importlib.util.spec_from_file_location("example34_all_connectors_run", os.path.join(HERE, "run.py"))
+assert _RUN_SPEC is not None and _RUN_SPEC.loader is not None
+sweep = importlib.util.module_from_spec(_RUN_SPEC)
+_RUN_SPEC.loader.exec_module(sweep)
 from connectors import CONNECTORS
 
 

@@ -107,10 +107,12 @@ def main(argv: list[str] | None = None) -> int:
     rows = []
     for (name, (module, route, payload, note)), res in zip(CONNECTORS.items(), smoke):
         gated = route is None
-        status = ("RAN ✓" if res["ok"] else f"FAILED: {str(res['data'])[:50]}") if not gated \
+        failure = res.get("data") if not res.get("ok") else None
+        status = ("RAN ✓" if res["ok"] else f"FAILED: {json.dumps(failure, ensure_ascii=False, default=str)[:240]}") if not gated \
             else ("installed + valid (config-gated)" if res["ok"] else "NOT IMPORTABLE")
         rows.append({"connector": name, "installed": present.get(name, False),
-                     "gated": gated, "ok": res["ok"], "status": status, "note": note})
+                     "gated": gated, "ok": res["ok"], "status": status, "note": note,
+                     "failure": failure})
 
     if args.json:
         print(json.dumps({"install": install_results, "smoke": rows}, ensure_ascii=False, indent=2))
