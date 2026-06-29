@@ -1,4 +1,11 @@
 # Part of the ifURI solution.
+VENV_BIN := $(wildcard ../venv/bin)
+ifneq ($(VENV_BIN),)
+export PATH := $(abspath $(VENV_BIN)):$(PATH)
+endif
+
+export PYTHONPATH := ../../urirun-contract:../../urirun-connector-router:../../urirun/adapters/python:$(PYTHONPATH)
+
 PY ?= python3
 
 .PHONY: run rogue both test

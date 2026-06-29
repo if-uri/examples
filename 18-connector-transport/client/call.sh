@@ -2,11 +2,16 @@
 # The client side: has urirun but NOT the connector. Drives the connector purely
 # over the URI + HTTP contract.
 set -euo pipefail
-rm -rf /tmp/urirun-contract /tmp/urirun
-cp -r /src/urirun-contract /tmp/urirun-contract && cp -r /src/urirun /tmp/urirun
-rm -rf /tmp/urirun-contract/{build,dist,*.egg-info} /tmp/urirun/{build,dist,*.egg-info}
+rm -rf /tmp/urirun-contract /tmp/urirun-flow /tmp/urirun-connector-router /tmp/urirun
+cp -r /src/urirun-contract /tmp/urirun-contract
+cp -r /src/urirun-flow /tmp/urirun-flow
+cp -r /src/urirun-connector-router /tmp/urirun-connector-router
+cp -r /src/urirun /tmp/urirun
+rm -rf /tmp/urirun-contract/{build,dist,*.egg-info} /tmp/urirun-flow/{build,dist,*.egg-info} /tmp/urirun-connector-router/{build,dist,*.egg-info} /tmp/urirun/{build,dist,*.egg-info}
 pip install --quiet --force-reinstall /tmp/urirun-contract
 pip install --quiet "jsonschema>=4.18" "pydantic>=2"
+pip install --quiet --force-reinstall --no-deps /tmp/urirun-flow
+pip install --quiet --force-reinstall --no-deps /tmp/urirun-connector-router
 pip install --quiet --force-reinstall --no-deps /tmp/urirun
 python - <<'PY'
 import json, time, urllib.request

@@ -22,6 +22,8 @@ trap cleanup EXIT
 for t in php jq curl python3; do command -v "$t" >/dev/null 2>&1 || { echo "SKIP: needs $t"; exit 0; }; done
 [ -d "$MESH/clients" ] || { echo "SKIP: mesh-urirun-com not checked out beside the examples repo"; exit 0; }
 [ -d "$ROOT/urirun/adapters/python" ] && export PYTHONPATH="$ROOT/urirun/adapters/python:${PYTHONPATH:-}"
+[ -d "$ROOT/urirun-flow" ] && export PYTHONPATH="$ROOT/urirun-flow:${PYTHONPATH:-}"
+[ -d "$ROOT/urirun-connector-router" ] && export PYTHONPATH="$ROOT/urirun-connector-router:${PYTHONPATH:-}"
 python3 -c "import urirun.runtime.v2" >/dev/null 2>&1 || { echo "SKIP: a current urirun is not importable (pip install urirun)"; exit 0; }
 U() { python3 -m urirun.runtime.v2 "$@"; }
 free_port() { python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }

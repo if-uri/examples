@@ -21,6 +21,7 @@ SCREENSHOTS = BASE / "screenshots"
 REGISTRY = BASE / "connectors-registry.json"
 POLICY = BASE / "connectors-policy.json"
 IFURI_URL = "http://ifuri-site/"
+DEFAULT_CONNECTORS = "planfile,sqlite-context,domain-monitor,http-check,time-tools,grpc-transport,namecheap-dns,browser-control"
 
 
 def run(args: list[str], *, check: bool = True, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -53,6 +54,11 @@ def fetch_catalog() -> dict:
     base = os.environ.get("CONNECT_BASE_URL", "https://connect.ifuri.com").rstrip("/")
     with urllib.request.urlopen(f"{base}/connectors.json", timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def selected_connector_ids() -> set[str]:
+    raw = os.environ.get("CONNECTORS", DEFAULT_CONNECTORS)
+    return {item.strip() for item in raw.split(",") if item.strip()}
 
 
 def emit_http_check_bindings() -> None:
@@ -313,20 +319,22 @@ def test_grpc_transport() -> dict:
             server.kill()
 
 
-def summarize_catalog(catalog: dict, route_results: dict) -> dict:
+def summarize_catalog(catalog: dict, route_results: dict, selected: set[str]) -> dict:
     connectors = catalog.get("connectors") or []
     route_result_text = json.dumps(route_results, sort_keys=True)
     summary = []
     for connector in connectors:
+        connector_id = connector.get("id")
         routes = connector.get("routes") or []
         tested = [route for route in routes if route in route_result_text]
-        if connector.get("id") == "grpc-transport":
+        if connector_id == "grpc-transport":
             tested = routes
         status = connector.get("status")
         summary.append(
             {
-                "id": connector.get("id"),
+                "id": connector_id,
                 "status": status,
+                "selected": connector_id in selected,
                 "routes": routes,
                 "testedRoutes": tested,
                 "tested": bool(tested) if status == "available" else False,
@@ -338,12 +346,13 @@ def summarize_catalog(catalog: dict, route_results: dict) -> dict:
 
 def main() -> int:
     catalog = fetch_catalog()
+    selected = selected_connector_ids()
     write_json(BASE / "connectors-catalog.json", catalog)
     build_registry()
     route_results = run_connector_routes()
     mcp_a2a = project_mcp_a2a()
     grpc = test_grpc_transport()
-    catalog_summary = summarize_catalog(catalog, route_results)
+    catalog_summary = summarize_catalog(catalog, route_results, selected)
 
     required = [
         "sqlite_dataset_create",
@@ -371,7 +380,11 @@ def main() -> int:
         "logs_recent",
     ]
     failures = [name for name in required if not result_ok(route_results.get(name, {}))]
-    available_not_tested = [item["id"] for item in catalog_summary["items"] if item["status"] == "available" and not item["tested"]]
+    available_not_tested = [
+        item["id"]
+        for item in catalog_summary["items"]
+        if item["selected"] and item["status"] == "available" and not item["tested"]
+    ]
     connector_tools = (mcp_a2a["tools"].get("tools") or [])
     connector_skills = (mcp_a2a["card"].get("skills") or [])
     tool_names = {tool.get("name") for tool in connector_tools}

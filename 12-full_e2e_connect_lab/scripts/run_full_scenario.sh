@@ -86,7 +86,7 @@ exec_pc host "urirun host agents --config '$MESH_CONFIG' > /lab/generated/agents
 exec_pc host "urirun host ask --config '$MESH_CONFIG' --node pc1 --node pc2 --no-llm --execute 'sprawdz procesy system date pc1 pc2' > /lab/generated/flow-result.json"
 
 echo "==> Build and execute connector registry, MCP tools and A2A skills"
-exec_pc host "CONNECT_BASE_URL='$CONNECT_BASE_URL' python3 /lab/scripts/connector_checks.py"
+exec_pc host "CONNECT_BASE_URL='$CONNECT_BASE_URL' CONNECTORS='$CONNECTORS' python3 /lab/scripts/connector_checks.py"
 
 python3 scripts/assert_results.py generated
 echo "full E2E scenario OK"
