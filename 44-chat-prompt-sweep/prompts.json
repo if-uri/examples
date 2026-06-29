@@ -1,6 +1,6 @@
 [
-  {"id": "screen-001", "category": "screen", "prompt": "zrob zrzut ekranu"},
-  {"id": "screen-002", "category": "screen", "prompt": "zrob zrzut jednego ekranu"},
+  {"id": "screen-001", "category": "screen", "prompt": "zrob zrzut ekranu", "expect": "blocked-needs-selection"},
+  {"id": "screen-002", "category": "screen", "prompt": "zrob zrzut jednego ekranu", "expect": "blocked-needs-selection"},
   {"id": "screen-003", "category": "screen", "prompt": "zrob zrzut wszystkich monitorow"},
   {"id": "screen-004", "category": "screen", "prompt": "zrob zrzut ekranu monitora glownego"},
   {"id": "screen-005", "category": "screen", "prompt": "zrob zrzut ekranu 1 monitora"},
