@@ -22,6 +22,11 @@ Run all 100 prompts as dry-run planning/routing tests:
 python3 examples/44-chat-prompt-sweep/run_chat_prompts.py
 ```
 
+LLM runs send an explicit model in the chat request. The runner resolves it in
+this order: `--model`, `URIRUN_LLM_MODEL`, `LLM_MODEL`, then the dashboard's
+non-secret `/api/chat/config`. Provider quota/rate-limit failures are reported
+separately as `environmentBlocked`, without counting as a successful prompt.
+
 Use the current dashboard URL as defaults for host/targets:
 
 ```bash
@@ -82,6 +87,7 @@ The console line per prompt includes:
 
 For deeper diagnosis inspect the JSONL fields:
 
+- `model`, `environmentBlocked`, `generator`
 - `selectedTargets`, `selectedNodes`
 - `routingAccepted`, `routingViolations`, `runsOnByStep`
 - `flowUris`, `timeline`

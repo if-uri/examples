@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import json
+import os
 import sys
 import time
 import urllib.error
@@ -53,6 +54,20 @@ def defaults_from_url(url: str | None) -> dict:
     }
 
 
+def model_from_env() -> str | None:
+    return os.environ.get("URIRUN_LLM_MODEL") or os.environ.get("LLM_MODEL") or None
+
+
+def model_from_server_config(base: str, timeout: float) -> str | None:
+    try:
+        with urllib.request.urlopen(base.rstrip("/") + "/api/chat/config", timeout=timeout) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, ValueError, json.JSONDecodeError):
+        return None
+    model = str(payload.get("model") or "").strip()
+    return model or None
+
+
 def load_cases(path: Path) -> list[dict]:
     raw = json.loads(path.read_text(encoding="utf-8"))
     if isinstance(raw, dict):
@@ -85,18 +100,22 @@ def select_cases(cases: list[dict], categories: set[str], limit: int | None) -> 
 
 
 def build_payload(case: dict, defaults: dict, *, execute: bool, no_llm: bool | None,
+                  model: str | None = None,
                   include_side_effects: bool, artifact_dir: str | None) -> tuple[dict, bool]:
     execute_allowed = bool(case.get("executeAllowed", True))
     skipped = bool(execute and not execute_allowed and not include_side_effects)
+    effective_no_llm = bool(defaults.get("no_llm", False) if no_llm is None else no_llm)
     payload = {
         "prompt": str(case["prompt"]),
         "nodes": case.get("nodes", defaults.get("nodes") or []),
         "targets": case.get("targets", defaults.get("targets") or ["host"]),
         "target_explicit": bool(case.get("target_explicit", defaults.get("target_explicit", True))),
         "execute": bool(execute and not skipped),
-        "no_llm": bool(defaults.get("no_llm", False) if no_llm is None else no_llm),
+        "no_llm": effective_no_llm,
         "inline_artifacts": False,
     }
+    if model and not effective_no_llm:
+        payload["model"] = model
     if artifact_dir:
         payload["artifact_dir"] = artifact_dir
     return payload, skipped
@@ -157,6 +176,21 @@ def _has_block_signal(response: dict) -> bool:
     )
 
 
+def _looks_like_llm_provider_blocked(*values: object) -> bool:
+    text = " ".join(str(value or "") for value in values).casefold()
+    return any(
+        marker in text
+        for marker in (
+            "key limit exceeded",
+            "quota",
+            "rate limit",
+            "insufficient credit",
+            "resource exhausted",
+            "openrouterexception",
+        )
+    )
+
+
 def summarize(case: dict, payload: dict, status: int | None, response: dict | None,
               elapsed_ms: int, error: str = "", skipped: bool = False) -> dict:
     response = response or {}
@@ -167,6 +201,8 @@ def summarize(case: dict, payload: dict, status: int | None, response: dict | No
     ok = bool(response.get("ok")) if response else False
     expected_block = expect.startswith("blocked") or expect.startswith("human")
     passed = False if error else (expected_block and _has_block_signal(response)) or (ok and not skipped)
+    generator = response.get("generator") if isinstance(response.get("generator"), dict) else {}
+    environment_blocked = _looks_like_llm_provider_blocked(error, response.get("error"), generator.get("reason"))
     return {
         "id": case.get("id"),
         "category": case.get("category"),
@@ -182,6 +218,8 @@ def summarize(case: dict, payload: dict, status: int | None, response: dict | No
         "degradedReason": response.get("degradedReason"),
         "execute": payload.get("execute"),
         "no_llm": payload.get("no_llm"),
+        "model": payload.get("model"),
+        "environmentBlocked": environment_blocked,
         "selectedTargets": response.get("selectedTargets"),
         "selectedNodes": response.get("selectedNodes"),
         "generator": response.get("generator"),
@@ -212,6 +250,7 @@ def write_reports(rows: list[dict], out_dir: Path) -> None:
         "passed": sum(1 for row in rows if row.get("passed")),
         "ok": sum(1 for row in rows if row.get("ok")),
         "skipped": sum(1 for row in rows if row.get("skipped")),
+        "environmentBlocked": sum(1 for row in rows if row.get("environmentBlocked")),
         "failed": [row["id"] for row in rows if not row.get("passed") and not row.get("skipped")],
         "categories": {},
     }
@@ -229,16 +268,18 @@ def write_reports(rows: list[dict], out_dir: Path) -> None:
         f"- passed: {summary['passed']}",
         f"- ok: {summary['ok']}",
         f"- skipped: {summary['skipped']}",
+        f"- environmentBlocked: {summary['environmentBlocked']}",
         "",
-        "| id | category | pass | ok | target | steps | ms | error |",
-        "|---|---|---:|---:|---|---:|---:|---|",
+        "| id | category | pass | ok | env-block | target | steps | ms | error |",
+        "|---|---|---:|---:|---:|---|---:|---:|---|",
     ]
     for row in rows:
         target = ",".join(row.get("selectedTargets") or [])
         err = str(row.get("error") or row.get("degradedReason") or "")[:80].replace("|", "\\|")
         lines.append(
             f"| {row['id']} | {row.get('category')} | {int(bool(row.get('passed')))} | "
-            f"{int(bool(row.get('ok')))} | {target} | {row.get('flowStepCount')} | "
+            f"{int(bool(row.get('ok')))} | {int(bool(row.get('environmentBlocked')))} | "
+            f"{target} | {row.get('flowStepCount')} | "
             f"{row.get('elapsedMs')} | {err} |"
         )
     (out_dir / "REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -252,18 +293,23 @@ def run(args: argparse.Namespace) -> int:
         defaults["targets"] = _split_csv(args.targets) or []
     if args.nodes is not None:
         defaults["nodes"] = _split_csv(args.nodes)
+    effective_no_llm = bool(defaults.get("no_llm", False) if args.no_llm is None else args.no_llm)
+    resolved_model = None if effective_no_llm else (
+        args.model or model_from_env() or model_from_server_config(defaults["base"], min(args.timeout, 5.0))
+    )
     categories = set(_split_csv(args.category))
     cases = select_cases(load_cases(Path(args.prompts)), categories, args.limit)
     out_dir = Path(args.out or (HERE / "generated" / _dt.datetime.now().strftime("%Y%m%dT%H%M%S")))
     artifact_dir = str(out_dir / "artifacts")
     rows: list[dict] = []
     print(f"chat: {defaults['base'].rstrip('/')}/api/chat/ask")
-    print(f"cases: {len(cases)}  execute={args.execute}  no_llm={args.no_llm}")
+    print(f"cases: {len(cases)}  execute={args.execute}  no_llm={args.no_llm}  model={resolved_model or '(none)'}")
     for idx, case in enumerate(cases, 1):
         payload, skipped = build_payload(
             case, defaults,
             execute=args.execute,
             no_llm=args.no_llm,
+            model=resolved_model,
             include_side_effects=args.include_side_effects,
             artifact_dir=artifact_dir,
         )
@@ -318,6 +364,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--category", help="Comma-separated categories to run.")
     parser.add_argument("--limit", type=int, help="Run only first N selected cases.")
     parser.add_argument("--execute", action="store_true", help="Execute accepted flows. Omitted means dry-run.")
+    parser.add_argument("--model", help="LLM model to send in chat requests. Defaults to URIRUN_LLM_MODEL, LLM_MODEL, then /api/chat/config.")
     parser.add_argument("--include-side-effects", action="store_true",
                         help="When --execute is set, also run cases with executeAllowed=false.")
     parser.add_argument("--no-llm", action="store_true", default=None, help="Send no_llm=true.")

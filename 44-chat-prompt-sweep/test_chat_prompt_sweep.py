@@ -63,6 +63,45 @@ def test_execute_can_include_side_effect_cases_when_explicit():
     assert payload["execute"] is True
 
 
+def test_payload_includes_model_only_for_llm_requests():
+    case = {"id": "x", "prompt": "otworz strone"}
+
+    payload, _ = runner.build_payload(
+        case,
+        {"targets": ["host"], "nodes": [], "no_llm": False},
+        execute=False,
+        no_llm=None,
+        model="openrouter/test-model",
+        include_side_effects=False,
+        artifact_dir=None,
+    )
+    assert payload["model"] == "openrouter/test-model"
+
+    payload, _ = runner.build_payload(
+        case,
+        {"targets": ["host"], "nodes": [], "no_llm": False},
+        execute=False,
+        no_llm=True,
+        model="openrouter/test-model",
+        include_side_effects=False,
+        artifact_dir=None,
+    )
+    assert "model" not in payload
+
+
+def test_summarize_marks_llm_provider_quota_as_environment_blocked():
+    row = runner.summarize(
+        {"id": "x", "prompt": "otworz strone"},
+        {"execute": False, "no_llm": False, "model": "openrouter/test-model"},
+        200,
+        {"ok": False, "generator": {"reason": "OpenrouterException: Key limit exceeded"}},
+        10,
+    )
+
+    assert row["model"] == "openrouter/test-model"
+    assert row["environmentBlocked"] is True
+
+
 def test_category_filter_keeps_order():
     cases = runner.load_cases(HERE / "prompts.json")
     selected = runner.select_cases(cases, {"routing"}, 3)
