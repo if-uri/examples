@@ -51,8 +51,7 @@ CONNECTORS = [
      "run": ("email://host/inbox/query/list", {})},          # safe: "not configured" without creds
     {"n": "sqlite-context", "lang": "py", "pkg": "urirun_connector_sqlite_context",
      "run": ("log://host/logs/query/recent", {"limit": 5})},
-    {"n": "mqtt", "lang": "py", "pkg": "urirun_connector_mqtt",
-     "run": ("device://device-01/led/command/set", {"state": "on"})},  # reports topic, no broker bound
+    {"n": "mqtt", "lang": "py", "pkg": "urirun_connector_mqtt"},        # needs paho-mqtt + a broker
     {"n": "ksef", "lang": "py", "pkg": "urirun_connector_ksef"},          # live MF API
     {"n": "planfile", "lang": "py", "pkg": "urirun_connector_planfile"},  # needs a planfile project
     {"n": "namecheap-dns", "lang": "py", "pkg": "urirun_connector_namecheap_dns"},  # API creds
@@ -81,6 +80,18 @@ def setup_polyglot_bin() -> None:
         path.write_text(f"#!/bin/sh\n{body}\n")
         path.chmod(0o755)
     os.environ["PATH"] = f"{binroot}{os.pathsep}{os.environ['PATH']}"
+
+
+def _with_pythonpath(*paths: str) -> str:
+    """Prepend absolute paths to PYTHONPATH for isolated handler subprocesses.
+
+    The local-function-subprocess adapter runs with cwd outside the repo, so
+    relative PYTHONPATH entries that work for pytest collection are not enough.
+    """
+    existing = [p for p in os.environ.get("PYTHONPATH", "").split(os.pathsep) if p]
+    prepend = [str(Path(p).resolve()) for p in paths if p]
+    merged = list(dict.fromkeys([*prepend, *existing]))
+    return os.pathsep.join(merged)
 
 
 def emit_bindings(c) -> dict:
@@ -115,7 +126,15 @@ def check(c) -> dict:
         uri, payload = c["run"]
         scheme = uri.split("://", 1)[0]
         policy = urirun.policy(allow=[f"{scheme}://*"])
-        result = urirun.run(uri, registry, payload, mode="execute", policy=policy)
+        old_pythonpath = os.environ.get("PYTHONPATH")
+        os.environ["PYTHONPATH"] = _with_pythonpath(UP, str(ROOT / f"urirun-connector-{c['n']}"))
+        try:
+            result = urirun.run(uri, registry, payload, mode="execute", policy=policy)
+        finally:
+            if old_pythonpath is None:
+                os.environ.pop("PYTHONPATH", None)
+            else:
+                os.environ["PYTHONPATH"] = old_pythonpath
         ok = bool(result.get("ok"))
         row["ran"] = uri
         row["status"] = "RAN ✓" if ok else f"run-failed: {(result.get('decision') or {}).get('reason') or result.get('error')}"

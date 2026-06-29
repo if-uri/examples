@@ -24,10 +24,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 
 
+def _prepend_pythonpath(paths: list[str]) -> None:
+    existing = [p for p in os.environ.get("PYTHONPATH", "").split(os.pathsep) if p]
+    prepend = [os.path.abspath(p) for p in paths if p and os.path.isdir(p)]
+    merged = list(dict.fromkeys([*prepend, *existing]))
+    os.environ["PYTHONPATH"] = os.pathsep.join(merged)
+    for path in reversed(prepend):
+        if path not in sys.path:
+            sys.path.insert(0, path)
+
+
 def _ensure_imports() -> None:
     cand = os.path.join(ROOT, "urirun", "adapters", "python")
-    if os.path.isdir(cand) and cand not in sys.path:
-        sys.path.insert(0, cand)
+    _prepend_pythonpath([cand])
 
 
 _ensure_imports()
@@ -37,6 +46,16 @@ import yaml  # noqa: E402
 sys.path.insert(0, HERE)
 import pkg_connector  # noqa: E402
 from connectors import CONNECTORS  # noqa: E402
+
+
+def _ensure_connector_imports() -> None:
+    """Make local editable connectors visible to isolated handler subprocesses."""
+    paths = [os.path.join(ROOT, "urirun", "adapters", "python")]
+    for name in CONNECTORS:
+        cdir = os.path.join(ROOT, f"urirun-connector-{name}")
+        paths.append(cdir)
+        paths.append(os.path.join(cdir, "src"))
+    _prepend_pythonpath(paths)
 
 
 def write_flow(path: str, task: str, allow: list[str], steps: list[dict]) -> dict:
@@ -55,6 +74,7 @@ def run_flow(registry: dict, steps: list[dict]) -> list[dict]:
 
 def merged_registry() -> tuple[dict, dict]:
     """Compile one registry from pkg:// + every (importable) connector's bindings."""
+    _ensure_connector_imports()
     doc = {"version": "urirun.bindings.v2", "bindings": dict(pkg_connector.bindings()["bindings"])}
     present = {}
     for name, (module, *_rest) in CONNECTORS.items():
@@ -72,6 +92,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--no-install", action="store_true", help="skip the install flow (use what's already installed)")
     p.add_argument("--json", action="store_true")
     args = p.parse_args(argv)
+    _ensure_connector_imports()
 
     # 1) the INSTALL flow — installing each connector is itself a URI step
     install_steps = [{"id": f"install-{n}", "uri": "pkg://host/connector/command/install", "payload": {"name": n}}

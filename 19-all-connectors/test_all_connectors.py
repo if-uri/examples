@@ -12,5 +12,5 @@ def test_all_connectors_valid_and_runnable():
     assert len(rows) == 17
     executed = [r["connector"] for r in rows if r.get("ok")]
     # the offline/network-safe routes must actually execute end-to-end
-    for name in ("base64", "hash", "uuid", "time-tools", "mcp-filesystem", "email", "mqtt", "sqlite-context"):
+    for name in ("base64", "hash", "uuid", "time-tools", "mcp-filesystem", "email", "sqlite-context"):
         assert name in executed, f"{name} did not execute its route"
