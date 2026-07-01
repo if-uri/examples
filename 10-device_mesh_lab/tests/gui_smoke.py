@@ -172,17 +172,52 @@ def free_port() -> int:
 
 
 def find_chrome() -> str:
-    for candidate in (
+    candidates = [
         os.environ.get("CHROME_BIN"),
+        os.environ.get("CHROME_PATH"),
         "google-chrome",
         "google-chrome-stable",
         "chromium",
         "chromium-browser",
-    ):
-        if candidate and shutil.which(candidate):
-            return shutil.which(candidate) or candidate
-    raise RuntimeError("Chrome/Chromium executable was not found")
+        "chrome",
+        "chrome.exe",
+        "msedge",
+        "msedge.exe",
+    ]
 
+    if os.name == "nt":
+        program_files = [
+            os.environ.get("PROGRAMFILES"),
+            os.environ.get("PROGRAMFILES(X86)"),
+            os.environ.get("LOCALAPPDATA"),
+        ]
+
+        for base in program_files:
+            if not base:
+                continue
+
+            candidates.extend([
+                str(pathlib.Path(base) / "Google" / "Chrome" / "Application" / "chrome.exe"),
+                str(pathlib.Path(base) / "Chromium" / "Application" / "chrome.exe"),
+                str(pathlib.Path(base) / "Microsoft" / "Edge" / "Application" / "msedge.exe"),
+            ])
+
+    for candidate in candidates:
+        if not candidate:
+            continue
+
+        found = shutil.which(candidate)
+        if found:
+            return found
+
+        path = pathlib.Path(candidate)
+        if path.exists():
+            return str(path)
+
+    raise RuntimeError(
+        "Chrome/Chromium/Edge executable was not found. "
+        "Set CHROME_BIN or CHROME_PATH to the browser executable."
+    )
 
 def recv_exact(sock: socket.socket, length: int) -> bytes:
     chunks = []

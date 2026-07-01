@@ -21,6 +21,7 @@ PY="$(pick_python)" || { echo "ERROR: no Python with 'urirun' found. Install: pi
 # Make a path-based interpreter absolute so it survives `cd` into example dirs.
 case "$PY" in */*) PY="$(cd "$(dirname "$PY")" && pwd)/$(basename "$PY")";; esac
 echo "Using Python: $PY ($("$PY" -c 'import urirun,sys;print("urirun",getattr(urirun,"__version__","?"))' 2>/dev/null))"
+export PYTHON="$PY"
 HAVE_NODE=0; command -v node >/dev/null 2>&1 && HAVE_NODE=1
 HAVE_PHP=0;  command -v php  >/dev/null 2>&1 && HAVE_PHP=1
 HAVE_TSC=0;  command -v tsc  >/dev/null 2>&1 && HAVE_TSC=1

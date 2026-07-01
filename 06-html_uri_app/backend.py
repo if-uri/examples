@@ -44,8 +44,22 @@ def read_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def resolve_runtime_placeholders(value):
+    if isinstance(value, dict):
+        return {key: resolve_runtime_placeholders(item) for key, item in value.items()}
+
+    if isinstance(value, list):
+        return [resolve_runtime_placeholders(item) for item in value]
+
+    if isinstance(value, str):
+        return value.replace("$PYTHON", os.getenv("HTML_URI_APP_PYTHON", sys.executable))
+
+    return value
+
+
 def binding_document() -> dict:
-    return read_json(ROOT / os.getenv("HTML_URI_APP_BINDINGS", "bindings.json"))
+    document = read_json(ROOT / os.getenv("HTML_URI_APP_BINDINGS", "bindings.json"))
+    return resolve_runtime_placeholders(document)
 
 
 def registry() -> dict:

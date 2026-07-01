@@ -12,7 +12,7 @@
         },
         "additionalProperties": false
       },
-      "argv": ["python3", "-c", "import sys; print(sys.argv[1])", "{text}"],
+      "argv": ["$PYTHON", "-c", "import sys; print(sys.argv[1])", "{text}"],
       "meta": {
         "label": "Echo argv",
         "payload": { "text": "hello from v2" }
@@ -65,7 +65,7 @@
         },
         "additionalProperties": false
       },
-      "argv": ["python3", "-m", "pip", "install", "{requirement}"],
+      "argv": ["$PYTHON", "-m", "pip", "install", "{requirement}"],
       "meta": {
         "label": "PyPI install"
       }
