@@ -6,7 +6,10 @@
 # that works on GNOME/Wayland where gnome-screenshot/x11grab/pipewire fail. Deploy onto
 # a node with `host deploy --code gillm_capture.py --bindings <its bindings>`; the node
 # needs python3-dbus + python3-gobject (present on a GNOME desktop).
-# Capture logic adapted from semcod/gillm (gillm.capture.portal_backend).
+# Capture logic adapted from semcod/gillm (gillm.capture.portal_backend; PyPI: gillm>=0.1).
+# Deliberately vendored, NOT imported: this file's source is shipped verbatim to the remote
+# node by observe.py, so the node needs zero pip installs beyond the GNOME system packages.
+# If gillm's portal backend changes, re-sync from the package instead of patching here.
 
 import base64, shutil, subprocess, urllib.parse
 from pathlib import Path
