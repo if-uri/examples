@@ -76,10 +76,45 @@ def _read_messages(path: Path, limit: int) -> list[dict]:
         box.close()
 
 
+def _ollama_spam(messages: list[dict], model: str) -> dict | None:
+    """Klasyfikacja spamu przez LOKALNY ollama (HTTP :11434). None → ollama niedostępny."""
+    import json
+    import urllib.request
+    base = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+    name = model.split("/", 1)[1] if "/" in model else model
+    out = []
+    for m in messages:
+        prompt = ("Czy ten e-mail to spam? Odpowiedz JEDNYM słowem: SPAM albo HAM.\n"
+                  f"Od: {m.get('from','')}\nTemat: {m.get('subject','')}\n")
+        body = json.dumps({"model": name, "prompt": prompt, "stream": False,
+                           "options": {"temperature": 0}}).encode()
+        try:
+            req = urllib.request.Request(base + "/api/generate", data=body,
+                                         headers={"Content-Type": "application/json"})
+            resp = json.loads(urllib.request.urlopen(req, timeout=30).read().decode())  # noqa: S310
+        except Exception:  # noqa: BLE001 - ollama off/unreachable → caller falls back to rules
+            return None
+        verdict = "spam" in str(resp.get("response", "")).lower()
+        out.append({**m, "spam": verdict, "score": 1 if verdict else 0,
+                    "reasons": ["ollama:" + name] if verdict else []})
+    spam = [m for m in out if m["spam"]]
+    return {"ok": True, "classified": out, "spam_count": len(spam),
+            "spam_uids": [m["uid"] for m in spam]}
+
+
 def _classify(messages: list[dict]) -> dict:
-    """Reuse the connector's pure, credential-free spam classifier."""
+    """Klasyfikuj spam. Jawnie zwraca który LLM uczestniczył (pole 'llm').
+
+    EMAIL_LLM_MODEL (np. 'ollama/llama3.1') → lokalny ollama; inaczej reguły connectora
+    (bez LLM). Każde zadanie deklaruje SWÓJ model — nic nie działa 'nie wiadomo czym'."""
+    model = os.environ.get("EMAIL_LLM_MODEL", "").strip()
+    if model:
+        r = _ollama_spam(messages, model)
+        if r is not None:
+            return {**r, "llm": model}
+        print(f"(LLM {model} niedostępny — fallback na reguły)")
     from urirun_connector_email.core import message_query_classify
-    return message_query_classify(messages)
+    return {**message_query_classify(messages), "llm": "reguły (bez LLM)"}
 
 
 def main() -> int:
