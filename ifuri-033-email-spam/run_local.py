@@ -63,14 +63,16 @@ def _decode(value: str) -> str:
 
 
 def _read_messages(path: Path, limit: int) -> list[dict]:
+    """PIERWSZE ``limit`` wiadomości z mboxa (z Message-ID do stabilnego hashu)."""
     box = mailbox.mbox(str(path))
     try:
-        keys = list(box.keys())[-limit:]
+        keys = list(box.keys())[:limit]
         rows = []
         for k in keys:
             m = box[k]
             rows.append({"uid": f"{path.parent.name}/{k}", "from": _decode(str(m.get("From", ""))),
-                         "subject": _decode(str(m.get("Subject", ""))), "date": str(m.get("Date", ""))})
+                         "subject": _decode(str(m.get("Subject", ""))), "date": str(m.get("Date", "")),
+                         "message_id": str(m.get("Message-ID", "")).strip()})
         return rows
     finally:
         box.close()
@@ -125,33 +127,46 @@ def main() -> int:
         print("  TB_PROFILE_DIR=/ścieżka/do/xxxx.default python run_local.py")
         print("Szukane lokalizacje:", ", ".join(_ROOTS))
         return 2
-    limit = int(os.environ.get("TB_LIMIT") or 50)
-    all_msgs: list[dict] = []
-    for prof in profiles:
-        inboxes = _inbox_mboxes(prof)
-        print(f"Profil: {prof}  ·  INBOX-ów: {len(inboxes)}")
-        for ib in inboxes:
-            try:
-                msgs = _read_messages(ib, limit)
-            except Exception as exc:  # noqa: BLE001
-                print(f"  (pomiń {ib}: {exc})")
-                continue
-            print(f"  {ib.parent.name}: {len(msgs)} wiad.")
-            all_msgs += msgs
-    if not all_msgs:
-        print("Brak wiadomości w lokalnym INBOX (Thunderbird niezsynchronizowany?).")
+    import checkpoint  # trwały stan: hash wiadomości → nie duplikuj, wznawiaj
+    limit = int(os.environ.get("EMAIL_FIRST_N") or 10)         # "pierwsze 10 z pierwszej skrzynki"
+    reclassify = "--reclassify" in sys.argv or "--all" in sys.argv
+    prof = profiles[0]                                          # PIERWSZA skrzynka
+    inboxes = _inbox_mboxes(prof)
+    if not inboxes:
+        print(f"Profil {prof} nie ma INBOX-a.")
         return 0
-    cl = _classify(all_msgs)
+    ib = inboxes[0]
+    account = os.environ.get("EMAIL_ACCOUNT") or f"{prof.name}/{ib.parent.name}"
+    msgs = _read_messages(ib, limit)
+    print(f"Skrzynka: {account}  ·  pierwsze {len(msgs)} wiad. (z {ib})")
+    if not msgs:
+        print("Brak wiadomości (Thunderbird niezsynchronizowany?).")
+        return 0
+
+    fresh, done = (msgs, []) if reclassify else checkpoint.partition(account, msgs)
+    print(f"Nowe do klasyfikacji: {len(fresh)}  ·  już przetworzone (pomijam): {len(done)}"
+          + (" [--reclassify: przetwarzam wszystko]" if reclassify else ""))
+    for m in done:
+        print(f"  ⏭  {m.get('uid')}  {m.get('subject','')[:50]!r} (w stanie)")
+    if not fresh:
+        print("Nic nowego — wszystko już przetworzone w poprzednich przebiegach.")
+        print("Stan:", checkpoint.summary(account))
+        return 0
+
+    cl = _classify(fresh)
     if not cl.get("ok"):
         print(f"Klasyfikacja błąd: {cl.get('error')}")
         return 3
-    spam = [m for m in (cl.get("classified") or []) if m.get("spam")]
-    print(f"\nRazem: {len(all_msgs)} wiad. · spam: {cl.get('spam_count')} (bez logowania, z lokalnego mbox)")
-    for m in spam:
-        print(f"  [{m.get('uid')}] {m.get('from','')[:46]!r} | {m.get('subject','')[:56]!r}"
-              f" → {','.join(m.get('reasons') or [])}")
-    if not spam:
-        print("Brak spamu w lokalnej skrzynce.")
+    classified = cl.get("classified") or []
+    run_id = os.environ.get("EMAIL_RUN_ID") or "local-" + str(int(msgs[0].get("uid", "0").split("/")[-1] or 0))
+    checkpoint.record(account, classified, run_id)
+    spam = [m for m in classified if m.get("spam")]
+    print(f"\nLLM: {cl.get('llm')}  ·  sklasyfikowano NOWYCH: {len(classified)}  ·  spam: {len(spam)}")
+    for m in classified:
+        tag = "SPAM" if m.get("spam") else "ham "
+        print(f"  {tag} [{m.get('uid')}] {m.get('from','')[:40]!r} | {m.get('subject','')[:50]!r}"
+              + (f" → {','.join(m.get('reasons') or [])}" if m.get("spam") else ""))
+    print("Zapisano stan:", checkpoint.summary(account))
     return 0
 
 
