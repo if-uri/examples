@@ -13,18 +13,15 @@
 # If not, the first step (ensure) launches a dedicated session.
 #
 #   DRY RUN (plan only, no publish):
-#       python run.py "napisz post na LinkedIn: Testujemy CDP" --node http://127.0.0.1:8766
+#       python run.py "napisz post na LinkedIn: Testujemy CDP" --node-url http://127.0.0.1:8766 --name laptop
 #
 #   EXECUTE:
 #       python run.py "napisz post na LinkedIn: Testujemy CDP" \
-#           --node http://127.0.0.1:8766 --execute
+#           --node-url http://127.0.0.1:8766 --name laptop --execute
 #
 #   PUBLISH (add --publish flag — clicks "Opublikuj"/"Post"):
-#       python run.py "..." --node http://127.0.0.1:8766 --execute --publish
+#       python run.py "..." --node-url http://127.0.0.1:8766 --name laptop --execute --publish
 #
-# Environment: examples/.env (LLM_MODEL + OPENROUTER_API_KEY) — used only for NL->text.
-# The flow itself does NOT need the LLM — it drives pure CDP DOM.
-
 from __future__ import annotations
 
 import argparse
@@ -37,8 +34,13 @@ import time
 from pathlib import Path
 from typing import Any
 
+# Environment: examples/.env (LLM_MODEL + OPENROUTER_API_KEY) — used only for NL->text.
+# The flow itself does NOT need the LLM — it drives pure CDP DOM.
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "urirun" / "adapters" / "python"))
+
+SCHEME = os.environ.get("LINKEDIN_CDP_SCHEME", "browser")
 
 from urirun.node.mesh import _maybe_load_dotenv  # noqa: E402
 
@@ -53,6 +55,7 @@ COMPOSER_OPENER_ROLE = "button"
 COMPOSER_FIELD_ROLE  = "textbox"
 PUBLISH_BUTTON_TEXT  = "Post"           # EN; try "Opublikuj" fallback on PL locale
 PUBLISH_BUTTON_ROLE  = "button"
+LINKEDIN_URL         = "https://www.linkedin.com/feed/"
 
 # JS snippet that reads the current text content of the first visible textbox.
 # Used for the hard verification gate — returns the actual text as a string.
@@ -68,10 +71,10 @@ VERIFY_JS = (
 _URIRUN = str(ROOT / "urirun" / "venv" / "bin" / "urirun")
 
 
-def _step(node: str, uri_path: str, payload: dict[str, Any], timeout: float = 30) -> dict[str, Any]:
+def _step(node_url: str, node_name: str, uri_path: str, payload: dict[str, Any], timeout: float = 30) -> dict[str, Any]:
     """Call a single URI step on the node via `urirun host run`."""
-    uri = f"browser://{node}/{uri_path}"
-    cmd = [_URIRUN, "host", "run", f"http://{node}", uri,
+    uri = f"{SCHEME}://{node_name}/{uri_path}"
+    cmd = [_URIRUN, "host", "run", node_url, uri,
            "--payload", json.dumps(payload), "--timeout", str(int(timeout))]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     m = re.search(r"\{.*\}", proc.stdout, re.S)
@@ -87,18 +90,18 @@ def _ok(result: dict) -> bool:
     return bool(result.get("ok"))
 
 
-def run_flow(node: str, text: str, *, execute: bool, publish: bool, verbose: bool) -> None:
+def run_flow(node_url: str, node_name: str, text: str, *, execute: bool, publish: bool, verbose: bool) -> None:
     steps = []
 
     def do(label: str, uri_path: str, payload: dict, *, skip_on_dry: bool = True) -> dict:
-        entry = {"label": label, "uri": f"browser://{node}/{uri_path}", "payload": payload}
+        entry = {"label": label, "uri": f"{SCHEME}://{node_name}/{uri_path}", "payload": payload}
         if not execute:
             if verbose:
-                print(f"  [DRY] {label}  →  browser://{node}/{uri_path}  {json.dumps(payload)}")
+                print(f"  [DRY] {label}  →  {SCHEME}://{node_name}/{uri_path}  {json.dumps(payload)}")
             steps.append({**entry, "ok": None, "dry": True})
             return {"ok": True, "dry": True}
         t0 = time.monotonic()
-        result = _step(node, uri_path, payload)
+        result = _step(node_url, node_name, uri_path, payload)
         elapsed = time.monotonic() - t0
         ok = _ok(result)
         steps.append({**entry, "ok": ok, "result": result, "elapsed_ms": int(elapsed * 1000)})
@@ -109,32 +112,37 @@ def run_flow(node: str, text: str, *, execute: bool, publish: bool, verbose: boo
         return result
 
     print(f"\n{'[DRY RUN] ' if not execute else ''}LinkedIn Compose via CDP DOM")
-    print(f"  node  : http://{node}")
+    print(f"  node  : {node_url}")
+    print(f"  name  : {node_name}")
     print(f"  text  : {text!r}")
     print(f"  publish: {publish}")
     print()
 
-    # 1. Ensure CDP session (idempotent — reuses if already bound)
-    r = do("ensure CDP session", "cdp/session/command/ensure", {})
+    # 1. Launch a CDP browser session directly on the target page.
+    # The live browser-control registry exposes launch/find, not ensure/ready.
+    r = do("launch CDP browser on LinkedIn", "cdp/session/command/launch",
+           {"browser": "chrome", "url": LINKEDIN_URL, "headless": False})
     if execute and not _ok(r):
-        _fail("CDP session could not be ensured", r, steps)
+        _fail("CDP browser could not be launched", r, steps)
         return
 
-    # 2. Wait for session port to bind (launch/probe split — no re-launch)
-    r = do("wait for CDP session ready", "cdp/session/query/ready", {"timeout": 15})
+    # 2. Open LinkedIn before any compose actions.
+    # The CDP session may start on about:blank or a non-LinkedIn tab, so we
+    # explicitly navigate to the target page instead of depending on ambient state.
+    r = do("navigate to LinkedIn", "cdp/page/command/navigate", {"url": LINKEDIN_URL})
     if execute and not _ok(r):
-        _fail("CDP session did not bind within timeout", r, steps)
+        _fail("Could not navigate to LinkedIn", r, steps)
         return
 
     # 3. Verify we are on LinkedIn (safety check — do NOT publish to wrong page)
-    r = do("verify LinkedIn is open", "page/query/eval",
+    r = do("verify LinkedIn is open", "cdp/page/query/eval",
            {"expr": "document.location.hostname.includes('linkedin.com')"})
     if execute:
         if not _ok(r):
             _fail("page/query/eval failed", r, steps)
             return
         if r.get("value") is not True:
-            _fail("Not on linkedin.com — navigate there first", r, steps)
+            _fail("Not on linkedin.com after navigation", r, steps)
             return
 
     # 4. Click the "Start a post" / "Opublikuj" teaser (opens composer modal)
@@ -159,7 +167,7 @@ def run_flow(node: str, text: str, *, execute: bool, publish: bool, verbose: boo
             if r.get("value") is True:
                 break
             time.sleep(0.5)
-            r = _step(node, "cdp/page/query/eval",
+            r = _step(node_url, node_name, "cdp/page/query/eval",
                       {"expr": "!!document.querySelector('[role=textbox][contenteditable]')"})
         if r.get("value") is not True:
             _fail("Composer textbox did not appear in DOM after 4s", r, steps)
@@ -210,13 +218,13 @@ def run_flow(node: str, text: str, *, execute: bool, publish: bool, verbose: boo
         r = do("verify composer closed (post published)",
                "cdp/page/query/eval",
                {"expr": "!document.querySelector('[role=dialog][aria-label*=post]')"
-                       " && !document.querySelector('[role=dialog][aria-label*=Post]')"})
+                " && !document.querySelector('[role=dialog][aria-label*=Post]')"})
         if execute:
             for _ in range(10):
                 if r.get("value") is True:
                     break
                 time.sleep(0.5)
-                r = _step(node, "cdp/page/query/eval",
+                r = _step(node_url, node_name, "cdp/page/query/eval",
                           {"expr": "!document.querySelector('[role=dialog]')"})
             if r.get("value") is not True:
                 print("  ⚠  Composer still open — post may have failed or requires confirmation")
@@ -251,12 +259,13 @@ def main() -> None:
     _maybe_load_dotenv(str(ROOT / "examples" / ".env"))
     p = argparse.ArgumentParser(description="LinkedIn Compose via CDP DOM")
     p.add_argument("text", help="Text to write in the LinkedIn composer")
-    p.add_argument("--node", default="127.0.0.1:8766", help="urirun node host:port")
+    p.add_argument("--node-url", default="http://127.0.0.1:8766", help="urirun node base URL")
+    p.add_argument("--name", default="laptop", help="service name used in browser:// URIs")
     p.add_argument("--execute", action="store_true", help="Actually execute (default: dry run)")
     p.add_argument("--publish", action="store_true", help="Click Publish after fill+verify")
     p.add_argument("--verbose", "-v", action="store_true", help="Print full result dicts")
     args = p.parse_args()
-    run_flow(args.node, args.text, execute=args.execute, publish=args.publish, verbose=args.verbose)
+    run_flow(args.node_url, args.name, args.text, execute=args.execute, publish=args.publish, verbose=args.verbose)
 
 
 if __name__ == "__main__":

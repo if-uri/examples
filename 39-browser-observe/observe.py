@@ -66,12 +66,16 @@ def run_ro(client: NodeClient, uri: str, payload: dict | None = None) -> dict:
     return client.run(uri, payload, timeout=60)
 
 
-def ensure_capture(client: NodeClient) -> None:
+def ensure_capture(client: NodeClient) -> str:
     """Self-manage the capture capability: if no screen:// route is served, deploy the
     gillm portal-capture handler (signed)."""
-    served = {r["uri"].split("://", 1)[0] for r in client.routes()}
-    if "screen" in served:
-        return
+    routes = [r.get("uri", "") for r in client.routes()]
+    for uri in routes:
+        if uri.endswith("/screen/query/capture") and uri.startswith("kvm://"):
+            return uri
+    for uri in routes:
+        if uri.endswith("/portal/query/capture") and uri.startswith("screen://"):
+            return uri
     sys.path.insert(0, str(HERE))
     import gillm_capture
     res = mesh.deploy_to_node(client.base, bindings=gillm_capture.urirun_bindings(),
@@ -79,15 +83,19 @@ def ensure_capture(client: NodeClient) -> None:
                               allow=["screen://**"], merge=True, identity=IDENTITY)
     if not res.get("ok"):
         raise RuntimeError(f"could not provision capture: {res}")
+    return f"screen://{NODE_NAME}/portal/query/capture"
 
 
 def observe(client: NodeClient) -> dict:
-    ensure_capture(client)
-    env = run_ro(client, f"screen://{NODE_NAME}/portal/query/capture")
+    capture_uri = ensure_capture(client)
+    env = run_ro(client, capture_uri, {"base64": True})
     data = (env.get("result") or {}).get("value") or {}
     if not data.get("ok"):
         return {"ok": False, "error": data.get("error", "capture failed")}
-    shot = "data:image/png;base64," + data["base64"]
+    encoded = data.get("base64") or data.get("pngBase64")
+    if not encoded:
+        return {"ok": False, "error": "capture returned no base64 image payload"}
+    shot = "data:image/png;base64," + encoded
     if not MODEL:
         return {"ok": True, "captured_bytes": data["bytes"], "note": "set LLM_MODEL (vision) to analyse the image"}
     from urirun_connector_llm.core import complete
