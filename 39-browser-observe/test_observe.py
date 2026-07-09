@@ -19,7 +19,7 @@ class FakeClient:
 
     def run(self, uri, payload, timeout=60):
         assert uri == "screen://laptop/portal/query/capture"
-        assert payload is None
+        assert payload == {"base64": True}
         assert timeout == 60
         return {
             "ok": True,

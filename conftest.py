@@ -12,6 +12,20 @@ import sys
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
+_URIRUN_PKG = _HERE.parent / "urirun" / "adapters" / "python"
+
+
+def _ensure_urirun_package() -> None:
+    """Keep the real urirun package ahead of the PEP-420 namespace shell at repo ``urirun/``."""
+    if not _URIRUN_PKG.is_dir():
+        return
+    pkg = str(_URIRUN_PKG)
+    if pkg not in sys.path:
+        sys.path.insert(1, pkg)
+    mod = sys.modules.get("urirun")
+    if mod is not None and getattr(mod, "__file__", None) is None:
+        for name in [n for n in list(sys.modules) if n == "urirun" or n.startswith("urirun.")]:
+            del sys.modules[name]
 
 
 def _example_key(p: Path) -> str:
@@ -53,5 +67,6 @@ def pytest_collect_file(parent, file_path: Path):
     if dir_str in sys.path:
         sys.path.remove(dir_str)
     sys.path.insert(0, dir_str)
+    _ensure_urirun_package()
 
     return None

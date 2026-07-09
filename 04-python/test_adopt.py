@@ -2,6 +2,7 @@
 # Part of the ifURI solution.
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -18,6 +19,8 @@ from urirun.v2_adopt import (
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "03-artifacts"
+URIRUN_PKG = ROOT.parent / "urirun" / "adapters" / "python"
+SUBPROC_ENV = {**os.environ, "PYTHONPATH": str(URIRUN_PKG)}
 ALLOW_ALL = {"execute": {"allow": ["*"]}}
 
 
@@ -88,13 +91,14 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             bindings = Path(tmp) / "b.json"
             registry = Path(tmp) / "r.json"
-            subprocess.run([sys.executable, "-m", "urirun.v2_adopt", "add-python-package", "pip", "--out", str(bindings)], check=True)
-            subprocess.run([sys.executable, "-m", "urirun.v2", "validate", str(bindings)], check=True, capture_output=True)
-            subprocess.run([sys.executable, "-m", "urirun.v2", "compile", str(bindings), "--out", str(registry)], check=True)
+            subprocess.run([sys.executable, "-m", "urirun.v2_adopt", "add-python-package", "pip", "--out", str(bindings)],
+                           check=True, env=SUBPROC_ENV)
+            subprocess.run([sys.executable, "-m", "urirun.v2", "validate", str(bindings)], check=True, capture_output=True, env=SUBPROC_ENV)
+            subprocess.run([sys.executable, "-m", "urirun.v2", "compile", str(bindings), "--out", str(registry)], check=True, env=SUBPROC_ENV)
             result = subprocess.run(
                 [sys.executable, "-m", "urirun.v2", "run", "cli://pip/pip/run",
                  "--registry", str(registry), "--payload", '{"args":["--version"]}'],
-                check=True, capture_output=True, text=True,
+                check=True, capture_output=True, text=True, env=SUBPROC_ENV,
             )
         self.assertEqual(json.loads(result.stdout)["result"]["command"], ["pip", "--version"])
 
