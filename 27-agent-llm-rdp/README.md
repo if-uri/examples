@@ -29,7 +29,7 @@ which is what "did the agent produce a valid, permitted plan for the goal" requi
 
 Goal: *"Control the computer over RDP: open the RDP target, take a screenshot of the
 remote screen with the kvm connector, OCR the screen text, then decide the next
-action."* — planner: **llm** (`openrouter/google/gemini-3.1-flash-image-preview`),
+action."* — planner: **llm** (`openrouter/qwen/qwen3.7-plus`),
 action space: 20 routes.
 
 | # | URI | resolved | permitted | why (LLM's reasoning) |

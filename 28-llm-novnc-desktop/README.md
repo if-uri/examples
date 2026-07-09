@@ -36,7 +36,7 @@ key it falls back to a deterministic planner so the example still runs.
 
 NL goal: *"Open a terminal on the desktop and run a command that prints 'urirun agent
 was here', then take a screenshot of the result."* — planner: **llm**
-(`openrouter/google/gemini-3.1-flash-image-preview`), action space: 6 typed routes.
+(`openrouter/qwen/qwen3.7-plus`), action space: 6 typed routes.
 
 | # | URI | ok | payload (LLM-filled **from the schema**) |
 |---|-----|----|------------------------------------------|

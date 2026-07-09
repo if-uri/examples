@@ -35,7 +35,7 @@ REFUSED = ("/command/", "publish", "form/command/submit", "message", "/send", "d
 
 ```bash
 # 0) LLM config from ../.env or ./.env (no manual `set -a; . .env`):
-#    LLM_MODEL=openrouter/google/gemini-3.1-flash-image-preview   (a VISION model)
+#    LLM_MODEL=openrouter/qwen/qwen3.7-plus   (a VISION model)
 #    OPENROUTER_API_KEY=sk-or-...
 
 # 1) read-only observe: capture the screen + describe it (self-deploys gillm capture if missing)

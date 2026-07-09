@@ -76,7 +76,7 @@ matching `*_API_KEY`. The repo's [`examples/.env`](../.env) already carries both
 
 ```ini
 OPENROUTER_API_KEY=sk-or-...
-LLM_MODEL=openrouter/google/gemini-3.1-flash-image-preview
+LLM_MODEL=openrouter/qwen/qwen3.7-plus
 ```
 
 `--env-file` loads it and uses `LLM_MODEL` as the model:

@@ -29,7 +29,7 @@ USE_LLM=1 ./run.sh     # plan with the LLM instead of the heuristic
 ```
 
 ```
-== 4) ... [plan: LLM (openrouter/google/gemini-3.1-flash-image-preview)] ==
+== 4) ... [plan: LLM (openrouter/qwen/qwen3.7-plus)] ==
   planner:    {"fallback":false,"provider":"litellm"}
   flow steps: ["env://office/runtime/query/health","shell://office/command/date"]
   timeline:   [{...,"ok":true},{...,"ok":true}]

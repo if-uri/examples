@@ -74,7 +74,7 @@ model and key are read from **`examples/.env`** (`LLM_MODEL` + `OPENROUTER_API_K
 gitignored) automatically, so no flags are needed:
 
 ```bash
-# uses LLM_MODEL from examples/.env (e.g. openrouter/google/gemini-3.1-flash-image-preview)
+# uses LLM_MODEL from examples/.env (e.g. openrouter/qwen/qwen3.7-plus)
 python3 agent_repair.py --llm --execute "zapisz notatkę raport z wartością ok"
 
 # or override the model explicitly:
