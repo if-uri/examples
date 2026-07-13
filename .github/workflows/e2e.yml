@@ -2,6 +2,15 @@ name: e2e
 
 on:
   workflow_dispatch:
+    inputs:
+      urirun_repo_url:
+        description: "urirun repository URL to install for host examples"
+        type: string
+        default: "https://github.com/if-uri/urirun.git"
+      urirun_ref:
+        description: "urirun ref/SHA to install for host examples"
+        type: string
+        default: "main"
   schedule:
     - cron: "17 3 * * *"   # nightly 03:17 UTC
 
@@ -49,7 +58,13 @@ jobs:
           node-version: "20"
       - name: Install PHP (for 05-generators)
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends php-cli
-      - name: Install urirun (pinned release tag)
-        run: pip install "git+https://github.com/if-uri/urirun.git@v0.3.14#subdirectory=adapters/python"
+      - name: Install urirun under test
+        env:
+          URIRUN_REPO_URL: ${{ inputs.urirun_repo_url || vars.URIRUN_REPO_URL || 'https://github.com/if-uri/urirun.git' }}
+          URIRUN_REF: ${{ inputs.urirun_ref || vars.URIRUN_REF || 'main' }}
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install "git+${URIRUN_REPO_URL}@${URIRUN_REF}#subdirectory=adapters/python"
       - name: Run host examples (Docker demos skipped)
         run: PYTHON=python ./run_tests.sh
