@@ -1,0 +1,190 @@
+examples:
+  01-json:
+    class: host
+    command: python -m urirun.v2 validate bindings.v2.example.json
+  02-decorators:
+    class: host
+    command: python example.py
+  03-artifacts:
+    class: docker
+    command: make test
+  04-python:
+    class: host
+    command: python -m pytest -q .
+  05-generators:
+    class: host
+    command: make test
+  06-html_uri_app:
+    class: host
+    command: node test.mjs
+  07-transports:
+    class: host
+    command: python -m pytest -q .
+  08-multi_transport:
+    class: docker
+    command: make test
+  09-docker_uri_flow:
+    class: docker
+    command: make test
+  10-device_mesh_lab:
+    class: host
+    command: python tests/device_agent_policy.py && python tests/gui_smoke.py
+  11-novnc_lan_flow:
+    class: docker
+    command: make test-full
+  11-tellmesh-uri-flow:
+    class: host
+    command: python -m pytest -q .
+  12-full_e2e_connect_lab:
+    class: docker
+    command: make test
+  13-simple_defaults:
+    class: host
+    command: make test
+  14-llm-uri-agent:
+    class: host
+    command: python -m pytest -q .
+  15-declarative-http:
+    class: host
+    command: make test
+  15-llm-yaml-repair:
+    class: host
+    command: python -m pytest -q .
+  16-secrets:
+    class: host
+    command: python -m pytest -q .
+  17-flows:
+    class: host
+    command: python -m pytest -q .
+  18-connector-transport:
+    class: docker
+    command: make test
+  18-openapi-import:
+    class: host
+    command: make test
+  19-all-connectors:
+    class: host
+    command: python -m pytest -q .
+  19-uri-tree:
+    class: host
+    command: make test
+  20-runtime-transport-matrix:
+    class: host
+    command: python -m pytest -q .
+  21-generate-from-binding:
+    class: host
+    command: python -m pytest -q .
+  22-warm-worker:
+    class: service
+    skip_reason: Benchmark example; requires long-running warm worker timing service and is not deterministic enough for shared CI.
+  23-embedded-urirun:
+    class: host
+    command: python -m pytest -q .
+  23-llm-flow-repair:
+    class: host
+    command: python -m pytest -q .
+  24-adopt-existing-stack:
+    class: docker
+    command: python -m pytest -q .
+  24-adopt-tellmesh-packs:
+    class: host
+    command: python -m pytest -q .
+  25-tellmesh-uri-flow:
+    class: host
+    command: python -m pytest -q .
+  26-agent-uri-flow:
+    class: host
+    command: python -m pytest -q .
+  27-agent-llm-rdp:
+    class: external-secret
+    skip_reason: LLM/RDP scenario requires an external model provider credential and remote desktop target not available to standard CI.
+  28-llm-novnc-desktop:
+    class: external-secret
+    skip_reason: LLM/noVNC desktop scenario requires external model credentials for planning.
+  29-mcp-desktop-agent:
+    class: host
+    command: python -m pytest -q .
+  30-mesh-no-rdp:
+    class: host
+    command: python -m pytest -q .
+  31-llm-remote-office:
+    class: external-secret
+    skip_reason: Remote office LLM flow requires external model credentials and a remote office endpoint.
+  32-host-ask-over-relay:
+    class: service
+    skip_reason: Relay scenario requires a local relay service lifecycle not yet exposed as an idempotent CI command.
+  32-task-scenarios:
+    class: host
+    command: python -m pytest -q .
+  33-office-automation-mcp:
+    class: host
+    command: python -m pytest -q .
+  34-all-connectors-flow:
+    class: host
+    command: python -m pytest -q .
+  35-deploy-lenovo-surface:
+    class: self-hosted
+    skip_reason: Deploys to a specific Lenovo desktop node and needs a self-hosted runner on that LAN.
+  36-remote-browser-cdp:
+    class: host
+    command: python -m pytest -q .
+  37-closed-loop-automation:
+    class: host
+    command: python -m pytest -q .
+  38-self-managing:
+    class: host
+    command: python -m pytest -q .
+  39-browser-observe:
+    class: host
+    command: python -m pytest -q .
+  39-local-social-autonomy:
+    class: external-secret
+    skip_reason: Social autonomy examples may require authenticated social/email accounts; CI must not use production credentials.
+  40-local-portals-suite:
+    class: host
+    command: python -m pytest -q .
+  40-wordpress-article:
+    class: host
+    command: python -m pytest -q .
+  43-camera-usb-ocr-inspection:
+    class: hardware
+    skip_reason: Requires a real USB camera or phone camera stream for OCR inspection.
+  44-chat-prompt-sweep:
+    class: external-secret
+    skip_reason: Chat prompt sweep requires external LLM/chat provider credentials.
+  44-ksef-token-via-browser:
+    class: external-secret
+    skip_reason: KSeF token capture requires a real account or authentication secret unavailable in CI.
+  44-phone-webrtc-scanner-dashboard:
+    class: hardware
+    skip_reason: Requires a real phone/browser WebRTC scanner session.
+  45-ksef-send-faktura:
+    class: external-secret
+    skip_reason: KSeF invoice submission requires a real KSeF credential or paid/external service account.
+  46-connect-anything:
+    class: host
+    command: python -m pytest -q .
+  47-android-nexus7-node:
+    class: hardware
+    skip_reason: Requires a physical Nexus 7 Android device connected through ADB.
+  47-nl-desktop-control:
+    class: self-hosted
+    skip_reason: Natural-language desktop control requires a self-hosted desktop runner with GUI access.
+  48-api-device-node:
+    class: service
+    skip_reason: API device node scenario needs a separately started local device API service.
+  49-linkedin-compose-cdp:
+    class: external-secret
+    skip_reason: LinkedIn CDP scenario requires an authenticated LinkedIn browser profile.
+  50-contract-guarded-flow:
+    class: host
+    command: python -m pytest -q .
+  51-router-guarded-autonomy:
+    class: host
+    command: python -m pytest -q .
+  52-office-vm-rdp-novnc:
+    class: self-hosted
+    skip_reason: Office VM/RDP/noVNC scenario requires a VM/RDP-capable self-hosted runner.
+  53-ecosystem-coverage-audit:
+    class: host
+    command: python -m pytest -q .

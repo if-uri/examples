@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Add `53-ecosystem-coverage-audit`, a host-runnable example that validates the
+  if-uri repository coverage map and future repository drift.
+- Add `ci/ecosystem-coverage.yml` covering the paginated if-uri GitHub
+  repository inventory.
+- Add `docs/ECOSYSTEM_COVERAGE.md` and `docs/EXAMPLES_BACKLOG.md`.
+- Add scheduled `.github/workflows/ecosystem-audit.yml`.
+
+### Changed
+- Document ecosystem coverage from the main README.
+- Extend CI classification with the ecosystem audit example.
+
 ## [0.1.10] - 2026-06-21
 
 ### Fixed

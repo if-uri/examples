@@ -29,6 +29,18 @@ test-all: ## Run the full host pytest suite for examples/
 audit: ## Report examples test coverage versus the smoke runner
 	python scripts/audit_test_coverage.py --verbose
 
+.PHONY: ci-classification
+ci-classification: ## Validate every NN-* example is classified for CI
+	python scripts/run_ci_manifest.py --validate-only
+
+.PHONY: ci-host
+ci-host: ## Run all manifest examples classified as host-runnable
+	python scripts/run_ci_manifest.py --class host --out-dir ci-artifacts/host
+
+.PHONY: ci-docker
+ci-docker: ## Run all manifest examples classified as Docker-runnable
+	python scripts/run_ci_manifest.py --class docker --out-dir ci-artifacts/docker
+
 .PHONY: test-connectors
 test-connectors: ## Run pytest for every sibling Python connector with a tests/ dir (runs all, reports the failures)
 	@fail=0; n=0; failed=""; \
