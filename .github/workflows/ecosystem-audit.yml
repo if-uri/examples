@@ -1,0 +1,72 @@
+name: ecosystem audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+  push:
+    paths:
+      - "ci/ecosystem-coverage.yml"
+      - "scripts/audit_ecosystem_coverage.py"
+      - "docs/ECOSYSTEM_COVERAGE.md"
+      - "[0-9][0-9]-*/**"
+
+permissions:
+  contents: read
+
+jobs:
+  ecosystem-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch if-uri repositories
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > repos.txt
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ.get("GITHUB_TOKEN")
+          headers = {"Accept": "application/vnd.github+json", "User-Agent": "if-uri-examples-audit"}
+          if token:
+              headers["Authorization"] = f"Bearer {token}"
+          page = 1
+          while True:
+              req = urllib.request.Request(
+                  f"https://api.github.com/orgs/if-uri/repos?per_page=100&page={page}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  data = json.loads(resp.read().decode("utf-8"))
+              if not data:
+                  break
+              for repo in data:
+                  print(repo["full_name"])
+              page += 1
+          PY
+      - name: Run ecosystem coverage audit
+        run: |
+          mkdir -p audit
+          python scripts/audit_ecosystem_coverage.py \
+            --repos-file repos.txt \
+            --allow-example-gaps \
+            --json-out audit/ecosystem-audit.json \
+            --markdown-out audit/ecosystem-audit.md
+      - name: Add summary
+        if: always()
+        run: |
+          if [ -f audit/ecosystem-audit.md ]; then
+            cat audit/ecosystem-audit.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-audit
+          path: audit/

@@ -16,6 +16,11 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
+try:
+    from scripts.run_ci_manifest import validate_manifest
+except Exception:  # pragma: no cover - direct execution without package context
+    from run_ci_manifest import validate_manifest  # type: ignore
+
 EXAMPLE_RE = re.compile(r"^\d{2}-[A-Za-z0-9_.-]+$")
 MENTION_RE = re.compile(r"\b(\d{2}-[A-Za-z0-9_.-]+)\b")
 
@@ -42,18 +47,29 @@ def _mentioned_dirs(root: Path, script: Path) -> list[str]:
     return sorted(name for name in set(MENTION_RE.findall(text)) if name in dirs)
 
 
-def audit(root: Path, script: Path) -> dict[str, object]:
+def audit(root: Path, script: Path, manifest: Path | None = None) -> dict[str, object]:
     numbered = _numbered_dirs(root)
     pytest_dirs = _test_dirs(root)
     smoke_dirs = _mentioned_dirs(root, script)
     smoke = set(smoke_dirs)
     tested = set(pytest_dirs)
+    manifest_errors: list[str] = []
+    manifest_examples: list[str] = []
+    if manifest:
+        try:
+            loaded, manifest_errors = validate_manifest(root, manifest)
+            manifest_examples = sorted(loaded)
+        except Exception as exc:  # noqa: BLE001
+            manifest_errors = [str(exc)]
     return {
         "root": str(root),
         "smokeScript": str(script),
+        "manifest": str(manifest) if manifest else None,
         "exampleDirs": numbered,
         "pytestDirs": pytest_dirs,
         "smokeDirs": smoke_dirs,
+        "manifestDirs": manifest_examples,
+        "manifestErrors": manifest_errors,
         "pytestDirsNotInSmoke": sorted(tested - smoke),
         "smokeDirsWithoutPytest": sorted(smoke - tested),
         "dirsWithoutPytestAndNotInSmoke": sorted(set(numbered) - tested - smoke),
@@ -61,6 +77,8 @@ def audit(root: Path, script: Path) -> dict[str, object]:
             "examples": len(numbered),
             "pytestDirs": len(pytest_dirs),
             "smokeDirs": len(smoke_dirs),
+            "manifestDirs": len(manifest_examples),
+            "manifestErrors": len(manifest_errors),
             "pytestDirsNotInSmoke": len(tested - smoke),
             "smokeDirsWithoutPytest": len(smoke - tested),
             "dirsWithoutPytestAndNotInSmoke": len(set(numbered) - tested - smoke),
@@ -95,8 +113,14 @@ def _print_report(rep: dict[str, object], verbose: bool) -> None:
         f"{counts['pytestDirsNotInSmoke']} pytest dirs are not in the smoke runner; "
         "run `make test-all` for the full host pytest suite"
     )
+    if rep.get("manifest"):
+        print(
+            "ci manifest: "
+            f"{counts['manifestDirs']} entries, {counts['manifestErrors']} classification error(s)"
+        )
     if verbose:
         for key, title in (
+            ("manifestErrors", "manifest errors"),
             ("pytestDirsNotInSmoke", "pytest dirs not in smoke"),
             ("smokeDirsWithoutPytest", "smoke dirs without pytest"),
             ("dirsWithoutPytestAndNotInSmoke", "dirs without pytest and not in smoke"),
@@ -118,16 +142,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--fail-on-uncovered-pytest", action="store_true")
+    parser.add_argument("--manifest", default=None)
+    parser.add_argument("--fail-on-manifest-errors", action="store_true")
     ns = parser.parse_args(argv)
 
     root = Path(ns.root).resolve()
     script = Path(ns.script).resolve() if ns.script else root / "run_tests.sh"
-    rep = audit(root, script)
+    manifest = Path(ns.manifest).resolve() if ns.manifest else root / "ci" / "examples-manifest.yml"
+    rep = audit(root, script, manifest if manifest.exists() else None)
     if ns.json:
         print(json.dumps(rep, indent=2, sort_keys=True))
     else:
         _print_report(rep, ns.verbose)
     if ns.fail_on_uncovered_pytest and rep["pytestDirsNotInSmoke"]:
+        return 1
+    if ns.fail_on_manifest_errors and rep["manifestErrors"]:
         return 1
     return 0
 

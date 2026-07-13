@@ -13,6 +13,22 @@ tellmesh/urihandler/v2/examples
 Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 `README.md`.
 
+CI classification lives in `ci/examples-manifest.yml`. Every `NN-*` directory
+must be listed there as `host`, `docker`, `service`, `hardware`, `self-hosted`,
+`manual` or `external-secret`. Runnable classes need a command; skipped classes
+need a concrete technical reason. Operators can run:
+
+```bash
+make ci-classification
+make ci-host
+make ci-docker
+```
+
+An unclassified new directory fails with
+`Unclassified example: NN-example-name` and asks to add it to the manifest.
+Ecosystem-wide repository coverage is tracked in `ci/ecosystem-coverage.yml`
+and summarized in [`docs/ECOSYSTEM_COVERAGE.md`](docs/ECOSYSTEM_COVERAGE.md).
+
 | # | Example | What it shows | Tested (host) |
 |---|---------|---------------|---------------|
 | 01 | [`01-json/`](01-json/) | binding document (JSON Schema + adapter) | ✅ validate/compile |
@@ -78,6 +94,7 @@ Numbered roughly from basics to advanced. Each folder is `NN-name/` with its own
 | 50 | [`50-contract-guarded-flow/`](50-contract-guarded-flow/) | reuse a connector in a flow, its **contract** guards every step (honest passes, drift caught); same `contracts.json` drives the JS/Go SDK guards | ✅ `pytest` |
 | 51 | [`51-router-guarded-autonomy/`](51-router-guarded-autonomy/) | the autonomy safety stack: agent decides a plan → **router** diagnoses WHERE each step runs (blocks unroutable pre-flight) → **contract** guards executed envelopes | ✅ `pytest` |
 | 52 | [`52-office-vm-rdp-novnc/`](52-office-vm-rdp-novnc/) | office work on a **virtual machine over RDP**, surfaced through a **noVNC** HTML5 canvas: NL → ≥10-step flow (vm/rdp/novnc/desktop/fs/clipboard) → verify the task happened **and** RDP/noVNC tore down cleanly; `--live` drives a real noVNC desktop | ✅ `pytest` |
+| 53 | [`53-ecosystem-coverage-audit/`](53-ecosystem-coverage-audit/) | audits the full if-uri repository inventory against the examples coverage map | ✅ `pytest` |
 
 See [`AUTOMATION-INTEGRATIONS.md`](AUTOMATION-INTEGRATIONS.md) for the URI→registry→LLM
 pattern and a plan for browser/email/KSeF/government connectors.
