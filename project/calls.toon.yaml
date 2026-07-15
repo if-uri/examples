@@ -1,49 +1,49 @@
 # code2llm call graph | /home/tom/github/if-uri/examples
-# generated in 0.10s
-# nodes: 221 | edges: 273 | modules: 23
-# CC̄=3.5
+# generated in 0.36s
+# nodes: 460 | edges: 500 | modules: 82
+# CC̄=4.4
 
 HUBS[20]:
+  29-mcp-desktop-agent.mcp_serve.print
+    CC=0  in:384  out:0  total:384
+  43-camera-usb-ocr-inspection.run.main
+    CC=25  in:0  out:98  total:98
+  49-linkedin-compose-cdp.run.run_flow
+    CC=30  in:1  out:69  total:70
   12-full_e2e_connect_lab.scripts.assert_results.main
     CC=38  in:0  out:60  total:60
+  ifuri-033-email-spam.run_local.main
+    CC=21  in:0  out:52  total:52
+  44-chat-prompt-sweep.run_chat_prompts.summarize
+    CC=20  in:1  out:49  total:50
+  44-chat-prompt-sweep.run_chat_prompts.run
+    CC=29  in:1  out:48  total:49
+  44-chat-prompt-sweep.run_chat_prompts.write_reports
+    CC=19  in:1  out:47  total:48
   12-full_e2e_connect_lab.scripts.connector_checks.run_connector_routes
     CC=7  in:1  out:47  total:48
+  44-ksef-token-via-browser.run_token_capture.main
+    CC=16  in:0  out:46  total:46
+  52-office-vm-rdp-novnc.run.main
+    CC=27  in:0  out:43  total:43
+  34-all-connectors-flow.run.main
+    CC=27  in:0  out:42  total:42
+  scripts.audit_ecosystem_coverage.audit
+    CC=18  in:2  out:40  total:42
+  32-task-scenarios.aggregate_report.main
+    CC=24  in:0  out:41  total:41
+  33-office-automation-mcp.run.main
+    CC=26  in:0  out:41  total:41
+  35-deploy-lenovo-surface.lenovo_cdp._ws
+    CC=6  in:3  out:38  total:41
   12-full_e2e_connect_lab.scripts.connector_checks.build_registry
-    CC=1  in:2  out:38  total:40
-  10-device_mesh_lab.controller.normalize_flow
-    CC=20  in:4  out:35  total:39
+    CC=1  in:1  out:38  total:39
+  ifuri-033-email-spam.run.main
+    CC=17  in:0  out:36  total:36
   11-novnc_lan_flow.computer.browser_node.app_service_call
     CC=22  in:1  out:35  total:36
   10-device_mesh_lab.device_agent.DeviceAgent.handler
-    CC=1  in:0  out:32  total:32
-  12-full_e2e_connect_lab.scripts.connector_checks.main
-    CC=20  in:0  out:30  total:30
-  10-device_mesh_lab.mesh_env.send_json
-    CC=1  in:18  out:12  total:30
-  11-novnc_lan_flow.computer.browser_node.json_response
-    CC=1  in:18  out:12  total:30
-  10-device_mesh_lab.device_agent.parse_browser_targets
-    CC=19  in:1  out:26  total:27
-  12-full_e2e_connect_lab.scripts.connector_checks.uri_run
-    CC=2  in:23  out:4  total:27
-  11-novnc_lan_flow.computer.browser_node.screenshot_page
-    CC=10  in:1  out:26  total:27
-  09-docker_uri_flow.orchestrator.flow_runner.parse_flow
-    CC=24  in:1  out:26  total:27
-  08-multi_transport.worker.serve_http
-    CC=1  in:0  out:25  total:25
-  07-transports.transport_lib.start_http_worker
-    CC=1  in:1  out:24  total:25
-  10-device_mesh_lab.device_agent.DeviceAgent.open_browser_in_novnc
-    CC=9  in:0  out:24  total:24
-  10-device_mesh_lab.controller.Handler.do_POST
-    CC=12  in:0  out:24  total:24
-  11-novnc_lan_flow.computer.browser_node.Handler.do_POST
-    CC=9  in:0  out:23  total:23
-  10-device_mesh_lab.www.app.escapeHtml
-    CC=1  in:20  out:2  total:22
-  06-html_uri_app.backend.Handler.do_GET
-    CC=8  in:0  out:21  total:21
+    CC=1  in:1  out:32  total:33
 
 MODULES:
   05-generators.c.example  [2 funcs]
@@ -55,7 +55,7 @@ MODULES:
   05-generators.php.example  [2 funcs]
     bindingFromFunction  CC=2  out:9
     schemaType  CC=2  out:3
-  06-html_uri_app.app  [15 funcs]
+  06-html_uri_app.app  [16 funcs]
     card  CC=2  out:2
     classFor  CC=1  out:2
     data  CC=2  out:1
@@ -66,12 +66,12 @@ MODULES:
     payloadDefaults  CC=4  out:0
     refreshLogs  CC=5  out:7
     renderActions  CC=5  out:5
-  06-html_uri_app.backend  [13 funcs]
+  06-html_uri_app.backend  [14 funcs]
     do_GET  CC=8  out:21
     do_POST  CC=4  out:10
     log_message  CC=1  out:1
     add_log  CC=2  out:2
-    binding_document  CC=1  out:2
+    binding_document  CC=1  out:3
     dispatch  CC=6  out:14
     dispatch_tool  CC=7  out:13
     env_bool  CC=1  out:2
@@ -112,23 +112,12 @@ MODULES:
     dispatch  CC=3  out:2
     normalize  CC=1  out:6
     summary  CC=1  out:2
-  09-docker_uri_flow.shell-worker.server  [3 funcs]
+  09-docker_uri_flow.shell-worker.server  [2 funcs]
     do_GET  CC=3  out:3
     do_POST  CC=6  out:11
-    dispatch  CC=2  out:5
-  10-device_mesh_lab.controller  [26 funcs]
-    do_GET  CC=2  out:5
-    do_OPTIONS  CC=1  out:1
-    do_POST  CC=12  out:24
-    append_step_if_missing  CC=7  out:6
-    build_registry  CC=5  out:3
-    discover_device  CC=6  out:9
-    discover_mesh  CC=5  out:6
-    execute_flow  CC=9  out:15
-    fallback_flow  CC=1  out:4
-    fallback_steps  CC=33  out:19
-  10-device_mesh_lab.device_agent  [11 funcs]
+  10-device_mesh_lab.device_agent  [12 funcs]
     __init__  CC=3  out:3
+    dispatch  CC=27  out:25
     handler  CC=1  out:32
     log  CC=2  out:7
     open_browser_in_novnc  CC=9  out:24
@@ -137,14 +126,11 @@ MODULES:
     default_browser_targets  CC=2  out:2
     main  CC=1  out:6
     make_agent_from_env  CC=3  out:14
-    object_schema  CC=2  out:0
-  10-device_mesh_lab.mesh_env  [7 funcs]
+  10-device_mesh_lab.mesh_env  [5 funcs]
     auth_headers  CC=2  out:1
     auth_token  CC=1  out:2
     check_auth  CC=2  out:2
     load_env  CC=9  out:10
-    parse_peers  CC=8  out:14
-    read_json  CC=3  out:5
     send_json  CC=1  out:12
   10-device_mesh_lab.www.app  [52 funcs]
     appendTimeline  CC=3  out:3
@@ -175,6 +161,8 @@ MODULES:
     run_step  CC=2  out:8
     target_from_uri  CC=2  out:2
     wait_health  CC=4  out:6
+  11-tellmesh-uri-flow.run  [1 funcs]
+    resolve_payload  CC=7  out:9
   12-full_e2e_connect_lab.registry-runtime.registry_server  [5 funcs]
     do_GET  CC=4  out:9
     discover  CC=4  out:9
@@ -184,19 +172,17 @@ MODULES:
   12-full_e2e_connect_lab.scripts.assert_results  [2 funcs]
     load  CC=1  out:2
     main  CC=38  out:60
-  12-full_e2e_connect_lab.scripts.connector_checks  [14 funcs]
+  12-full_e2e_connect_lab.scripts.connector_checks  [15 funcs]
     build_registry  CC=1  out:38
     emit_browser_control_bindings  CC=1  out:3
     emit_http_check_bindings  CC=1  out:3
     emit_time_tools_bindings  CC=1  out:3
     fetch_catalog  CC=1  out:6
-    main  CC=20  out:30
+    main  CC=21  out:31
     project_mcp_a2a  CC=1  out:4
     run  CC=4  out:2
     run_connector_routes  CC=7  out:47
     run_json  CC=2  out:3
-  12-full_e2e_connect_lab.scripts.run_full_scenario  [1 funcs]
-    print  CC=0  out:0
   13-simple_defaults.js.defaults  [6 funcs]
     boolean  CC=1  out:1
     connector  CC=2  out:13
@@ -207,8 +193,351 @@ MODULES:
   13-simple_defaults.python_connector  [2 funcs]
     bindings  CC=1  out:1
     main  CC=2  out:5
+  14-llm-uri-agent.agent  [6 funcs]
+    action_space  CC=1  out:1
+    browser_control_bindings  CC=11  out:8
+    load_flow_steps  CC=3  out:7
+    load_registry  CC=5  out:8
+    main  CC=11  out:29
+    plan  CC=10  out:8
+  14-llm-uri-agent.tools  [7 funcs]
+    _chrome_bin  CC=3  out:1
+    _route  CC=2  out:0
+    bindings  CC=1  out:8
+    browser_dom  CC=4  out:7
+    emit  CC=1  out:2
+    main  CC=10  out:20
+    now  CC=1  out:2
+  15-llm-yaml-repair.agent_repair  [5 funcs]
+    _normalize_flow_dict  CC=10  out:14
+    _strip_fences  CC=5  out:8
+    make_llm_planner  CC=2  out:10
+    repair_run  CC=10  out:19
+    run_flow_file  CC=12  out:21
+  15-llm-yaml-repair.tools  [6 funcs]
+    _route  CC=2  out:0
+    bindings  CC=1  out:6
+    emit  CC=1  out:2
+    main  CC=8  out:16
+    note_put  CC=5  out:9
+    now  CC=1  out:2
+  17-flows.run_flow  [3 funcs]
+    load  CC=2  out:5
+    main  CC=6  out:17
+    run_flow  CC=17  out:24
+  19-all-connectors.check_all  [1 funcs]
+    check  CC=8  out:18
+  20-runtime-transport-matrix.matrix  [1 funcs]
+    main  CC=15  out:29
+  21-generate-from-binding.generate  [3 funcs]
+    main  CC=2  out:29
+    pascal  CC=3  out:3
+    routes  CC=7  out:8
+  21-generate-from-binding.generated.client  [9 funcs]
+    _run  CC=1  out:2
+    browser_host_page_command_screenshot  CC=3  out:2
+    flow_host_daily_command_run  CC=3  out:2
+    flow_host_domain_command_check  CC=3  out:2
+    log_host_daily_command_write  CC=3  out:2
+    log_host_logs_query_recent  CC=3  out:2
+    monitor_host_dns_query_current  CC=3  out:2
+    monitor_host_dns_query_expected  CC=3  out:2
+    monitor_host_http_query_status  CC=3  out:2
+  23-llm-flow-repair.repair_flow  [5 funcs]
+    _extract_yaml  CC=2  out:3
+    build_prompt  CC=3  out:1
+    generate_run_repair  CC=6  out:12
+    main  CC=2  out:12
+    run_flow  CC=12  out:16
+  25-tellmesh-uri-flow.flow  [3 funcs]
+    build_registry  CC=4  out:8
+    main  CC=4  out:11
+    run_flow  CC=1  out:11
+  25-tellmesh-uri-flow.packs.flow_llm.handlers  [1 funcs]
+    complete  CC=5  out:6
+  27-agent-llm-rdp.run_task  [5 funcs]
+    _manifest  CC=2  out:2
+    build_registry  CC=5  out:6
+    main  CC=2  out:8
+    run  CC=12  out:27
+    to_markdown  CC=8  out:18
+  28-llm-novnc-desktop.novnc_connector.core  [9 funcs]
+    _exec  CC=2  out:1
+    _run  CC=1  out:1
+    _state  CC=2  out:4
+    key  CC=2  out:6
+    launch  CC=1  out:9
+    screenshot  CC=5  out:18
+    start  CC=5  out:17
+    stop  CC=2  out:6
+    type_text  CC=3  out:8
+  29-mcp-desktop-agent.mcp_serve  [1 funcs]
+    print  CC=0  out:0
+  31-llm-remote-office.tellmesh_bridge  [4 funcs]
+    __getattr__  CC=3  out:12
+    _ensure_paths  CC=5  out:5
+    _input_schema  CC=1  out:1
+    build_bindings  CC=2  out:1
+  32-task-scenarios.aggregate_report  [1 funcs]
+    main  CC=24  out:41
+  32-task-scenarios.host_node_matrix  [6 funcs]
+    _available  CC=2  out:5
+    _contains_degraded  CC=6  out:8
+    _json_get  CC=2  out:4
+    _route_key  CC=3  out:3
+    _verdict  CC=12  out:14
+    probe_dashboard  CC=6  out:10
+  32-task-scenarios.reversibility_check  [4 funcs]
+    _suffix  CC=3  out:2
+    analyse  CC=7  out:11
+    classify  CC=17  out:5
+    main  CC=10  out:15
+  32-task-scenarios.run_scenarios  [5 funcs]
+    _load_yaml  CC=2  out:4
+    _mini_yaml  CC=13  out:12
+    main  CC=10  out:22
+    run_scenario  CC=10  out:24
+    watch_thread  CC=6  out:10
+  33-office-automation-mcp.office_system  [5 funcs]
+    _app_close  CC=5  out:2
+    _app_open  CC=2  out:5
+    _nid  CC=1  out:2
+    _open_window  CC=2  out:2
+    op  CC=1  out:0
+  33-office-automation-mcp.run  [6 funcs]
+    llm_planner  CC=1  out:9
+    load_registry  CC=1  out:2
+    main  CC=26  out:41
+    mcp_tools  CC=2  out:3
+    run_scenario  CC=12  out:18
+    run_step  CC=1  out:1
+  34-all-connectors-flow.pkg_connector  [3 funcs]
+    _route  CC=4  out:1
+    bindings  CC=1  out:4
+    main  CC=5  out:16
+  34-all-connectors-flow.run  [6 funcs]
+    _ensure_connector_imports  CC=2  out:6
+    _ensure_imports  CC=1  out:2
+    _prepend_pythonpath  CC=8  out:9
+    main  CC=27  out:42
+    merged_registry  CC=3  out:8
+    write_flow  CC=1  out:4
+  35-deploy-lenovo-surface.lenovo_cdp  [9 funcs]
+    _chrome  CC=3  out:1
+    _eval  CC=5  out:8
+    _http  CC=2  out:4
+    _pages  CC=4  out:2
+    _ws  CC=6  out:38
+    cdp_find  CC=10  out:18
+    cdp_launch  CC=8  out:14
+    cdp_linkedin_post  CC=6  out:16
+    cdp_state  CC=5  out:8
+  35-deploy-lenovo-surface.lenovo_node  [7 funcs]
+    _chrome  CC=3  out:1
+    _safe  CC=2  out:7
+    desktop_open  CC=2  out:6
+    fs_read  CC=2  out:7
+    fs_write  CC=1  out:7
+    page_screenshot  CC=4  out:15
+    page_text  CC=4  out:13
+  35-deploy-lenovo-surface.verify  [2 funcs]
+    main  CC=7  out:13
+    run  CC=3  out:3
+  37-closed-loop-automation.closed_loop  [3 funcs]
+    execute_flow  CC=6  out:12
+    goal_verify_loop  CC=3  out:6
+    self_repair_loop  CC=3  out:5
+  37-closed-loop-automation.planners  [3 funcs]
+    _loads_llm_json  CC=9  out:14
+    make_llm_decider  CC=1  out:7
+    make_llm_planner  CC=1  out:9
+  37-closed-loop-automation.run  [1 funcs]
+    main  CC=2  out:30
+  37-closed-loop-automation.vision_loop  [2 funcs]
+    full_screenshot  CC=8  out:9
+    make_vision_decider  CC=1  out:10
+  38-self-managing.deployable_handlers  [2 funcs]
+    _binding  CC=1  out:0
+    for_scheme  CC=4  out:3
+  38-self-managing.governance  [3 funcs]
+    governed_provision  CC=1  out:14
+    is_trusted  CC=3  out:3
+    source_of  CC=5  out:5
+  38-self-managing.resolver  [2 funcs]
+    index_local  CC=12  out:23
+    resolve  CC=13  out:8
+  38-self-managing.run_live  [4 funcs]
+    capability_aware_planner  CC=4  out:8
+    installable_routes  CC=3  out:1
+    main  CC=8  out:22
+    resolver  CC=2  out:2
+  38-self-managing.self_managing  [4 funcs]
+    _scheme  CC=1  out:1
+    flow_gaps  CC=3  out:3
+    self_managing_loop  CC=7  out:13
+    served_schemes  CC=2  out:2
+  39-browser-observe.gillm_capture  [2 funcs]
+    _portal_python  CC=5  out:2
+    capture  CC=6  out:11
+  39-browser-observe.observe  [4 funcs]
+    assert_read_only  CC=3  out:3
+    ensure_capture  CC=9  out:13
+    observe  CC=8  out:11
+    run_ro  CC=1  out:2
+  40-local-portals-suite.domain_loop  [8 funcs]
+    clean_action_prompt  CC=2  out:9
+    extract_domain  CC=3  out:7
+    extract_iterations  CC=3  out:5
+    iteration_payload  CC=5  out:9
+    main  CC=3  out:16
+    parse_loop_prompt  CC=1  out:3
+    route_for_portal  CC=3  out:2
+    run_domain_loop  CC=6  out:11
+  40-local-portals-suite.portal_autonomy  [1 funcs]
+    planner  CC=3  out:4
+  40-wordpress-article.wp_connector  [3 funcs]
+    _auth_header  CC=5  out:7
+    create_post  CC=11  out:21
+    list_posts  CC=5  out:11
+  43-camera-usb-ocr-inspection.ledger  [1 funcs]
+    main  CC=5  out:26
+  43-camera-usb-ocr-inspection.run  [2 funcs]
+    _value  CC=2  out:1
+    main  CC=25  out:98
+  44-chat-prompt-sweep.run_chat_prompts  [13 funcs]
+    _bool_query  CC=3  out:2
+    _dig  CC=3  out:2
+    _flow_steps  CC=2  out:2
+    _has_block_signal  CC=6  out:8
+    _has_human_signal  CC=4  out:5
+    _looks_like_llm_provider_blocked  CC=4  out:4
+    _routing  CC=2  out:2
+    _split_csv  CC=4  out:3
+    defaults_from_url  CC=6  out:13
+    run  CC=29  out:48
+  44-ksef-token-via-browser.ksef_auth  [2 funcs]
+    authenticate_and_store  CC=12  out:15
+    resolve_token  CC=8  out:8
+  44-ksef-token-via-browser.ksef_token  [2 funcs]
+    mask  CC=3  out:4
+    store_token  CC=6  out:11
+  44-ksef-token-via-browser.run_token_capture  [1 funcs]
+    main  CC=16  out:46
+  45-ksef-send-faktura.send_invoice  [3 funcs]
+    build_send_plan  CC=4  out:15
+    main  CC=9  out:27
+    send  CC=9  out:7
+  47-nl-desktop-control.run  [1 funcs]
+    run_uri  CC=3  out:8
+  49-linkedin-compose-cdp.run  [4 funcs]
+    _fail  CC=2  out:5
+    _summary  CC=7  out:9
+    main  CC=1  out:11
+    run_flow  CC=30  out:69
+  50-contract-guarded-flow.run  [3 funcs]
+    _route_of  CC=1  out:1
+    main  CC=3  out:9
+    run  CC=11  out:17
+  51-router-guarded-autonomy.run  [4 funcs]
+    _loads_llm_json  CC=11  out:14
+    llm_plan  CC=9  out:10
+    main  CC=3  out:10
+    run  CC=14  out:24
+  52-office-vm-rdp-novnc.run  [7 funcs]
+    llm_planner  CC=1  out:9
+    load_registry  CC=1  out:2
+    main  CC=27  out:43
+    mcp_tools  CC=2  out:3
+    run_live_finance  CC=6  out:13
+    run_scenario  CC=12  out:18
+    run_step  CC=1  out:1
+  52-office-vm-rdp-novnc.vm_office_system  [27 funcs]
+    _append_screen  CC=1  out:2
+    _clipboard_get  CC=1  out:1
+    _clipboard_set  CC=1  out:2
+    _desktop_hotkey  CC=3  out:4
+    _desktop_launch  CC=2  out:3
+    _desktop_ocr  CC=2  out:4
+    _desktop_screenshot  CC=2  out:6
+    _desktop_type  CC=2  out:4
+    _fs_read  CC=2  out:3
+    _fs_save  CC=2  out:3
+  ifuri-033-email-spam.checkpoint  [7 funcs]
+    load  CC=4  out:5
+    msg_hash  CC=3  out:16
+    partition  CC=3  out:3
+    record  CC=6  out:11
+    save  CC=1  out:3
+    state_path  CC=5  out:6
+    summary  CC=3  out:8
+  ifuri-033-email-spam.run  [5 funcs]
+    _cred  CC=4  out:2
+    _missing_creds_notice  CC=1  out:5
+    _print_spam  CC=4  out:9
+    _resolve_creds  CC=1  out:3
+    main  CC=17  out:36
+  ifuri-033-email-spam.run_local  [7 funcs]
+    _classify  CC=3  out:5
+    _decode  CC=4  out:3
+    _inbox_mboxes  CC=5  out:3
+    _ollama_spam  CC=9  out:17
+    _profiles  CC=9  out:12
+    _read_messages  CC=2  out:17
+    main  CC=21  out:52
+  ifuri-039-signal-reply.run  [1 funcs]
+    main  CC=13  out:30
+  scripts.audit_ecosystem_coverage  [3 funcs]
+    audit  CC=18  out:40
+    load_coverage  CC=1  out:2
+    numbered_examples  CC=4  out:4
+  scripts.audit_test_coverage  [6 funcs]
+    _mentioned_dirs  CC=4  out:6
+    _numbered_dirs  CC=4  out:4
+    _print_report  CC=8  out:10
+    _test_dirs  CC=5  out:6
+    _wrap  CC=4  out:6
+    audit  CC=4  out:24
 
 EDGES:
+  11-novnc_lan_flow.orchestrator.run_flow.wait_health → 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  11-novnc_lan_flow.orchestrator.run_flow.collect_routes → 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  11-novnc_lan_flow.orchestrator.run_flow.run_step → 11-novnc_lan_flow.orchestrator.run_flow.target_from_uri
+  11-novnc_lan_flow.orchestrator.run_flow.run_step → 11-novnc_lan_flow.orchestrator.run_flow.fetch_json
+  11-novnc_lan_flow.orchestrator.run_flow.main → 11-novnc_lan_flow.orchestrator.run_flow.collect_routes
+  11-novnc_lan_flow.orchestrator.run_flow.main → 29-mcp-desktop-agent.mcp_serve.print
+  11-novnc_lan_flow.orchestrator.run_flow.main → 11-novnc_lan_flow.orchestrator.run_flow.wait_health
+  11-novnc_lan_flow.orchestrator.run_flow.main → 11-novnc_lan_flow.orchestrator.run_flow.run_step
+  11-novnc_lan_flow.computer.browser_node.wait_for_webdriver → 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.computer.browser_node.ensure_session → 11-novnc_lan_flow.computer.browser_node.wait_for_webdriver
+  11-novnc_lan_flow.computer.browser_node.ensure_session → 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.computer.browser_node.current_url → 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.computer.browser_node.open_page → 11-novnc_lan_flow.computer.browser_node.ensure_session
+  11-novnc_lan_flow.computer.browser_node.open_page → 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.computer.browser_node.open_page → 11-novnc_lan_flow.computer.browser_node.log
+  11-novnc_lan_flow.computer.browser_node.open_page → 11-novnc_lan_flow.computer.browser_node.current_url
+  11-novnc_lan_flow.computer.browser_node.screenshot_page → 11-novnc_lan_flow.computer.browser_node.ensure_session
+  11-novnc_lan_flow.computer.browser_node.screenshot_page → 11-novnc_lan_flow.computer.browser_node.webdriver
+  11-novnc_lan_flow.computer.browser_node.screenshot_page → 11-novnc_lan_flow.computer.browser_node.log
+  11-novnc_lan_flow.computer.browser_node.app_service_call → 11-novnc_lan_flow.computer.browser_node.log
+  11-novnc_lan_flow.computer.browser_node.route_call → 11-novnc_lan_flow.computer.browser_node.open_page
+  11-novnc_lan_flow.computer.browser_node.route_call → 11-novnc_lan_flow.computer.browser_node.screenshot_page
+  11-novnc_lan_flow.computer.browser_node.route_call → 11-novnc_lan_flow.computer.browser_node.log
+  11-novnc_lan_flow.computer.browser_node.route_call → 11-novnc_lan_flow.computer.browser_node.app_service_call
+  11-novnc_lan_flow.computer.browser_node.Handler.log_message → 29-mcp-desktop-agent.mcp_serve.print
+  11-novnc_lan_flow.computer.browser_node.Handler.do_OPTIONS → 11-novnc_lan_flow.computer.browser_node.json_response
+  11-novnc_lan_flow.computer.browser_node.Handler.do_GET → 11-novnc_lan_flow.computer.browser_node.json_response
+  11-novnc_lan_flow.computer.browser_node.Handler.do_GET → 11-novnc_lan_flow.computer.browser_node.route_kind
+  11-novnc_lan_flow.computer.browser_node.Handler.do_POST → 11-novnc_lan_flow.computer.browser_node.json_response
+  11-novnc_lan_flow.computer.browser_node.Handler.do_POST → 11-novnc_lan_flow.computer.browser_node.route_call
+  11-novnc_lan_flow.computer.browser_node.main → 11-novnc_lan_flow.computer.browser_node.log
+  11-novnc_lan_flow.computer.browser_node.main → 29-mcp-desktop-agent.mcp_serve.print
+  07-transports.transport_lib.run_via → 07-transports.transport_lib.run_inprocess
+  07-transports.transport_lib.run_via → 07-transports.transport_lib.run_queue
+  07-transports.transport_lib.run_via → 07-transports.transport_lib.serverless_handler
+  07-transports.transport_lib.run_via → 07-transports.transport_lib.start_http_worker
+  07-transports.transport_lib.available_transports → 07-transports.transport_lib.grpc_available
+  08-multi_transport.worker.serve_http → 29-mcp-desktop-agent.mcp_serve.print
+  08-multi_transport.worker.serve_grpc → 29-mcp-desktop-agent.mcp_serve.print
   06-html_uri_app.app.routeResponse → 06-html_uri_app.app.renderActions
   06-html_uri_app.app.routeResponse → 06-html_uri_app.app.renderForm
   06-html_uri_app.app.renderActions → 06-html_uri_app.app.classFor
@@ -220,42 +549,3 @@ EDGES:
   06-html_uri_app.app.required → 06-html_uri_app.app.escapeHtml
   06-html_uri_app.app.defaults → 06-html_uri_app.app.escapeHtml
   06-html_uri_app.app.inputType → 06-html_uri_app.app.escapeHtml
-  06-html_uri_app.app.refreshLogs → 06-html_uri_app.app.escapeHtml
-  06-html_uri_app.app.data → 06-html_uri_app.app.escapeHtml
-  06-html_uri_app.app.card → 06-html_uri_app.app.renderToolList
-  06-html_uri_app.app.renderToolList → 06-html_uri_app.app.escapeHtml
-  06-html_uri_app.app.iconFor → 06-html_uri_app.app.classFor
-  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.send
-  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.readBody
-  09-docker_uri_flow.node-worker.server.server → 09-docker_uri_flow.node-worker.server.slugify
-  09-docker_uri_flow.node-worker.server.body → 09-docker_uri_flow.node-worker.server.send
-  09-docker_uri_flow.node-worker.server.slug → 09-docker_uri_flow.node-worker.server.send
-  10-device_mesh_lab.www.app.showView → 10-device_mesh_lab.www.app.setMenuActive
-  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.showView
-  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.setMenuActive
-  10-device_mesh_lab.www.app.focusArea → 10-device_mesh_lab.www.app.focusTargetFor
-  10-device_mesh_lab.www.app.recordActivity → 10-device_mesh_lab.www.app.renderActivityLog
-  10-device_mesh_lab.www.app.routeBadge → 10-device_mesh_lab.www.app.isRouteSafe
-  10-device_mesh_lab.www.app.renderDevices → 10-device_mesh_lab.www.app.filter
-  10-device_mesh_lab.www.app.renderDevices → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.reachable → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.installable → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.novncUrlFor → 10-device_mesh_lab.www.app.novncEntryFor
-  10-device_mesh_lab.www.app.renderNovnc → 10-device_mesh_lab.www.app.novncUrlFor
-  10-device_mesh_lab.www.app.renderNovnc → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.url → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.status → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.filter
-  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.renderRoutes → 10-device_mesh_lab.www.app.routeBadge
-  10-device_mesh_lab.www.app.filter → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.rows → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.renderRoutes
-  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.renderPayloadForm
-  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.setMenuActive
-  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.showJson
-  10-device_mesh_lab.www.app.selectRoute → 10-device_mesh_lab.www.app.previewPayload
-  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.defaultValueFor
-  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.escapeHtml
-  10-device_mesh_lab.www.app.renderField → 10-device_mesh_lab.www.app.valueToInput
-  10-device_mesh_lab.www.app.description → 10-device_mesh_lab.www.app.escapeHtml

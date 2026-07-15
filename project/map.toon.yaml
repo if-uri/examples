@@ -1,202 +1,423 @@
-# examples | 56f 7901L | python:32,shell:14,javascript:5,css:2,go:1,typescript:1,less:1 | 2026-06-21
-# stats: 187 func | 24 cls | 56 mod | CC̄=4.4 | critical:16 | cycles:0
-# alerts[5]: CC main=38; CC fallback_steps=33; CC md=28; CC parse_flow=24; CC app_service_call=22
-# hotspots[5]: main fan=24; start_http_worker fan=19; serve_http fan=19; run_e2e fan=19; screenshot_page fan=16
-# evolution: baseline
+# examples | 404f 99131L | shell:44,python:118,json:118,toml:3,yml:9,javascript:11,txt:5,yaml:50,go:1,typescript:1,php:1,c:1,ini:1,proto:1,gateway:1 | 2026-07-14
+# generated in 0.09s
+# stats: 994 func | 0 cls | 404 mod | CC̄=4.4 | critical:46 | cycles:0
+# alerts[5]: fan-out main=52; fan-out main=44; CC main=38; fan-out main=35; CC fallback_steps=33
+# hotspots[5]: main fan=52; main fan=44; main fan=35; run fan=32; main fan=31
+# evolution: CC̄ 0.0→4.4 (regressed +4.4)
 # Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
-M[56]:
-  02-decorators/example.py,29
-  03-artifacts/deploy.sh,7
-  04-python/test_adopt.py,104
-  04-python/test_mcp_a2a.py,143
-  04-python/test_urihandler_v2.py,316
-  05-generators/go/example.go,84
-  05-generators/ts/decorators.ts,66
-  06-html_uri_app/app.js,171
-  06-html_uri_app/backend.py,231
-  06-html_uri_app/run.sh,9
-  06-html_uri_app/styles.css,293
-  07-transports/demo.py,19
-  07-transports/scan_and_run.py,53
-  07-transports/test_transports.py,53
-  07-transports/transport_lib.py,156
-  08-multi_transport/run_multi_test.py,109
-  08-multi_transport/run_tests.sh,17
-  08-multi_transport/worker.py,81
-  09-docker_uri_flow/generate_registry.sh,30
-  09-docker_uri_flow/node-worker/server.js,56
-  09-docker_uri_flow/orchestrator/flow_runner.py,222
-  09-docker_uri_flow/python-worker/server.py,72
-  09-docker_uri_flow/run.sh,17
-  09-docker_uri_flow/run_tests.sh,17
-  09-docker_uri_flow/shell-worker/server.py,68
-  09-docker_uri_flow/shell-worker/write_report.sh,13
-  09-docker_uri_flow/test_flow_e2e.py,103
-  09-docker_uri_flow/test_flow_runner.py,112
-  09-docker_uri_flow/test_service_adapter.py,111
-  09-docker_uri_flow/tester/run_compose_test.py,83
-  10-device_mesh_lab/controller.py,491
-  10-device_mesh_lab/device_agent.py,609
-  10-device_mesh_lab/mesh_env.py,79
-  10-device_mesh_lab/tests/device_agent_policy.py,52
-  10-device_mesh_lab/tests/gui_smoke.py,428
-  10-device_mesh_lab/www/app.js,563
-  10-device_mesh_lab/www/runtime-config.js,14
-  10-device_mesh_lab/www/styles.css,704
-  11-novnc_lan_flow/computer/browser_node.py,332
-  11-novnc_lan_flow/dashboard/runtime-config.js,14
-  11-novnc_lan_flow/orchestrator/run_flow.py,280
-  11-novnc_lan_flow/scripts/smoke.sh,95
-  12-full_e2e_connect_lab/registry-runtime/registry_server.py,106
-  12-full_e2e_connect_lab/scripts/assert_results.py,117
-  12-full_e2e_connect_lab/scripts/connector_checks.py,410
-  12-full_e2e_connect_lab/scripts/public_smoke.sh,41
-  12-full_e2e_connect_lab/scripts/run_full_scenario.sh,93
-  13-simple_defaults/python_connector.py,41
-  14-llm-uri-agent/agent.py,108
-  14-llm-uri-agent/tools.py,124
-  app.doql.less,30
+M[404]:
+  01-json/Makefile,17
+  01-json/bindings.v2.example.json,151
+  02-decorators/Makefile,13
+  02-decorators/example.py,28
+  03-artifacts/Dockerfile,9
+  03-artifacts/Makefile,14
+  03-artifacts/deploy.sh,6
+  03-artifacts/package.json,6
+  03-artifacts/pyproject.toml,6
+  03-artifacts/urirun.manifest.json,18
+  04-python/Makefile,11
+  05-generators/Makefile,24
+  05-generators/c/example.c,25
+  05-generators/go/example.go,83
+  05-generators/js/example.mjs,20
+  05-generators/js/uri-command.mjs,47
+  05-generators/nodejs/generate-bindings.mjs,28
+  05-generators/php/example.php,64
+  05-generators/ts/decorators.ts,65
+  06-html_uri_app/Makefile,13
+  06-html_uri_app/app.js,170
+  06-html_uri_app/backend.py,244
+  06-html_uri_app/bindings.json,74
+  06-html_uri_app/run.sh,8
+  06-html_uri_app/test.mjs,16
+  07-transports/Makefile,18
+  07-transports/demo.py,18
+  07-transports/registry.bindings.json,28
+  07-transports/scan_and_run.py,52
+  07-transports/transport_lib.py,155
+  08-multi_transport/Dockerfile,16
+  08-multi_transport/Makefile,18
+  08-multi_transport/docker-compose.test.yml,33
+  08-multi_transport/rpc-bindings.json,24
+  08-multi_transport/run_tests.sh,16
+  08-multi_transport/web-bindings.json,36
+  08-multi_transport/worker.py,80
+  09-docker_uri_flow/Makefile,29
+  09-docker_uri_flow/docker-compose.yml,48
+  09-docker_uri_flow/docker-compose.test.yml,34
+  09-docker_uri_flow/flows/cross_service_report.yaml,39
+  09-docker_uri_flow/generate_registry.sh,29
+  09-docker_uri_flow/generated/bindings.v2.json,545
+  09-docker_uri_flow/generated/registry.json,1124
+  09-docker_uri_flow/generated/routes.txt,21
+  09-docker_uri_flow/node-worker/Dockerfile,9
+  09-docker_uri_flow/node-worker/bindings.json,18
+  09-docker_uri_flow/node-worker/package.json,6
+  09-docker_uri_flow/node-worker/server.js,55
+  09-docker_uri_flow/orchestrator/Dockerfile,7
+  09-docker_uri_flow/orchestrator/flow_runner.py,221
+  09-docker_uri_flow/python-worker/Dockerfile,9
+  09-docker_uri_flow/python-worker/bindings.json,31
+  09-docker_uri_flow/python-worker/server.py,71
+  09-docker_uri_flow/run.sh,16
+  09-docker_uri_flow/run_tests.sh,16
+  09-docker_uri_flow/shell-worker/Dockerfile,10
+  09-docker_uri_flow/shell-worker/bindings.json,20
+  09-docker_uri_flow/shell-worker/server.py,67
+  09-docker_uri_flow/shell-worker/write_report.sh,12
+  09-docker_uri_flow/tester/Dockerfile,14
+  10-device_mesh_lab/Makefile,14
+  10-device_mesh_lab/controller.py,494
+  10-device_mesh_lab/device_agent.py,608
+  10-device_mesh_lab/mesh_env.py,78
+  10-device_mesh_lab/www/app.js,562
+  10-device_mesh_lab/www/runtime-config.js,13
+  11-novnc_lan_flow/Makefile,51
+  11-novnc_lan_flow/computer/Dockerfile,9
+  11-novnc_lan_flow/computer/browser_node.py,331
+  11-novnc_lan_flow/dashboard/runtime-config.js,13
+  11-novnc_lan_flow/docker-compose.yml,123
+  11-novnc_lan_flow/generated/flow-result.json,276
+  11-novnc_lan_flow/generated/registry.json,65
+  11-novnc_lan_flow/generated/routes.txt,12
+  11-novnc_lan_flow/generated/smoke-output.json,276
+  11-novnc_lan_flow/orchestrator/run_flow.py,279
+  11-novnc_lan_flow/scripts/smoke.sh,94
+  11-tellmesh-uri-flow/Makefile,13
+  11-tellmesh-uri-flow/flow.yaml,37
+  11-tellmesh-uri-flow/packs/llm.yaml,36
+  11-tellmesh-uri-flow/packs/message.yaml,13
+  11-tellmesh-uri-flow/packs/ocr.yaml,19
+  11-tellmesh-uri-flow/packs/vql.yaml,19
+  11-tellmesh-uri-flow/run.py,89
+  12-full_e2e_connect_lab/Makefile,31
+  12-full_e2e_connect_lab/docker-compose.yml,60
+  12-full_e2e_connect_lab/flows/user_scenario.yaml,26
+  12-full_e2e_connect_lab/generated/agents.json,1680
+  12-full_e2e_connect_lab/generated/browser-control-bindings.json,96
+  12-full_e2e_connect_lab/generated/connectors-catalog.json,2631
+  12-full_e2e_connect_lab/generated/connectors-install-registry.json,3579
+  12-full_e2e_connect_lab/generated/connectors-install-routes.txt,38
+  12-full_e2e_connect_lab/generated/connectors-policy.json,7
+  12-full_e2e_connect_lab/generated/connectors-registry.json,8163
+  12-full_e2e_connect_lab/generated/connectors-result.json,26686
+  12-full_e2e_connect_lab/generated/data-bindings.json,725
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T211850Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T213510Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T214509Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T215253Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T221603Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T222801Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T224704Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T230706Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T230901Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T233508Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T233741Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T234253Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T234757Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T000445Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T001713Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T004537Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T005133Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260622T070100Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260629T181352Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260629T181840Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260704T082524Z.dns-backup.json,13
+  12-full_e2e_connect_lab/generated/flow-result.json,516
+  12-full_e2e_connect_lab/generated/http-check-bindings.json,47
+  12-full_e2e_connect_lab/generated/monitor-bindings.json,2150
+  12-full_e2e_connect_lab/generated/nodes.json,1156
+  12-full_e2e_connect_lab/generated/registry-runtime.json,266
+  12-full_e2e_connect_lab/generated/routes.json,288
+  12-full_e2e_connect_lab/generated/task-bindings.json,1838
+  12-full_e2e_connect_lab/generated/time-tools-bindings.json,39
+  12-full_e2e_connect_lab/pc/Dockerfile,17
+  12-full_e2e_connect_lab/registry-runtime/Dockerfile,7
+  12-full_e2e_connect_lab/registry-runtime/registry_server.py,105
+  12-full_e2e_connect_lab/scripts/assert_results.py,116
+  12-full_e2e_connect_lab/scripts/connector_checks.py,422
+  12-full_e2e_connect_lab/scripts/public_smoke.sh,55
+  12-full_e2e_connect_lab/scripts/run_full_scenario.sh,92
+  13-simple_defaults/Makefile,15
+  13-simple_defaults/js/defaults.mjs,52
+  13-simple_defaults/js/example.mjs,23
+  13-simple_defaults/python_connector.py,40
+  14-llm-uri-agent/Makefile,18
+  14-llm-uri-agent/agent.py,200
+  14-llm-uri-agent/flows/web-recon.yaml,30
+  14-llm-uri-agent/tools.py,127
+  15-declarative-http/Makefile,18
+  15-declarative-http/httpbin.toml,33
+  15-declarative-http/httpbin.bindings.json,94
+  15-declarative-http/httpbin.registry.json,230
+  15-declarative-http/ksef.toml,57
+  15-declarative-http/ksef.bindings.json,437
+  15-llm-yaml-repair/Makefile,21
+  15-llm-yaml-repair/agent_repair.py,362
+  15-llm-yaml-repair/flows/ocr-to-note.yaml,29
+  15-llm-yaml-repair/flows/save-note.yaml,24
+  15-llm-yaml-repair/tools.py,98
+  16-secrets/Makefile,13
+  16-secrets/secret_demo.py,104
+  17-flows/Makefile,26
+  17-flows/flow-declarative.sh,9
+  17-flows/flow-ksef.sh,6
+  17-flows/flow-local.sh,6
+  17-flows/flow-web-recon.sh,7
+  17-flows/ksef-send.flow.yaml,20
+  17-flows/local.flow.yaml,16
+  17-flows/run_flow.py,88
+  17-flows/scenarios.txt,30
+  17-flows/tools.bindings.json,120
+  17-flows/web-recon.flow.yaml,18
+  17-flows/web_recon.flow.py,14
+  18-connector-transport/Makefile,14
+  18-connector-transport/client/call.sh,64
+  18-connector-transport/docker-compose.yml,42
+  18-connector-transport/node/serve.sh,23
+  18-openapi-import/Makefile,13
+  18-openapi-import/petstore.json,17
+  18-openapi-import/run.py,85
+  19-all-connectors/check_all.py,165
+  19-uri-tree/Makefile,15
+  19-uri-tree/build_uri_tree.py,72
+  19-uri-tree/ops_flow.py,28
+  19-uri-tree/uri-tree.yaml,217
+  20-runtime-transport-matrix/matrix.py,115
+  21-generate-from-binding/gen.sh,11
+  21-generate-from-binding/generate.py,130
+  21-generate-from-binding/generated/client.py,57
+  21-generate-from-binding/generated/openapi.json,391
+  21-generate-from-binding/generated/service.proto,109
+  22-warm-worker/bench.py,64
+  23-embedded-urirun/demo.sh,37
+  23-llm-flow-repair/repair_flow.py,160
+  23-llm-flow-repair/repair_flow_mesh.py,129
+  24-adopt-existing-stack/Dockerfile.gateway,21
+  24-adopt-existing-stack/docker-compose.yml,31
+  24-adopt-existing-stack/shop.bindings.json,57
+  24-adopt-existing-stack/verify.sh,30
+  24-adopt-tellmesh-packs/adopt.sh,36
+  24-adopt-tellmesh-packs/generated/tellmesh.bindings.json,2978
+  24-adopt-tellmesh-packs/generated/tellmesh.registry.json,6087
+  24-adopt-tellmesh-packs/manifests/flat-uri-bad.manifest.yaml,20
+  24-adopt-tellmesh-packs/manifests/uriocr.manifest.yaml,22
+  25-tellmesh-uri-flow/flow.py,94
+  25-tellmesh-uri-flow/flow_cli.sh,62
+  25-tellmesh-uri-flow/flow_node.sh,72
+  25-tellmesh-uri-flow/generated/flow.registry.json,210
+  25-tellmesh-uri-flow/generated/flow_kvm.bindings.json,34
+  25-tellmesh-uri-flow/generated/flow_llm.bindings.json,34
+  25-tellmesh-uri-flow/generated/flow_ocr.bindings.json,30
+  25-tellmesh-uri-flow/generated/node.json,15
+  25-tellmesh-uri-flow/packs/flow_kvm/__init__.py,0
+  25-tellmesh-uri-flow/packs/flow_kvm/handlers.py,12
+  25-tellmesh-uri-flow/packs/flow_kvm/manifest.yaml,16
+  25-tellmesh-uri-flow/packs/flow_llm/__init__.py,0
+  25-tellmesh-uri-flow/packs/flow_llm/handlers.py,21
+  25-tellmesh-uri-flow/packs/flow_llm/manifest.yaml,15
+  25-tellmesh-uri-flow/packs/flow_ocr/__init__.py,0
+  25-tellmesh-uri-flow/packs/flow_ocr/handlers.py,16
+  25-tellmesh-uri-flow/packs/flow_ocr/manifest.yaml,15
+  26-agent-uri-flow/agent_flow.sh,47
+  26-agent-uri-flow/generated/agent.report.json,84
+  26-agent-uri-flow/generated/flow.registry.json,210
+  26-agent-uri-flow/generated/flow_kvm.bindings.json,34
+  26-agent-uri-flow/generated/flow_llm.bindings.json,34
+  26-agent-uri-flow/generated/flow_ocr.bindings.json,30
+  26-agent-uri-flow/planner.py,59
+  27-agent-llm-rdp/generated/run-log.json,60
+  27-agent-llm-rdp/llm_planner.py,117
+  27-agent-llm-rdp/run_task.py,139
+  28-llm-novnc-desktop/generated/session.json,86
+  28-llm-novnc-desktop/novnc_connector/__init__.py,3
+  28-llm-novnc-desktop/novnc_connector/core.py,146
+  28-llm-novnc-desktop/run_session.py,124
+  28-llm-novnc-desktop/schema_planner.py,96
+  29-mcp-desktop-agent/generated/mcp-session.json,80
+  29-mcp-desktop-agent/mcp_agent.py,152
+  29-mcp-desktop-agent/mcp_serve.sh,38
+  30-mesh-no-rdp/generated/host.json,17
+  30-mesh-no-rdp/generated/node-a.bindings.json,47
+  30-mesh-no-rdp/generated/node-a.node.json,15
+  30-mesh-no-rdp/generated/node-a.registry.json,316
+  30-mesh-no-rdp/generated/node-b.bindings.json,47
+  30-mesh-no-rdp/generated/node-b.node.json,15
+  30-mesh-no-rdp/generated/node-b.registry.json,316
+  30-mesh-no-rdp/mesh_local.sh,82
+  30-mesh-no-rdp/node.bindings.template.json,47
+  31-llm-remote-office/build_node_registry.py,105
+  31-llm-remote-office/data/office/raport.txt,0
+  31-llm-remote-office/deploy_from_host.sh,60
+  31-llm-remote-office/generated/lab.node.json,10
+  31-llm-remote-office/generated/lenovo.node.json,10
+  31-llm-remote-office/generated/node-office.bindings.json,912
+  31-llm-remote-office/generated/node-office.registry.json,2127
+  31-llm-remote-office/generated/run-log.json,40
+  31-llm-remote-office/node_serve.sh,100
+  31-llm-remote-office/office_agent.py,304
+  31-llm-remote-office/office_cli.sh,16
+  31-llm-remote-office/tellmesh_bridge.py,204
+  32-host-ask-over-relay/Makefile,13
+  32-host-ask-over-relay/run.sh,102
+  32-task-scenarios/aggregate_report.py,79
+  32-task-scenarios/generated/host-node-matrix-report.json,2949
+  32-task-scenarios/generated/odczytaj-ostatnie-wpisy-z-logu-node-i-za.json,299
+  32-task-scenarios/generated/otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro.json,76
+  32-task-scenarios/generated/otworz-https-example-com-i-zrob-zrzut-ek.json,273
+  32-task-scenarios/generated/pokaz-date-systemowa-nazwe-jadra-i-spraw.json,244
+  32-task-scenarios/generated/przeczytaj-tekst-ze-strony-https-example.json,47
+  32-task-scenarios/generated/przepracuj-typowy-dzie-biurowy-otw-rz-st.json,76
+  32-task-scenarios/generated/scenarios-report.json,192
+  32-task-scenarios/generated/sprawdz-zdrowie-maszyny-i-zapisz-notatke.json,193
+  32-task-scenarios/generated/wypisz-5-najciezszych-procesow-biurowych.json,227
+  32-task-scenarios/host_node_matrix.py,344
+  32-task-scenarios/nl_scenario.py,236
+  32-task-scenarios/reversibility_check.py,114
+  32-task-scenarios/run_scenarios.py,160
+  32-task-scenarios/scenarios/desktop-control.yaml,19
+  32-task-scenarios/scenarios/gen-odczytaj-ostatnie-wpisy-z-logu-node-i-za.yaml,12
+  32-task-scenarios/scenarios/gen-otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro.yaml,12
+  32-task-scenarios/scenarios/gen-otworz-https-example-com-i-zrob-zrzut-ek.yaml,12
+  32-task-scenarios/scenarios/gen-pokaz-date-systemowa-nazwe-jadra-i-spraw.yaml,10
+  32-task-scenarios/scenarios/gen-przeczytaj-tekst-ze-strony-https-example.yaml,12
+  32-task-scenarios/scenarios/gen-przepracuj-typowy-dzie-biurowy-otw-rz-st.yaml,15
+  32-task-scenarios/scenarios/gen-sprawdz-zdrowie-maszyny-i-zapisz-notatke.yaml,11
+  32-task-scenarios/scenarios/gen-wypisz-5-najciezszych-procesow-biurowych.yaml,9
+  32-task-scenarios/scenarios/office-doc.yaml,21
+  32-task-scenarios/scenarios/reversible-web-draft.yaml,26
+  32-task-scenarios/scenarios/system-audit.yaml,11
+  32-task-scenarios/scenarios/web-login.yaml,24
+  33-office-automation-mcp/Makefile,17
+  33-office-automation-mcp/office_system.py,293
+  33-office-automation-mcp/run.py,146
+  33-office-automation-mcp/scenarios.py,211
+  34-all-connectors-flow/Makefile,14
+  34-all-connectors-flow/connectors.py,32
+  34-all-connectors-flow/flows/install.flow.yaml,66
+  34-all-connectors-flow/flows/smoke.flow.yaml,76
+  34-all-connectors-flow/pkg_connector.py,81
+  34-all-connectors-flow/run.py,155
+  35-deploy-lenovo-surface/deploy.sh,33
+  35-deploy-lenovo-surface/lenovo_cdp.py,220
+  35-deploy-lenovo-surface/lenovo_node.py,216
+  35-deploy-lenovo-surface/node-surface.bindings.json,1
+  35-deploy-lenovo-surface/verify.py,69
+  36-remote-browser-cdp/cdp-bindings.json,61
+  36-remote-browser-cdp/drive_cdp.py,126
+  36-remote-browser-cdp/e2e.sh,50
+  36-remote-browser-cdp/unattended_browser.py,291
+  37-closed-loop-automation/closed_loop.py,91
+  37-closed-loop-automation/planners.py,105
+  37-closed-loop-automation/run.py,80
+  37-closed-loop-automation/vision_loop.py,84
+  38-self-managing/deployable_handlers.py,67
+  38-self-managing/governance.py,75
+  38-self-managing/resolver.py,120
+  38-self-managing/run_live.py,103
+  38-self-managing/self_managing.py,100
+  39-browser-observe/gillm_capture.py,95
+  39-browser-observe/observe.py,111
+  39-local-social-autonomy/autonomous_browser.py,410
+  39-local-social-autonomy/bindings.json,112
+  39-local-social-autonomy/extract_invoices.py,33
+  39-local-social-autonomy/lenovo-office-workflow.yaml,42
+  39-local-social-autonomy/mock_linkedin.py,277
+  39-local-social-autonomy/nl_autonomy.py,382
+  39-local-social-autonomy/programs/01-feed-save.json,22
+  39-local-social-autonomy/programs/02-search-filter-save.json,26
+  39-local-social-autonomy/programs/03-hashtag-watch.json,26
+  39-local-social-autonomy/programs/04-saved-posts-archive.json,22
+  39-local-social-autonomy/programs/05-profile-posts-review.json,18
+  39-local-social-autonomy/programs/06-comments-ocr-snapshot.json,30
+  39-local-social-autonomy/programs/07-people-search-bio-scan.json,22
+  39-local-social-autonomy/programs/08-multi-hashtag-compare.json,34
+  39-local-social-autonomy/programs/09-competitor-monitor.json,34
+  39-local-social-autonomy/programs/10-weekly-feed-and-saved-archive.json,38
+  39-local-social-autonomy/programs/11-deep-comment-thread.json,38
+  39-local-social-autonomy/programs/12-multi-keyword-tracker.json,34
+  39-local-social-autonomy/run_email_connector.py,15
+  39-local-social-autonomy/run_prompt.sh,21
+  39-local-social-autonomy/run_session_probe.sh,22
+  39-local-social-autonomy/scout.py,366
+  39-local-social-autonomy/session-probe.bindings.json,30
+  39-local-social-autonomy/session_probe.py,278
+  39-local-social-autonomy/uri_runtime.py,492
+  40-local-portals-suite/bindings.json,61
+  40-local-portals-suite/domain_loop.py,141
+  40-local-portals-suite/portal_autonomy.py,221
+  40-local-portals-suite/portal_server.py,307
+  40-local-portals-suite/run_all.sh,9
+  40-local-portals-suite/run_loop.sh,13
+  40-local-portals-suite/run_prompt.sh,17
+  40-wordpress-article/wp_connector.py,92
+  43-camera-usb-ocr-inspection/camera-alert.flow.yaml,25
+  43-camera-usb-ocr-inspection/camera-barcode-scan.flow.yaml,19
+  43-camera-usb-ocr-inspection/camera-mobile-web.flow.yaml,35
+  43-camera-usb-ocr-inspection/camera-motion-scan.flow.yaml,40
+  43-camera-usb-ocr-inspection/camera-receipt-parse.flow.yaml,17
+  43-camera-usb-ocr-inspection/camera-receipt-scan.flow.yaml,23
+  43-camera-usb-ocr-inspection/camera-usb-ocr.flow.yaml,55
+  43-camera-usb-ocr-inspection/ledger.py,76
+  43-camera-usb-ocr-inspection/receipt-to-invoice.flow.yaml,51
+  43-camera-usb-ocr-inspection/run.py,182
+  43-camera-usb-ocr-inspection/run_live_probe.sh,31
+  44-chat-prompt-sweep/prompts.json,108
+  44-chat-prompt-sweep/run_chat_prompts.py,381
+  44-ksef-token-via-browser/ksef-token-via-browser.flow.yaml,48
+  44-ksef-token-via-browser/ksef_auth.py,73
+  44-ksef-token-via-browser/ksef_token.py,69
+  44-ksef-token-via-browser/run_token_capture.py,124
+  44-phone-webrtc-scanner-dashboard/run.sh,37
+  45-ksef-send-faktura/ksef-send.flow.yaml,64
+  45-ksef-send-faktura/send_invoice.py,121
+  46-connect-anything/run_examples.sh,79
+  47-android-nexus7-node/node-nexus7.bindings.json,123
+  47-nl-desktop-control/computer_use.py,246
+  47-nl-desktop-control/run.py,213
+  48-api-device-node/api-request.flow.yaml,21
+  48-api-device-node/device-discovery.flow.yaml,19
+  48-api-device-node/register-demo.sh,23
+  49-linkedin-compose-cdp/run.py,272
+  50-contract-guarded-flow/Makefile,23
+  50-contract-guarded-flow/contracts.json,39
+  50-contract-guarded-flow/run.py,142
+  51-router-guarded-autonomy/Makefile,23
+  51-router-guarded-autonomy/run.py,187
+  52-office-vm-rdp-novnc/Makefile,19
+  52-office-vm-rdp-novnc/run.py,182
+  52-office-vm-rdp-novnc/scenarios.py,185
+  52-office-vm-rdp-novnc/vm_office_system.py,332
+  53-ecosystem-coverage-audit/run.py,27
+  Makefile,69
+  ci/ecosystem-coverage.yml,139
+  ci/examples-manifest.yml,190
+  ifuri-033-email-spam/checkpoint.py,80
+  ifuri-033-email-spam/run.py,107
+  ifuri-033-email-spam/run_local.py,174
+  ifuri-039-signal-reply/run.py,104
+  ifuri-229-executor-escalation/run.py,137
+  planfile.yaml,1319
+  prefact.yaml,94
   project.sh,66
-  run_tests.sh,93
-  scripts/build_site.py,139
-  scripts/deploy-plesk.sh,22
-  tree.sh,5
+  pytest.ini,3
+  run_tests.sh,100
+  scripts/audit_ecosystem_coverage.py,195
+  scripts/audit_test_coverage.py,165
+  scripts/build_site.py,138
+  scripts/deploy-plesk.sh,21
+  scripts/run_ci_manifest.py,244
+  testql-scenarios/generated-from-pytests.testql.toon.yaml,18
+  tree.sh,4
 D:
-  02-decorators/example.py:
-    e: echo_message,transcode,shell_echo
-    echo_message(text)
-    transcode(input;output;width;height)
-    shell_echo(text)
-  04-python/test_adopt.py:
-    e: SpreadArgsTests,PythonPackageAdoptionTests,NpmPackageAdoptionTests,InitTests,CliTests
-    SpreadArgsTests: test_spread_array_param_expands_into_argv(0),test_spread_defaults_to_empty(0),test_validate_accepts_spread_placeholder(0)
-    PythonPackageAdoptionTests: test_console_scripts_become_passthrough_commands(0),test_adopted_command_runs_with_passthrough_args(0)
-    NpmPackageAdoptionTests: test_bin_field_becomes_npx_command(0)
-    InitTests: test_init_builds_binding_document_from_project(0)
-    CliTests: test_add_python_package_compile_and_run(0)
-  04-python/test_mcp_a2a.py:
-    e: registry,McpProjectionTests,A2aCardTests,McpServerTests,BackendInteropTests
-    McpProjectionTests: setUp(0),test_mcp_manifest_exposes_tools_with_json_schema(0),test_tool_index_maps_back_to_uris(0),test_call_tool_dry_run_renders_command(0),test_call_unknown_tool_raises(0)
-    A2aCardTests: test_agent_card_lists_skills(0)
-    McpServerTests: test_jsonrpc_roundtrip_over_streams(0)
-    BackendInteropTests: test_backend_serves_mcp_tools_and_calls(0)
-    registry()
-  04-python/test_urihandler_v2.py:
-    e: DecoratorTests,SchemaRuntimeTests,ArtifactAdoptionTests,HtmlAppTests
-    DecoratorTests: test_decorator_generates_schema_and_argv_runtime(0),test_shell_decorator_executes_only_when_shell_policy_allows_it(0)
-    SchemaRuntimeTests: setUp(0),test_json_schema_defaults_are_applied_before_rendering(0),test_missing_required_input_is_schema_error(0),test_shell_binding_is_real_shell_runtime_when_allowed(0),test_document_validation_catches_unresolved_placeholders(0)
-    ArtifactAdoptionTests: test_artifact_scan_builds_v2_bindings_from_common_standards(0),test_cli_scan_validate_compile_and_run(0),test_cli_add_pypi_and_command_binding_in_one_line(0)
-    HtmlAppTests: test_html_backend_dispatches_v2_runtime(0)
-  06-html_uri_app/backend.py:
-    e: load_env,env_bool,read_json,binding_document,registry,routes,add_log,recent_logs,json_response,execute_policy,dispatch,dispatch_tool,main,Handler
-    Handler: log_message(1),do_GET(0),do_POST(0),read_body(0),serve_static(1)
-    load_env(path)
-    env_bool(name;default)
-    read_json(path)
-    binding_document()
-    registry()
-    routes()
-    add_log(event;detail;source)
-    recent_logs(limit)
-    json_response(handler;status;payload)
-    execute_policy(uri;allow_shell)
-    dispatch(body)
-    dispatch_tool(body)
-    main()
-  07-transports/demo.py:
-  07-transports/scan_and_run.py:
-    e: main
-    main(argv)
-  07-transports/test_transports.py:
-    e: test_all_transports_agree,test_schema_validation_is_uniform,test_scan_and_run_cli
-    test_all_transports_agree()
-    test_schema_validation_is_uniform()
-    test_scan_and_run_cli()
-  07-transports/transport_lib.py:
-    e: build_registry,run_inprocess,run_queue,serverless_handler,start_http_worker,run_via,grpc_available,available_transports
-    build_registry()
-    run_inprocess(uri;payload;registry;mode)
-    run_queue(uri;payload;registry;timeout)
-    serverless_handler(event;registry)
-    start_http_worker(registry;host)
-    run_via(transport;uri;payload;registry)
-    grpc_available()
-    available_transports()
-  08-multi_transport/run_multi_test.py:
-    e: http_get,wait_http,wait_grpc,route_key,detect_conflicts,main
-    http_get(url)
-    wait_http(host;port;timeout)
-    wait_grpc(host;timeout)
-    route_key(uri)
-    detect_conflicts(sources)
-    main()
-  08-multi_transport/worker.py:
-    e: discovery,serve_http,serve_grpc
-    discovery()
-    serve_http()
-    serve_grpc()
-  09-docker_uri_flow/orchestrator/flow_runner.py:
-    e: parse_scalar,parse_flow,get_path,resolve_payload,service_url,route_key,normalize_uri,registry_has_uri,registry_route_count,load_registry,validate_flow_registry,json_get,json_post,wait_for_services,run_flow,main
-    parse_scalar(value)
-    parse_flow(path)
-    get_path(data;dotted)
-    resolve_payload(payload;results)
-    service_url(uri)
-    route_key(uri)
-    normalize_uri(uri)
-    registry_has_uri(registry;uri)
-    registry_route_count(registry)
-    load_registry(path)
-    validate_flow_registry(flow;registry)
-    json_get(url)
-    json_post(url;payload)
-    wait_for_services(uris)
-    run_flow(flow)
-    main(argv)
-  09-docker_uri_flow/python-worker/server.py:
-    e: response,normalize,summary,dispatch,Handler
-    Handler: log_message(1),do_GET(0),do_POST(0)
-    response(handler;status;payload)
-    normalize(payload)
-    summary(payload)
-    dispatch(uri;payload)
-  09-docker_uri_flow/shell-worker/server.py:
-    e: response,dispatch,Handler
-    Handler: log_message(1),do_GET(0),do_POST(0)
-    response(handler;status;payload)
-    dispatch(uri;payload)
-  09-docker_uri_flow/test_flow_e2e.py:
-    e: load_runner,free_port,start,wait_health,run_e2e,test_cross_service_flow_runs_without_docker
-    load_runner()
-    free_port()
-    start(cmd;port;extra_env)
-    wait_health(port;timeout)
-    run_e2e()
-    test_cross_service_flow_runs_without_docker()
-  09-docker_uri_flow/test_flow_runner.py:
-    e: load_runner,test_parse_compact_uri_flow,test_registry_uri_lookup,test_registry_uri_lookup_prefers_full_uri_index,test_registry_dispatch_distinguishes_targets_with_same_segments
-    load_runner()
-    test_parse_compact_uri_flow()
-    test_registry_uri_lookup()
-    test_registry_uri_lookup_prefers_full_uri_index()
-    test_registry_dispatch_distinguishes_targets_with_same_segments()
-  09-docker_uri_flow/test_service_adapter.py:
-    e: registry,free_port,wait_health,test_dry_run_plans_the_http_call_without_network,test_schema_validation_runs_before_dispatch,test_unknown_uri_is_a_registry_error,test_service_dispatch_calls_live_workers
-    registry()
-    free_port()
-    wait_health(port;timeout)
-    test_dry_run_plans_the_http_call_without_network()
-    test_schema_validation_runs_before_dispatch()
-    test_unknown_uri_is_a_registry_error()
-    test_service_dispatch_calls_live_workers()
-  09-docker_uri_flow/tester/run_compose_test.py:
-    e: get,wait_healthy,main
-    get(url)
-    wait_healthy(host;timeout)
+  12-full_e2e_connect_lab/scripts/assert_results.py:
+    e: load,main
+    load(path)
     main()
   10-device_mesh_lab/controller.py:
-    e: json_get,json_post,slug,target_from_uri,route_binding,is_safe_route,discover_device,discover_mesh,build_registry,registry_route_count,route_summary,fallback_steps,fallback_flow,append_step_if_missing,postprocess_flow,json_from_text,normalize_flow,llm_messages,generate_with_litellm,generate_flow,execute_flow,nl_flow,main,Handler
-    Handler: __init__(0),end_headers(0),do_OPTIONS(0),do_GET(0),do_POST(0)
+    e: Handler,json_get,json_post,slug,target_from_uri,route_binding,is_safe_route,discover_device,discover_mesh,build_registry,registry_route_count,route_summary,fallback_steps,fallback_flow,append_step_if_missing,postprocess_flow,json_from_text,normalize_flow,llm_messages,generate_with_litellm,generate_flow,execute_flow,nl_flow,main
+    Handler(SimpleHTTPRequestHandler): __init__(0),end_headers(0),do_OPTIONS(0),do_GET(0),do_POST(0)
     json_get(url;timeout)
     json_post(url;payload;timeout)
     slug(value)
@@ -220,8 +441,51 @@ D:
     execute_flow(flow;mesh;registry)
     nl_flow(prompt;execute)
     main()
+  32-task-scenarios/nl_scenario.py:
+    e: _load_env,_slug,llm_steps,_heuristic,to_yaml,write_markdown,main
+    _load_env()
+    _slug(goal)
+    llm_steps(goal;space)
+    _heuristic(goal;space)
+    to_yaml(name;goal;steps)
+    write_markdown(path;report)
+    main()
+  49-linkedin-compose-cdp/run.py:
+    e: _step,_ok,run_flow,_fail,_summary,main
+    _step(node_url;node_name;uri_path;payload;timeout)
+    _ok(result)
+    run_flow(node_url;node_name;text)
+    _fail(reason;result;steps)
+    _summary(steps;execute)
+    main()
+  44-chat-prompt-sweep/run_chat_prompts.py:
+    e: _split_csv,_bool_query,defaults_from_url,model_from_env,model_from_server_config,load_cases,select_cases,build_payload,post_chat,_dig,_flow_steps,_routing,_has_human_signal,_has_block_signal,_looks_like_llm_provider_blocked,summarize,write_reports,run,main
+    _split_csv(value)
+    _bool_query(value;default)
+    defaults_from_url(url)
+    model_from_env()
+    model_from_server_config(base;timeout)
+    load_cases(path)
+    select_cases(cases;categories;limit)
+    build_payload(case;defaults)
+    post_chat(base;payload;timeout)
+    _dig(obj;path)
+    _flow_steps(response)
+    _routing(response)
+    _has_human_signal(response)
+    _has_block_signal(response)
+    _looks_like_llm_provider_blocked()
+    summarize(case;payload;status;response;elapsed_ms;error;skipped)
+    write_reports(rows;out_dir)
+    run(args)
+    main(argv)
+  scripts/build_site.py:
+    e: md,page,first_title_desc
+    md(text)
+    page(title;body;depth)
+    first_title_desc(readme)
   10-device_mesh_lab/device_agent.py:
-    e: object_schema,default_browser_targets,browser_target_from_spec,parse_browser_targets,build_novnc_browser_command,make_agent_from_env,main,DeviceAgent
+    e: DeviceAgent,object_schema,default_browser_targets,browser_target_from_spec,parse_browser_targets,build_novnc_browser_command,make_agent_from_env,main
     DeviceAgent: __init__(6),log(2),recent_logs(1),append_note(1),routes(0),device_card(0),browser_target(0),installable(0),processes(2),safe_command(2),open_browser_on_host(2),open_browser_in_novnc(2),open_browser(1),dispatch(2),handler(0),serve(2)
     object_schema(properties;required)
     default_browser_targets()
@@ -230,34 +494,74 @@ D:
     build_novnc_browser_command(url)
     make_agent_from_env()
     main()
-  10-device_mesh_lab/mesh_env.py:
-    e: load_env,parse_peers,auth_token,auth_headers,check_auth,read_json,send_json
-    load_env()
-    parse_peers(value)
-    auth_token()
-    auth_headers()
-    check_auth(headers)
-    read_json(handler)
-    send_json(handler;status;payload)
-  10-device_mesh_lab/tests/device_agent_policy.py:
+  52-office-vm-rdp-novnc/run.py:
+    e: _ensure_imports,load_registry,mcp_tools,run_step,llm_planner,run_scenario,run_live_finance,main
+    _ensure_imports()
+    load_registry()
+    mcp_tools(registry)
+    run_step(registry;uri;payload)
+    llm_planner(tools;model;base_url;provider)
+    run_scenario(scn;registry;planner)
+    run_live_finance()
+    main(argv)
+  34-all-connectors-flow/run.py:
+    e: _prepend_pythonpath,_ensure_imports,_ensure_connector_imports,write_flow,run_flow,merged_registry,main
+    _prepend_pythonpath(paths)
+    _ensure_imports()
+    _ensure_connector_imports()
+    write_flow(path;task;allow;steps)
+    run_flow(registry;steps)
+    merged_registry()
+    main(argv)
+  33-office-automation-mcp/run.py:
+    e: _ensure_imports,load_registry,mcp_tools,run_step,llm_planner,run_scenario,main
+    _ensure_imports()
+    load_registry()
+    mcp_tools(registry)
+    run_step(registry;uri;payload)
+    llm_planner(tools;model;base_url;provider)
+    run_scenario(scn;registry;planner)
+    main(argv)
+  31-llm-remote-office/office_agent.py:
+    e: Node,load_env,_schemes,_find,heuristic_plan,_extract_json,llm_plan,main,_write_md
+    Node(NodeClient): __init__(1),concretize(1),action_space(0),log(1),recent_log(1)
+    load_env(path)
+    _schemes(space)
+    _find(space)
+    heuristic_plan(goal;space)
+    _extract_json(text)
+    llm_plan(goal;space)
+    main()
+    _write_md(report)
+  43-camera-usb-ocr-inspection/run.py:
+    e: _value,_synthetic_receipt,main
+    _value(res)
+    _synthetic_receipt(path)
+    main()
+  09-docker_uri_flow/orchestrator/flow_runner.py:
+    e: parse_scalar,parse_flow,get_path,resolve_payload,service_url,route_key,normalize_uri,registry_has_uri,registry_route_count,load_registry,validate_flow_registry,json_get,json_post,wait_for_services,run_flow,main
+    parse_scalar(value)
+    parse_flow(path)
+    get_path(data;dotted)
+    resolve_payload(payload;results)
+    service_url(uri)
+    route_key(uri)
+    normalize_uri(uri)
+    registry_has_uri(registry;uri)
+    registry_route_count(registry)
+    load_registry(path)
+    validate_flow_registry(flow;registry)
+    json_get(url)
+    json_post(url;payload)
+    wait_for_services(uris)
+    run_flow(flow)
+    main(argv)
+  32-task-scenarios/aggregate_report.py:
     e: main
     main()
-  10-device_mesh_lab/tests/gui_smoke.py:
-    e: route,free_port,find_chrome,recv_exact,wait_for_debugger,wait_for_page_ready,main,DemoHandler,ThreadedHTTPServer,WebSocket,CDP
-    DemoHandler: __init__(0),log_message(1),send_json(1),do_GET(0),do_POST(0)
-    ThreadedHTTPServer:
-    WebSocket: __init__(1),send_json(1),recv_json(0),close(0)
-    CDP: __init__(1),call(2),close(0)
-    route(uri;title;properties;required)
-    free_port()
-    find_chrome()
-    recv_exact(sock;length)
-    wait_for_debugger(port)
-    wait_for_page_ready(cdp)
-    main()
   11-novnc_lan_flow/computer/browser_node.py:
-    e: log,json_response,route_kind,webdriver,wait_for_webdriver,ensure_session,current_url,open_page,safe_name,screenshot_page,app_service_call,route_call,main,Handler
-    Handler: log_message(1),do_OPTIONS(0),do_GET(0),do_POST(0)
+    e: Handler,log,json_response,route_kind,webdriver,wait_for_webdriver,ensure_session,current_url,open_page,safe_name,screenshot_page,app_service_call,route_call,main
+    Handler(BaseHTTPRequestHandler): log_message(1),do_OPTIONS(0),do_GET(0),do_POST(0)
     log(event;detail)
     json_response(handler;status;payload)
     route_kind(uri)
@@ -271,32 +575,22 @@ D:
     app_service_call(uri;payload)
     route_call(uri;payload)
     main()
-  11-novnc_lan_flow/orchestrator/run_flow.py:
-    e: target_from_uri,fetch_json,wait_health,collect_routes,run_step,main
-    target_from_uri(uri)
-    fetch_json(url;payload;timeout)
-    wait_health(target;timeout)
-    collect_routes(targets)
-    run_step(step)
-    main()
-  12-full_e2e_connect_lab/registry-runtime/registry_server.py:
-    e: nodes,get_json,discover,registry_document,send,Handler
-    Handler: do_GET(0),log_message(1)
-    nodes()
-    get_json(url;timeout)
-    discover()
-    registry_document()
-    send(handler;payload;status)
-  12-full_e2e_connect_lab/scripts/assert_results.py:
-    e: load,main
-    load(path)
+  ifuri-033-email-spam/run_local.py:
+    e: _profiles,_inbox_mboxes,_decode,_read_messages,_ollama_spam,_classify,main
+    _profiles()
+    _inbox_mboxes(profile)
+    _decode(value)
+    _read_messages(path;limit)
+    _ollama_spam(messages;model)
+    _classify(messages)
     main()
   12-full_e2e_connect_lab/scripts/connector_checks.py:
-    e: run,run_json,write_json,fetch_catalog,emit_http_check_bindings,emit_time_tools_bindings,emit_browser_control_bindings,build_registry,uri_run,result_ok,run_connector_routes,project_mcp_a2a,test_grpc_transport,summarize_catalog,main
+    e: run,run_json,write_json,fetch_catalog,selected_connector_ids,emit_http_check_bindings,emit_time_tools_bindings,emit_browser_control_bindings,build_registry,uri_run,result_ok,run_connector_routes,project_mcp_a2a,test_grpc_transport,summarize_catalog,main
     run(args)
     run_json(args)
     write_json(path;data)
     fetch_catalog()
+    selected_connector_ids()
     emit_http_check_bindings()
     emit_time_tools_bindings()
     emit_browser_control_bindings()
@@ -306,20 +600,480 @@ D:
     run_connector_routes()
     project_mcp_a2a()
     test_grpc_transport()
-    summarize_catalog(catalog;route_results)
+    summarize_catalog(catalog;route_results;selected)
     main()
-  13-simple_defaults/python_connector.py:
-    e: upper,bindings,main
-    upper(text;suffix)
-    bindings()
+  10-device_mesh_lab/www/app.js:
+    e: promptInput,generatedFlow,output,timeline,devicesEl,routesEl,routeFilter,selectedCommand,payloadForm,runSelectedButton,runNlFlowButton,runNlFlowInlineButton,refreshLogsButton,novncGrid,activityLog,viewTabs,viewPanes,navigationButtons,selectedRoute,showJson,escapeHtml,focusTargetFor,setMenuActive,showView,focusArea,target,recordActivity,targetFromUri,routeByUri,runUri,response,isRouteSafe,routeBadge,safe,schemaFor,requiredSet,defaultValueFor,lower,valueToInput,renderDevices,reachable,device,processes,installable,novncEntryFor,config,pcs,novncUrlFor,entry,host,path,renderNovnc,devices,device,name,url,status,renderRoutes,filter,rows,selectRoute,renderField,type,value,description,inputType,step,renderPayloadForm,schema,properties,required,parsePayloadValue,type,trimmed,payloadFromForm,value,previewPayload,appendTimeline,li,extractRunResult,manual,renderActivityLog,frontendRows,deviceRows,refreshLogs,groups,name,route,data,result,refreshDevices,response,runNlFlow,prompt,response,data,runSelectedRoute,data,row
+    promptInput()
+    generatedFlow()
+    output()
+    timeline()
+    devicesEl()
+    routesEl()
+    routeFilter()
+    selectedCommand()
+    payloadForm()
+    runSelectedButton()
+    runNlFlowButton()
+    runNlFlowInlineButton()
+    refreshLogsButton()
+    novncGrid()
+    activityLog()
+    viewTabs()
+    viewPanes()
+    navigationButtons()
+    selectedRoute()
+    showJson()
+    escapeHtml()
+    focusTargetFor()
+    setMenuActive()
+    showView()
+    focusArea()
+    target()
+    recordActivity()
+    targetFromUri()
+    routeByUri()
+    runUri()
+    response()
+    isRouteSafe()
+    routeBadge()
+    safe()
+    schemaFor()
+    requiredSet()
+    defaultValueFor()
+    lower()
+    valueToInput()
+    renderDevices()
+    reachable()
+    device()
+    processes()
+    installable()
+    novncEntryFor()
+    config()
+    pcs()
+    novncUrlFor()
+    entry()
+    host()
+    path()
+    renderNovnc()
+    devices()
+    device()
+    name()
+    url()
+    status()
+    renderRoutes()
+    filter()
+    rows()
+    selectRoute()
+    renderField()
+    type()
+    value()
+    description()
+    inputType()
+    step()
+    renderPayloadForm()
+    schema()
+    properties()
+    required()
+    parsePayloadValue()
+    type()
+    trimmed()
+    payloadFromForm()
+    value()
+    previewPayload()
+    appendTimeline()
+    li()
+    extractRunResult()
+    manual()
+    renderActivityLog()
+    frontendRows()
+    deviceRows()
+    refreshLogs()
+    groups()
+    name()
+    route()
+    data()
+    result()
+    refreshDevices()
+    response()
+    runNlFlow()
+    prompt()
+    response()
+    data()
+    runSelectedRoute()
+    data()
+    row()
+  15-llm-yaml-repair/agent_repair.py:
+    e: _ensure_imports,_load_dotenv,load_registry,plan_yaml,_strip_fences,make_llm_planner,_normalize_flow_dict,run_step,repair_run,_resolve_payload,run_flow_file,main
+    _ensure_imports()
+    _load_dotenv()
+    load_registry(include_llm)
+    plan_yaml(goal;allowed_uris;feedback)
+    _strip_fences(text)
+    make_llm_planner(space;model;base_url;provider)
+    _normalize_flow_dict(raw)
+    run_step(registry;uri;payload)
+    repair_run(goal;registry)
+    _resolve_payload(step;results;execute)
+    run_flow_file(path;registry)
+    main(argv)
+  28-llm-novnc-desktop/run_session.py:
+    e: _ocr,main,_env_key,_markdown
+    _ocr(png)
     main()
+    _env_key()
+    _markdown(r)
+  scripts/audit_ecosystem_coverage.py:
+    e: numbered_examples,has_test,load_coverage,repos_from_file,fetch_org_repos,audit,write_markdown,main
+    numbered_examples(root)
+    has_test(example_dir)
+    load_coverage(path)
+    repos_from_file(path)
+    fetch_org_repos(org)
+    audit(root;coverage_path;repos)
+    write_markdown(report;path)
+    main(argv)
+  39-local-social-autonomy/nl_autonomy.py:
+    e: binding_document,write_bindings,extract_post,_nl_key,planner,publish_local,check_active_session,scout_capture,main
+    binding_document(env_path)
+    write_bindings(path;env_path)
+    extract_post(prompt;env_path)
+    _nl_key(text)
+    planner(goal;action_space)
+    publish_local(post;hostname;host;port;env;keep_browser)
+    check_active_session(ports;env)
+    scout_capture(index;env)
+    main(argv)
+  39-local-social-autonomy/autonomous_browser.py:
+    e: AutonomyConfig,CDPBrowser,ensure_env,free_port,chrome_binary,_split_csv,_env_bool,_env_int,autonomy_config,route_uri,browser_feed_url,_local_host,_explicit_host,assert_local_url,http_json,js_login,js_publish,run_autonomy,main
+    AutonomyConfig:
+    CDPBrowser: __init__(5),_json(2),_connect(0),_open_ws(1),_send_ws(1),_read_exact(1),_recv_ws(0),command(2),eval(1),wait_for(2),close(0)
+    ensure_env(path)
+    free_port()
+    chrome_binary()
+    _split_csv(value;default)
+    _env_bool(value;default)
+    _env_int(value;default)
+    autonomy_config(env_path)
+    route_uri(env_path)
+    browser_feed_url(config;port)
+    _local_host(host;local_suffixes)
+    _explicit_host(host;allowed)
+    assert_local_url(url;mapped_hosts;local_suffixes)
+    http_json(base;path;method)
+    js_login(user;password)
+    js_publish(content)
+    run_autonomy(hostname;port;env_path;post;keep_browser;config)
+    main(argv)
+  32-task-scenarios/reversibility_check.py:
+    e: _suffix,classify,analyse,main
+    _suffix(uri)
+    classify(uri;payload;surface)
+    analyse(scenario;surface)
+    main()
+  ifuri-033-email-spam/run.py:
+    e: _cred,_resolve_creds,_missing_creds_notice,_print_spam,main
+    _cred(keyring_account;env_var)
+    _resolve_creds()
+    _missing_creds_notice()
+    _print_spam(spam)
+    main()
+  32-task-scenarios/host_node_matrix.py:
+    e: Step,Scenario,_json_get,_load_mesh,_mesh_nodes,_route_key,_available,_contains_degraded,_verdict,_summarize,probe_dashboard,run_node_matrix,render_markdown,main
+    Step:
+    Scenario:
+    _json_get(url;timeout)
+    _load_mesh(path)
+    _mesh_nodes()
+    _route_key(uri)
+    _available(routes;uri)
+    _contains_degraded(value)
+    _verdict(step;env;value)
+    _summarize(value;limit)
+    probe_dashboard(url)
+    run_node_matrix(node_def;scenarios)
+    render_markdown(report)
+    main()
+  17-flows/run_flow.py:
+    e: load,run_flow,main
+    load(path)
+    run_flow(flow;base_dir)
+    main(argv)
+  39-local-social-autonomy/uri_runtime.py:
+    e: cmd_navigate,cmd_search,cmd_scroll,cmd_filter,cmd_extract_posts,cmd_extract_comments,cmd_ocr,cmd_snapshot,cmd_append_markdown,extract_posts,ocr_element,ocr_to_posts,render_markdown,parse_uri,run_program,resolve_program,main
+    cmd_navigate(cdp;config;params;ctx)
+    cmd_search(cdp;config;params;ctx)
+    cmd_scroll(cdp;config;params;ctx)
+    cmd_filter(cdp;config;params;ctx)
+    cmd_extract_posts(cdp;config;params;ctx)
+    cmd_extract_comments(cdp;config;params;ctx)
+    cmd_ocr(cdp;config;params;ctx)
+    cmd_snapshot(cdp;config;params;ctx)
+    cmd_append_markdown(cdp;config;params;ctx)
+    extract_posts(cdp;min_text_len)
+    ocr_element(cdp;selector)
+    ocr_to_posts(text)
+    render_markdown(heading)
+    parse_uri(uri)
+    run_program(cdp;config;commands)
+    resolve_program(program)
+    main(argv)
+  39-local-social-autonomy/scout.py:
+    e: ScoutConfig,AttachCDP,scout_config,extract_posts,scout_page,dedupe_keep_order,to_markdown,write_captures,search_phrase,scout_run,main
+    ScoutConfig:
+    AttachCDP: __init__(1),_json(1),connect(1),_send(1),_recv_exact(1),_recv(0),command(2),eval(1),scroll_down(1),close(0)  # Minimal CDP client that attaches to a running Chrome over /j...
+    scout_config(env_path)
+    extract_posts(cdp)
+    scout_page(cdp;url;config)
+    dedupe_keep_order(items)
+    to_markdown(posts;sources)
+    write_captures(path;markdown)
+    search_phrase(cdp;phrase)
+    scout_run(env_path)
+    main(argv)
+  44-ksef-token-via-browser/run_token_capture.py:
+    e: _eval_text,main
+    _eval_text(result)
+    main()
+  36-remote-browser-cdp/drive_cdp.py:
+    e: run,value,cdp,_save_screenshot,main
+    run(uri;payload;timeout)
+    value(env)
+    cdp(op;payload)
+    _save_screenshot(v)
+    main()
+  scripts/run_ci_manifest.py:
+    e: numbered_dirs,_simple_yaml_manifest,load_manifest,validate_manifest,run_one,junit,markdown,main
+    numbered_dirs(root)
+    _simple_yaml_manifest(path)
+    load_manifest(path)
+    validate_manifest(root;manifest_path)
+    run_one(root;name;entry;out_dir;timeout)
+    junit(results;target)
+    markdown(results;target;urirun_sha;examples_sha)
+    main(argv)
+  20-runtime-transport-matrix/matrix.py:
+    e: via_mcp,connector_output,main
+    via_mcp(uri;payload;registry)
+    connector_output(envelope)
+    main()
+  39-local-social-autonomy/session_probe.py:
+    e: CDPEndpoint,_split_csv,_base_from_port,parse_endpoints,_http_json,_send_ws,_read_exact,_recv_ws,_ws_command,_safe_tabs,probe_endpoint,find_linkedin_session,binding_document,write_bindings,main
+    CDPEndpoint:
+    _split_csv(value)
+    _base_from_port(port)
+    parse_endpoints(endpoints;debug_ports;env_path)
+    _http_json(base;path;timeout)
+    _send_ws(sock;text)
+    _read_exact(sock;n)
+    _recv_ws(sock)
+    _ws_command(ws_url;method;params;timeout)
+    _safe_tabs(tabs)
+    probe_endpoint(endpoint;cookie_names)
+    find_linkedin_session(env;endpoints;debug_ports;cookie_names)
+    binding_document()
+    write_bindings(path)
+    main(argv)
+  29-mcp-desktop-agent/mcp_agent.py:
+    e: _load_env,mcp_tools_as_functions,run,_finish,_markdown,main
+    _load_env()
+    mcp_tools_as_functions(registry)
+    run()
+    _finish(final;trace;shots;index)
+    _markdown(r)
+    main()
+  51-router-guarded-autonomy/run.py:
+    e: _ensure_imports,sys_info,proc_top,agent_plan,_loads_llm_json,llm_plan,_route_of,run,main
+    _ensure_imports()
+    sys_info()
+    proc_top(limit)
+    agent_plan(goal;rogue)
+    _loads_llm_json(resp)
+    llm_plan(goal;model)
+    _route_of(uri)
+    run(rogue;live)
+    main(argv)
+  32-task-scenarios/run_scenarios.py:
+    e: Node,_load_yaml,_mini_yaml,watch_thread,run_scenario,main
+    Node(NodeClient): concretize(1)
+    _load_yaml(path)
+    _mini_yaml(text)
+    watch_thread(base;stop;sink)
+    run_scenario(node;scenario)
+    main()
+  38-self-managing/resolver.py:
+    e: _schemes_from_manifest,_schemes_from_code,index_local,resolve
+    _schemes_from_manifest(manifest)
+    _schemes_from_code(pkg_dir)
+    index_local(roots;git_org)
+    resolve(capability;index)
+  ifuri-039-signal-reply/run.py:
+    e: _human_escalation,main
+    _human_escalation(node)
+    main(argv)
+  27-agent-llm-rdp/llm_planner.py:
+    e: _load_env,_concrete,_find,heuristic_plan,_extract_json,plan
+    _load_env(path)
+    _concrete(uri)
+    _find(space)
+    heuristic_plan(goal;space)
+    _extract_json(text)
+    plan(goal;space)
+  47-nl-desktop-control/computer_use.py:
+    e: _find,run_uri,capture,load_calib,abs_click,calibrate,ground,execute,agent,main
+    _find(o;k)
+    run_uri(uri;payload;timeout)
+    capture(label)
+    load_calib()
+    abs_click(px;py;sw;sh;button;do_click)
+    calibrate()
+    ground(png;goal;history)
+    execute(act;sw;sh;confirm)
+    agent(goal;turns;confirm;save)
+    main()
+  27-agent-llm-rdp/run_task.py:
+    e: _manifest,build_registry,run,_env_has_key,to_markdown,main
+    _manifest(pack)
+    build_registry()
+    run()
+    _env_has_key()
+    to_markdown(report)
+    main()
+  43-camera-usb-ocr-inspection/ledger.py:
+    e: _fmt_ts,_row_detail,main
+    _fmt_ts(ts)
+    _row_detail(r)
+    main()
+  44-ksef-token-via-browser/ksef_auth.py:
+    e: resolve_token,authenticate_and_store
+    resolve_token(service;account;env;dotenv_path)
+    authenticate_and_store(env;nip)
+  23-llm-flow-repair/repair_flow.py:
+    e: ask_llm,_extract_yaml,build_prompt,_local_runner,run_flow,generate_run_repair,main
+    ask_llm(llm_registry;prompt)
+    _extract_yaml(text)
+    build_prompt(goal;space)
+    _local_runner(uri;registry;payload;allow)
+    run_flow(flow;registry)
+    generate_run_repair(goal;registry;llm_registry)
+    main(argv)
+  23-llm-flow-repair/repair_flow_mesh.py:
+    e: load_mesh_config,make_mesh_runner,_load_env_file,litellm_ask,main
+    load_mesh_config(path)
+    make_mesh_runner(mode)
+    _load_env_file(path)
+    litellm_ask(_llm_registry;prompt)
+    main(argv)
+  36-remote-browser-cdp/unattended_browser.py:
+    e: _host_matches,_target_host,policy_for_goal,route_uris,run,value,infer_url,summarize_page,_save_portal_capture,node_safe,_local_ocr,_compact_capture,observe_physical_screen,observe_cdp,main
+    _host_matches(host;allowed)
+    _target_host(url)
+    policy_for_goal(goal;target_url)
+    route_uris(client)
+    run(client;uri;payload;timeout)
+    value(env)
+    infer_url(goal;explicit)
+    summarize_page(data)
+    _save_portal_capture(data;artifact_dir)
+    node_safe(name)
+    _local_ocr(image;contains)
+    _compact_capture(data)
+    observe_physical_screen(client;node;routes;contains)
+    observe_cdp(client;node;routes;url)
+    main(argv)
+  28-llm-novnc-desktop/schema_planner.py:
+    e: _load_env,_extract_json,_by_op,heuristic_plan,plan
+    _load_env()
+    _extract_json(text)
+    _by_op(space;suffix)
+    heuristic_plan(goal;space)
+    plan(goal;space)
+  47-nl-desktop-control/run.py:
+    e: plan,run_uri,_ok,save_shot,main
+    plan(task;node)
+    run_uri(node_url;uri;payload;identity;timeout)
+    _ok(env)
+    save_shot(node;identity;outdir;label;at)
+    main()
+  40-wordpress-article/wp_connector.py:
+    e: _auth_header,create_post,list_posts,urirun_bindings
+    _auth_header()
+    create_post(title;content;status;excerpt;categories)
+    list_posts(status;per_page)
+    urirun_bindings()
   14-llm-uri-agent/agent.py:
-    e: load_registry,action_space,plan,run_step,main
+    e: _ensure_urirun,browser_control_bindings,load_registry,browser_backend,action_space,plan,run_step,load_flow_steps,main
+    _ensure_urirun()
+    browser_control_bindings()
     load_registry()
+    browser_backend(registry)
     action_space(registry)
     plan(goal;routes)
     run_step(registry;step)
+    load_flow_steps(path)
     main(argv)
+  50-contract-guarded-flow/run.py:
+    e: _ensure_imports,append,list_notes,_route_of,run,main
+    _ensure_imports()
+    append(text;tag)
+    list_notes(tag)
+    _route_of(uri)
+    run(drift)
+    main(argv)
+  06-html_uri_app/app.js:
+    e: routeResponse,button,result,schemaFor,payloadDefaults,renderActions,renderForm,route,schema,properties,required,defaults,value,inputType,payloadFromForm,value,refreshLogs,data,manifest,card,renderToolList,button,result,classFor,iconFor,key,escapeHtml
+    routeResponse()
+    button()
+    result()
+    schemaFor()
+    payloadDefaults()
+    renderActions()
+    renderForm()
+    route()
+    schema()
+    properties()
+    required()
+    defaults()
+    value()
+    inputType()
+    payloadFromForm()
+    value()
+    refreshLogs()
+    data()
+    manifest()
+    card()
+    renderToolList()
+    button()
+    result()
+    classFor()
+    iconFor()
+    key()
+    escapeHtml()
+  09-docker_uri_flow/node-worker/server.js:
+    e: http,fs,path,bindings,send,data,readBody,slugify,server,body,slug
+    http()
+    fs()
+    path()
+    bindings()
+    send()
+    data()
+    readBody()
+    slugify()
+    server()
+    body()
+    slug()
+  35-deploy-lenovo-surface/lenovo_cdp.py:
+    e: _chrome,_http,_pages,_ws,_eval,cdp_launch,cdp_find,cdp_state,cdp_linkedin_post,urirun_bindings
+    _chrome()
+    _http(path;timeout)
+    _pages()
+    _ws(ws_url;messages)
+    _eval(expr)
+    cdp_launch(headless;profile)
+    cdp_find(domain;cookie_names)
+    cdp_state()
+    cdp_linkedin_post(text;dry_run)
+    urirun_bindings()
   14-llm-uri-agent/tools.py:
     e: emit,_route,bindings,now,http_status,_chrome_bin,browser_dom,log_event,main
     emit(payload)
@@ -331,8 +1085,829 @@ D:
     browser_dom(url;max_chars)
     log_event(event;detail)
     main(argv)
-  scripts/build_site.py:
-    e: md,page,first_title_desc
-    md(text)
-    page(title;body;depth)
-    first_title_desc(readme)
+  40-local-portals-suite/portal_autonomy.py:
+    e: ensure_env,_api_json,_js_login,_js_submit,env_defaults,run_portal_action,create_crm_lead,create_support_ticket,create_shop_order,create_docs_document,choose_portal,_quoted_or_tail,payload_for_goal,planner,main
+    ensure_env(path)
+    _api_json(port;host;path)
+    _js_login(user;password)
+    _js_submit(fields)
+    env_defaults(portal;env)
+    run_portal_action(portal;fields;env;keep_browser)
+    create_crm_lead(customer;note;env;keep_browser)
+    create_support_ticket(title;message;env;keep_browser)
+    create_shop_order(product;qty;env;keep_browser)
+    create_docs_document(title;body;env;keep_browser)
+    choose_portal(goal)
+    _quoted_or_tail(goal)
+    payload_for_goal(portal;goal)
+    planner(goal;action_space)
+    main(argv)
+  10-device_mesh_lab/mesh_env.py:
+    e: load_env,parse_peers,auth_token,auth_headers,check_auth,read_json,send_json
+    load_env()
+    parse_peers(value)
+    auth_token()
+    auth_headers()
+    check_auth(headers)
+    read_json(handler)
+    send_json(handler;status;payload)
+  scripts/audit_test_coverage.py:
+    e: _numbered_dirs,_test_dirs,_mentioned_dirs,audit,_wrap,_print_report,main
+    _numbered_dirs(root)
+    _test_dirs(root)
+    _mentioned_dirs(root;script)
+    audit(root;script;manifest)
+    _wrap(items;width)
+    _print_report(rep;verbose)
+    main(argv)
+  37-closed-loop-automation/planners.py:
+    e: _loads_llm_json,heuristic_planner,make_llm_planner,make_llm_decider
+    _loads_llm_json(resp)
+    heuristic_planner(goal;routes;prev_error;observation)
+    make_llm_planner(model)
+    make_llm_decider(model)
+  45-ksef-send-faktura/send_invoice.py:
+    e: build_send_plan,parse_upo,send,main
+    build_send_plan(env;invoice_xml)
+    parse_upo(upo;upo_path;save_to)
+    send(env;invoice_path;invoice_xml;public_key;xsd_path;execute)
+    main()
+  39-browser-observe/observe.py:
+    e: _load_env,assert_read_only,run_ro,ensure_capture,observe
+    _load_env(path)
+    assert_read_only(uri)
+    run_ro(client;uri;payload)
+    ensure_capture(client)
+    observe(client)
+  40-local-portals-suite/portal_server.py:
+    e: PortalState,PortalHandler,load_env,_page,start_server,main
+    PortalState: from_env(1),create_record(2)
+    PortalHandler(BaseHTTPRequestHandler): log_message(1),_portal(0),_send(4),_redirect(2),_form(0),_session_id(0),_authenticated(0),do_GET(0),do_POST(0),_login(2),_dashboard(1),_record_html(1)
+    load_env(path)
+    _page(title;body)
+    start_server(host;port;env_path)
+    main()
+  19-all-connectors/check_all.py:
+    e: setup_polyglot_bin,_with_pythonpath,emit_bindings,check,main
+    setup_polyglot_bin()
+    _with_pythonpath()
+    emit_bindings(c)
+    check(c)
+    main()
+  39-local-social-autonomy/mock_linkedin.py:
+    e: MockState,MockLinkedInHandler,load_env,_page,start_server,main
+    MockState: from_env(1),publish(1)
+    MockLinkedInHandler(BaseHTTPRequestHandler): log_message(1),_send(4),_redirect(2),_form(0),_session_id(0),_authenticated(0),do_GET(0),do_POST(0),_login(1),_feed(0)
+    load_env(path)
+    _page(title;body)
+    start_server(host;port;env_path)
+    main()
+  31-llm-remote-office/tellmesh_bridge.py:
+    e: _ensure_paths,_manifest_routes,__getattr__,_input_schema,build_bindings
+    _ensure_paths()
+    _manifest_routes()
+    __getattr__(name)
+    _input_schema(op)
+    build_bindings()
+  15-llm-yaml-repair/tools.py:
+    e: emit,_route,bindings,now,note_put,log_event,main
+    emit(payload)
+    _route(uri;argv;properties;label)
+    bindings()
+    now()
+    note_put(key;value)
+    log_event(event;detail)
+    main(argv)
+  38-self-managing/run_live.py:
+    e: installable_routes,capability_aware_planner,resolver,make_install_fn,main
+    installable_routes()
+    capability_aware_planner(goal;routes;prev_error;observation)
+    resolver(scheme)
+    make_install_fn()
+    main()
+  37-closed-loop-automation/vision_loop.py:
+    e: full_screenshot,make_vision_decider
+    full_screenshot(client;shot_uri)
+    make_vision_decider(model;client;shot_uri)
+  06-html_uri_app/backend.py:
+    e: Handler,load_env,env_bool,read_json,resolve_runtime_placeholders,binding_document,registry,routes,add_log,recent_logs,json_response,execute_policy,dispatch,dispatch_tool,main
+    Handler(BaseHTTPRequestHandler): log_message(1),do_GET(0),do_POST(0),read_body(0),serve_static(1)
+    load_env(path)
+    env_bool(name;default)
+    read_json(path)
+    resolve_runtime_placeholders(value)
+    binding_document()
+    registry()
+    routes()
+    add_log(event;detail;source)
+    recent_logs(limit)
+    json_response(handler;status;payload)
+    execute_policy(uri;allow_shell)
+    dispatch(body)
+    dispatch_tool(body)
+    main()
+  11-novnc_lan_flow/orchestrator/run_flow.py:
+    e: target_from_uri,fetch_json,wait_health,collect_routes,run_step,main
+    target_from_uri(uri)
+    fetch_json(url;payload;timeout)
+    wait_health(target;timeout)
+    collect_routes(targets)
+    run_step(step)
+    main()
+  35-deploy-lenovo-surface/verify.py:
+    e: run,main
+    run(uri;payload;timeout)
+    main()
+  52-office-vm-rdp-novnc/vm_office_system.py:
+    e: _load,_save,_nid,_session,op,_vm_list,_vm_start,_vm_stop,_rdp_connect,_rdp_disconnect,_rdp_list,_novnc_open,_novnc_close,_novnc_status,_append_screen,_desktop_launch,_desktop_type,_desktop_hotkey,_desktop_screenshot,_desktop_ocr,_screen_ocr_image,_fs_save,_fs_read,_clipboard_set,_clipboard_get,_notify,_route,bindings,main
+    _load()
+    _save(s)
+    _nid(s;prefix)
+    _session(s;sid)
+    op(name)
+    _vm_list(s;a)
+    _vm_start(s;a)
+    _vm_stop(s;a)
+    _rdp_connect(s;a)
+    _rdp_disconnect(s;a)
+    _rdp_list(s;a)
+    _novnc_open(s;a)
+    _novnc_close(s;a)
+    _novnc_status(s;a)
+    _append_screen(ss;text)
+    _desktop_launch(s;a)
+    _desktop_type(s;a)
+    _desktop_hotkey(s;a)
+    _desktop_screenshot(s;a)
+    _desktop_ocr(s;a)
+    _screen_ocr_image(s;a)
+    _fs_save(s;a)
+    _fs_read(s;a)
+    _clipboard_set(s;a)
+    _clipboard_get(s;a)
+    _notify(s;a)
+    _route(uri;op_name;props;label;required)
+    bindings()
+    main(argv)
+  21-generate-from-binding/generate.py:
+    e: pascal,routes,gen_proto,gen_openapi,gen_client,main
+    pascal(uri)
+    routes(registry)
+    gen_proto(rs;package)
+    gen_openapi(rs;title)
+    gen_client(rs)
+    main()
+  38-self-managing/self_managing.py:
+    e: _scheme,served_schemes,flow_gaps,self_managing_loop,make_provision
+    _scheme(uri)
+    served_schemes(client)
+    flow_gaps(flow;served)
+    self_managing_loop(client;goal;planner;resolver;provision)
+    make_provision()
+  11-tellmesh-uri-flow/run.py:
+    e: stub_for,resolve_payload
+    stub_for(ref)
+    resolve_payload(payload;results)
+  ifuri-229-executor-escalation/run.py:
+    e: _install_mock,main
+    _install_mock(goal)
+    main(argv)
+  07-transports/transport_lib.py:
+    e: build_registry,run_inprocess,run_queue,serverless_handler,start_http_worker,run_via,grpc_available,available_transports
+    build_registry()
+    run_inprocess(uri;payload;registry;mode)
+    run_queue(uri;payload;registry;timeout)
+    serverless_handler(event;registry)
+    start_http_worker(registry;host)
+    run_via(transport;uri;payload;registry)
+    grpc_available()
+    available_transports()
+  07-transports/scan_and_run.py:
+    e: main
+    main(argv)
+  09-docker_uri_flow/shell-worker/server.py:
+    e: Handler,response,dispatch
+    Handler(BaseHTTPRequestHandler): log_message(1),do_GET(0),do_POST(0)
+    response(handler;status;payload)
+    dispatch(uri;payload)
+  09-docker_uri_flow/python-worker/server.py:
+    e: Handler,response,normalize,summary,dispatch
+    Handler(BaseHTTPRequestHandler): log_message(1),do_GET(0),do_POST(0)
+    response(handler;status;payload)
+    normalize(payload)
+    summary(payload)
+    dispatch(uri;payload)
+  44-ksef-token-via-browser/ksef_token.py:
+    e: mask,build_login_check_js,build_token_read_js,store_token
+    mask(token)
+    build_login_check_js(marker)
+    build_token_read_js(selector)
+    store_token(token)
+  ifuri-033-email-spam/checkpoint.py:
+    e: state_path,msg_hash,load,save,partition,record,summary
+    state_path(account)
+    msg_hash(m)
+    load(account)
+    save(account;data)
+    partition(account;messages)
+    record(account;classified;run_id;action)
+    summary(account)
+  37-closed-loop-automation/closed_loop.py:
+    e: execute_flow,self_repair_loop,goal_verify_loop,agent_loop
+    execute_flow(client;flow)
+    self_repair_loop(client;goal;planner;max_iter)
+    goal_verify_loop(client;goal;planner;verify;max_iter)
+    agent_loop(client;goal;decide;max_steps)
+  39-browser-observe/gillm_capture.py:
+    e: _portal_python,capture,urirun_bindings
+    _portal_python()
+    capture()
+    urirun_bindings()
+  40-local-portals-suite/domain_loop.py:
+    e: extract_domain,extract_iterations,clean_action_prompt,parse_loop_prompt,iteration_payload,route_for_portal,run_domain_loop,main
+    extract_domain(prompt)
+    extract_iterations(prompt;default;limit)
+    clean_action_prompt(prompt;domain)
+    parse_loop_prompt(prompt)
+    iteration_payload(portal;action;iteration;total)
+    route_for_portal(portal;space)
+    run_domain_loop(prompt;registry)
+    main(argv)
+  26-agent-uri-flow/planner.py:
+    e: _find,_concrete,plan
+    _find(space)
+    _concrete(uri;host)
+    plan(goal;space)
+  12-full_e2e_connect_lab/registry-runtime/registry_server.py:
+    e: Handler,nodes,get_json,discover,registry_document,send
+    Handler(BaseHTTPRequestHandler): do_GET(0),log_message(1)
+    nodes()
+    get_json(url;timeout)
+    discover()
+    registry_document()
+    send(handler;payload;status)
+  25-tellmesh-uri-flow/packs/flow_llm/handlers.py:
+    e: complete
+    complete(prompt;model;host)
+  38-self-managing/governance.py:
+    e: source_of,is_trusted,governed_provision,make_verify_fn
+    source_of(candidate)
+    is_trusted(candidate;allowlist)
+    governed_provision(install_fn)
+    make_verify_fn()
+  28-llm-novnc-desktop/novnc_connector/core.py:
+    e: _run,_state,_exec,start,launch,type_text,key,screenshot,stop,registry
+    _run(args;timeout)
+    _state()
+    _exec(cid)
+    start(image;port)
+    launch(command;settle)
+    type_text(text;enter)
+    key(keys)
+    screenshot(name)
+    stop()
+    registry()
+  34-all-connectors-flow/pkg_connector.py:
+    e: _route,bindings,install,installed,main
+    _route(uri;op;props;label;required)
+    bindings()
+    install(name)
+    installed(module)
+    main(argv)
+  33-office-automation-mcp/office_system.py:
+    e: _load,_save,_nid,_open_window,op,_app_open,_app_close,_app_running,_window_list,_window_focus,_window_close,_browser_open,_browser_read,_browser_type,_browser_click,_browser_screenshot,_email_compose,_email_attach,_email_send,_email_inbox,_email_search,_fs_write,_fs_read,_fs_list,_fs_copy,_clip_copy,_clip_paste,_cal_create,_cal_list,_screen_ocr,_notify,_route,bindings,main
+    _load()
+    _save(s)
+    _nid(s;prefix)
+    _open_window(s;app;title)
+    op(name)
+    _app_open(s;a)
+    _app_close(s;a)
+    _app_running(s;a)
+    _window_list(s;a)
+    _window_focus(s;a)
+    _window_close(s;a)
+    _browser_open(s;a)
+    _browser_read(s;a)
+    _browser_type(s;a)
+    _browser_click(s;a)
+    _browser_screenshot(s;a)
+    _email_compose(s;a)
+    _email_attach(s;a)
+    _email_send(s;a)
+    _email_inbox(s;a)
+    _email_search(s;a)
+    _fs_write(s;a)
+    _fs_read(s;a)
+    _fs_list(s;a)
+    _fs_copy(s;a)
+    _clip_copy(s;a)
+    _clip_paste(s;a)
+    _cal_create(s;a)
+    _cal_list(s;a)
+    _screen_ocr(s;a)
+    _notify(s;a)
+    _route(uri;op_name;props;label;required)
+    bindings()
+    main(argv)
+  19-uri-tree/build_uri_tree.py:
+    e: slug,catalog,schemes_tree,build
+    slug(name)
+    catalog()
+    schemes_tree(uris)
+    build(ids)
+  05-generators/js/uri-command.mjs:
+    e: string,integer,boolean,uriCommand,placeholders,required,properties,bindingDocument
+    string()
+    integer()
+    boolean()
+    uriCommand()
+    placeholders()
+    required()
+    properties()
+    bindingDocument()
+  05-generators/go/example.go:
+    e: Field,InputSchema,Binding,Document,uriCommand,main
+    Field:
+    InputSchema:
+    Binding:
+    Document:
+    uriCommand()
+    main()
+  25-tellmesh-uri-flow/flow.py:
+    e: build_registry,run_flow,main
+    build_registry()
+    run_flow(registry)
+    main()
+  38-self-managing/deployable_handlers.py:
+    e: _binding,for_scheme
+    _binding(uri;module;export;props)
+    for_scheme(scheme;node)
+  35-deploy-lenovo-surface/lenovo_node.py:
+    e: _chrome,_safe,page_text,page_screenshot,desktop_open,host_info,disk_usage,fs_write,fs_read,fs_list,b64,sha256,uuid_v4,http_status,note_write,note_read,urirun_bindings
+    _chrome()
+    _safe(path)
+    page_text(url;max)
+    page_screenshot(url;width)
+    desktop_open(url)
+    host_info()
+    disk_usage()
+    fs_write(path;content)
+    fs_read(path)
+    fs_list()
+    b64(text;mode)
+    sha256(text)
+    uuid_v4(count)
+    http_status(url)
+    note_write(text)
+    note_read()
+    urirun_bindings()
+  52-office-vm-rdp-novnc/scenarios.py:
+    e: _step,_ocr_has
+    _step(uri)
+    _ocr_has(state;needle;vm)
+  21-generate-from-binding/generated/client.py:
+    e: _run,flow_host_daily_command_run,flow_host_domain_command_check,log_host_logs_query_recent,monitor_host_dns_query_expected,monitor_host_dns_query_current,monitor_host_http_query_status,browser_host_page_command_screenshot,log_host_daily_command_write
+    _run(registry;uri;payload;allow)
+    flow_host_daily_command_run(registry;dataset;db;limit;project;screenshot_dir;screenshot_when)
+    flow_host_domain_command_check(registry;create_repair_ticket;db;domain;expected_a;expected_aaaa;expected_records;project;screenshot_dir;screenshot_when;timeout;url)
+    log_host_logs_query_recent(registry;db;limit;stream)
+    monitor_host_dns_query_expected(registry;expected_a;expected_aaaa;expected_records)
+    monitor_host_dns_query_current(registry;current_records;domain;profile;provider;record_types)
+    monitor_host_http_query_status(registry;domain;expected_status;timeout;url)
+    browser_host_page_command_screenshot(registry;db;domain;meta;reason;screenshot_dir;url)
+    log_host_daily_command_write(registry;db;detail;event;stream)
+  16-secrets/secret_demo.py:
+    e: start_server,build,run,scenarios,main
+    start_server()
+    build(base_url)
+    run(registry)
+    scenarios()
+    main()
+  08-multi_transport/worker.py:
+    e: discovery,serve_http,serve_grpc
+    discovery()
+    serve_http()
+    serve_grpc()
+  10-device_mesh_lab/www/runtime-config.js:
+    e: host
+    host()
+  05-generators/php/example.php:
+    e: UriCommand
+    UriCommand: __construct(-1),schemaType(-1),bindingFromFunction(-1),slug(-1)
+  05-generators/nodejs/generate-bindings.mjs:
+    i: ../js/uri-command.mjs,node:fs
+    e: sha256,document,out
+    sha256()
+    document()
+    out()
+  13-simple_defaults/python_connector.py:
+    e: upper,bindings,main
+    upper(text;suffix)
+    bindings()
+    main()
+  13-simple_defaults/js/defaults.mjs:
+    e: string,integer,boolean,field,connector,fullUri,uri,placeholders,properties,required
+    string()
+    integer()
+    boolean()
+    field()
+    connector()
+    fullUri()
+    uri()
+    placeholders()
+    properties()
+    required()
+  31-llm-remote-office/build_node_registry.py:
+    e: base_bindings,main
+    base_bindings(name)
+    main()
+  37-closed-loop-automation/run.py:
+    e: main
+    main()
+  19-uri-tree/ops_flow.py:
+    e: uri
+    uri(connector)
+  02-decorators/example.py:
+    e: echo_message,transcode,shell_echo
+    echo_message(text)
+    transcode(input;output;width;height)
+    shell_echo(text)
+  06-html_uri_app/test.mjs:
+    i: node:assert/strict,node:fs/promises
+    e: bindings,routes
+    bindings()
+    routes()
+  05-generators/js/example.mjs:
+    i: ./uri-command.mjs,node:assert/strict
+    e: greet,document
+    greet()
+    document()
+  05-generators/ts/decorators.ts:
+    e: MathCommands,uriCommand,method,placeholders,properties
+    MathCommands: add(-1)
+    uriCommand()
+    method()
+    placeholders()
+    properties()
+  05-generators/c/example.c:
+    i: stdio.h
+    e: main,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts,puts
+    main()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+    puts()
+  13-simple_defaults/js/example.mjs:
+    i: ./defaults.mjs
+    e: demo
+    demo()
+  25-tellmesh-uri-flow/packs/flow_ocr/handlers.py:
+    e: extract_text
+    extract_text(image_id;host)
+  25-tellmesh-uri-flow/packs/flow_kvm/handlers.py:
+    e: capture
+    capture(monitor;host)
+  53-ecosystem-coverage-audit/run.py:
+    e: main
+    main()
+  39-local-social-autonomy/extract_invoices.py:
+    e: run_extraction
+    run_extraction()
+  33-office-automation-mcp/scenarios.py:
+    e: _step
+    _step(uri)
+  22-warm-worker/bench.py:
+    e: cold,main
+    cold()
+    main()
+  18-openapi-import/run.py:
+    e: Mock
+    Mock(http.server.BaseHTTPRequestHandler): do_GET(0),log_message(0)
+  tree.sh:
+  project.sh:
+  03-artifacts/deploy.sh:
+  03-artifacts/urirun.manifest.json:
+  03-artifacts/pyproject.toml:
+  03-artifacts/package.json:
+  03-artifacts/Dockerfile:
+  11-novnc_lan_flow/docker-compose.yml:
+  11-novnc_lan_flow/dashboard/runtime-config.js:
+  11-novnc_lan_flow/generated/registry.json:
+  11-novnc_lan_flow/generated/routes.txt:
+  11-novnc_lan_flow/scripts/smoke.sh:
+    e: cleanup
+    cleanup()
+  11-novnc_lan_flow/computer/Dockerfile:
+  07-transports/registry.bindings.json:
+  07-transports/demo.py:
+  08-multi_transport/docker-compose.test.yml:
+  08-multi_transport/web-bindings.json:
+  08-multi_transport/run_tests.sh:
+    e: cleanup
+    cleanup()
+  08-multi_transport/rpc-bindings.json:
+  06-html_uri_app/run.sh:
+  01-json/bindings.v2.example.json:
+  scripts/deploy-plesk.sh:
+  09-docker_uri_flow/run.sh:
+    e: cleanup
+    cleanup()
+  09-docker_uri_flow/docker-compose.yml:
+  09-docker_uri_flow/run_tests.sh:
+    e: cleanup
+    cleanup()
+  09-docker_uri_flow/generate_registry.sh:
+  09-docker_uri_flow/shell-worker/bindings.json:
+  09-docker_uri_flow/shell-worker/Dockerfile:
+  09-docker_uri_flow/shell-worker/write_report.sh:
+  09-docker_uri_flow/node-worker/bindings.json:
+  09-docker_uri_flow/node-worker/package.json:
+  09-docker_uri_flow/node-worker/Dockerfile:
+  09-docker_uri_flow/python-worker/bindings.json:
+  09-docker_uri_flow/python-worker/Dockerfile:
+  09-docker_uri_flow/orchestrator/Dockerfile:
+  09-docker_uri_flow/flows/cross_service_report.yaml:
+  12-full_e2e_connect_lab/docker-compose.yml:
+  12-full_e2e_connect_lab/generated/connectors-policy.json:
+  12-full_e2e_connect_lab/generated/http-check-bindings.json:
+  12-full_e2e_connect_lab/generated/monitor-bindings.json:
+  12-full_e2e_connect_lab/generated/data-bindings.json:
+  12-full_e2e_connect_lab/generated/task-bindings.json:
+  12-full_e2e_connect_lab/generated/browser-control-bindings.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T214509Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T211850Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T001713Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T233508Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T234253Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T233741Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T234757Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T230901Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T215253Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T221603Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T004537Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T213510Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T222801Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T230706Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T000445Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260619T224704Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260620T005133Z.dns-backup.json:
+  12-full_e2e_connect_lab/pc/Dockerfile:
+  12-full_e2e_connect_lab/registry-runtime/Dockerfile:
+  12-full_e2e_connect_lab/flows/user_scenario.yaml:
+  Makefile:
+  planfile.yaml:
+  run_tests.sh:
+    e: pick_python
+    pick_python()
+  pytest.ini:
+  02-decorators/Makefile:
+  03-artifacts/Makefile:
+  24-adopt-tellmesh-packs/adopt.sh:
+  44-ksef-token-via-browser/ksef-token-via-browser.flow.yaml:
+  24-adopt-tellmesh-packs/generated/tellmesh.bindings.json:
+  prefact.yaml:
+  24-adopt-tellmesh-packs/manifests/flat-uri-bad.manifest.yaml:
+  24-adopt-tellmesh-packs/manifests/uriocr.manifest.yaml:
+  43-camera-usb-ocr-inspection/camera-alert.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-mobile-web.flow.yaml:
+  43-camera-usb-ocr-inspection/receipt-to-invoice.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-motion-scan.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-receipt-parse.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-receipt-scan.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-barcode-scan.flow.yaml:
+  43-camera-usb-ocr-inspection/camera-usb-ocr.flow.yaml:
+  24-adopt-tellmesh-packs/generated/tellmesh.registry.json:
+  27-agent-llm-rdp/generated/run-log.json:
+  21-generate-from-binding/generated/service.proto:
+  11-novnc_lan_flow/Makefile:
+  11-novnc_lan_flow/generated/smoke-output.json:
+  21-generate-from-binding/generated/openapi.json:
+  07-transports/Makefile:
+  08-multi_transport/Makefile:
+  08-multi_transport/Dockerfile:
+  11-novnc_lan_flow/generated/flow-result.json:
+  43-camera-usb-ocr-inspection/run_live_probe.sh:
+  06-html_uri_app/bindings.json:
+  21-generate-from-binding/gen.sh:
+  25-tellmesh-uri-flow/flow_cli.sh:
+  25-tellmesh-uri-flow/flow_node.sh:
+  25-tellmesh-uri-flow/generated/flow_llm.bindings.json:
+  25-tellmesh-uri-flow/generated/flow_ocr.bindings.json:
+  06-html_uri_app/Makefile:
+  47-android-nexus7-node/node-nexus7.bindings.json:
+  25-tellmesh-uri-flow/generated/flow_kvm.bindings.json:
+  25-tellmesh-uri-flow/generated/node.json:
+  25-tellmesh-uri-flow/packs/flow_kvm/manifest.yaml:
+  25-tellmesh-uri-flow/generated/flow.registry.json:
+  25-tellmesh-uri-flow/packs/flow_ocr/manifest.yaml:
+  25-tellmesh-uri-flow/packs/flow_llm/manifest.yaml:
+  25-tellmesh-uri-flow/packs/flow_llm/__init__.py:
+  32-task-scenarios/generated/przeczytaj-tekst-ze-strony-https-example.json:
+  32-task-scenarios/generated/otworz-https-example-com-i-zrob-zrzut-ek.json:
+  32-task-scenarios/generated/odczytaj-ostatnie-wpisy-z-logu-node-i-za.json:
+  32-task-scenarios/generated/pokaz-date-systemowa-nazwe-jadra-i-spraw.json:
+  32-task-scenarios/generated/wypisz-5-najciezszych-procesow-biurowych.json:
+  32-task-scenarios/generated/sprawdz-zdrowie-maszyny-i-zapisz-notatke.json:
+  32-task-scenarios/generated/scenarios-report.json:
+  32-task-scenarios/generated/host-node-matrix-report.json:
+  32-task-scenarios/scenarios/gen-wypisz-5-najciezszych-procesow-biurowych.yaml:
+  32-task-scenarios/scenarios/desktop-control.yaml:
+  32-task-scenarios/generated/otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro.json:
+  32-task-scenarios/scenarios/gen-przeczytaj-tekst-ze-strony-https-example.yaml:
+  32-task-scenarios/scenarios/gen-sprawdz-zdrowie-maszyny-i-zapisz-notatke.yaml:
+  32-task-scenarios/scenarios/gen-odczytaj-ostatnie-wpisy-z-logu-node-i-za.yaml:
+  32-task-scenarios/scenarios/gen-przepracuj-typowy-dzie-biurowy-otw-rz-st.yaml:
+  32-task-scenarios/scenarios/reversible-web-draft.yaml:
+  32-task-scenarios/scenarios/office-doc.yaml:
+  32-task-scenarios/scenarios/gen-otworz-https-example-com-i-zrob-zrzut-ek.yaml:
+  32-task-scenarios/generated/przepracuj-typowy-dzie-biurowy-otw-rz-st.json:
+  32-task-scenarios/scenarios/system-audit.yaml:
+  32-task-scenarios/scenarios/gen-pokaz-date-systemowa-nazwe-jadra-i-spraw.yaml:
+  32-task-scenarios/scenarios/gen-otw-rz-iana-org-i-zr-b-zrzut-ekranu-stro.yaml:
+  29-mcp-desktop-agent/mcp_serve.sh:
+    e: print
+    print()
+  25-tellmesh-uri-flow/packs/flow_kvm/__init__.py:
+  32-task-scenarios/scenarios/web-login.yaml:
+  29-mcp-desktop-agent/generated/mcp-session.json:
+  31-llm-remote-office/node_serve.sh:
+  31-llm-remote-office/deploy_from_host.sh:
+  31-llm-remote-office/office_cli.sh:
+  31-llm-remote-office/generated/node-office.bindings.json:
+  31-llm-remote-office/generated/lenovo.node.json:
+  31-llm-remote-office/generated/node-office.registry.json:
+  31-llm-remote-office/generated/run-log.json:
+  31-llm-remote-office/data/office/raport.txt:
+  31-llm-remote-office/generated/lab.node.json:
+  32-host-ask-over-relay/Makefile:
+  32-host-ask-over-relay/run.sh:
+  30-mesh-no-rdp/node.bindings.template.json:
+  30-mesh-no-rdp/mesh_local.sh:
+  30-mesh-no-rdp/generated/node-b.node.json:
+  30-mesh-no-rdp/generated/node-a.node.json:
+  30-mesh-no-rdp/generated/node-b.registry.json:
+  30-mesh-no-rdp/generated/node-a.bindings.json:
+  30-mesh-no-rdp/generated/host.json:
+  30-mesh-no-rdp/generated/node-a.registry.json:
+  30-mesh-no-rdp/generated/node-b.bindings.json:
+  25-tellmesh-uri-flow/packs/flow_ocr/__init__.py:
+  01-json/Makefile:
+  35-deploy-lenovo-surface/deploy.sh:
+  44-chat-prompt-sweep/prompts.json:
+  35-deploy-lenovo-surface/node-surface.bindings.json:
+  46-connect-anything/run_examples.sh:
+    e: section,summarize_project,print,print,print,print
+    section()
+    summarize_project()
+    print()
+    print()
+    print()
+    print()
+  24-adopt-existing-stack/verify.sh:
+  24-adopt-existing-stack/docker-compose.yml:
+  24-adopt-existing-stack/shop.bindings.json:
+  24-adopt-existing-stack/Dockerfile.gateway:
+  15-llm-yaml-repair/Makefile:
+  15-llm-yaml-repair/flows/ocr-to-note.yaml:
+  15-llm-yaml-repair/flows/save-note.yaml:
+  52-office-vm-rdp-novnc/Makefile:
+  10-device_mesh_lab/Makefile:
+  09-docker_uri_flow/Makefile:
+  09-docker_uri_flow/docker-compose.test.yml:
+  09-docker_uri_flow/generated/routes.txt:
+  09-docker_uri_flow/generated/registry.json:
+  09-docker_uri_flow/generated/bindings.v2.json:
+  09-docker_uri_flow/tester/Dockerfile:
+  17-flows/web-recon.flow.yaml:
+  17-flows/web_recon.flow.py:
+  17-flows/Makefile:
+  17-flows/flow-local.sh:
+  17-flows/flow-declarative.sh:
+  17-flows/ksef-send.flow.yaml:
+  17-flows/flow-web-recon.sh:
+  17-flows/scenarios.txt:
+  17-flows/flow-ksef.sh:
+  17-flows/tools.bindings.json:
+  17-flows/local.flow.yaml:
+  testql-scenarios/generated-from-pytests.testql.toon.yaml:
+  11-tellmesh-uri-flow/flow.yaml:
+  11-tellmesh-uri-flow/Makefile:
+  11-tellmesh-uri-flow/packs/ocr.yaml:
+  11-tellmesh-uri-flow/packs/message.yaml:
+  11-tellmesh-uri-flow/packs/vql.yaml:
+  11-tellmesh-uri-flow/packs/llm.yaml:
+  48-api-device-node/device-discovery.flow.yaml:
+  48-api-device-node/register-demo.sh:
+  48-api-device-node/api-request.flow.yaml:
+  12-full_e2e_connect_lab/Makefile:
+  12-full_e2e_connect_lab/generated/connectors-catalog.json:
+  12-full_e2e_connect_lab/generated/connectors-install-registry.json:
+  12-full_e2e_connect_lab/generated/flow-result.json:
+  12-full_e2e_connect_lab/generated/agents.json:
+  12-full_e2e_connect_lab/generated/connectors-registry.json:
+  12-full_e2e_connect_lab/generated/connectors-install-routes.txt:
+  12-full_e2e_connect_lab/generated/time-tools-bindings.json:
+  12-full_e2e_connect_lab/generated/registry-runtime.json:
+  12-full_e2e_connect_lab/generated/nodes.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260704T082524Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260629T181840Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260622T070100Z.dns-backup.json:
+  12-full_e2e_connect_lab/generated/dns-backups/example.test-20260629T181352Z.dns-backup.json:
+  12-full_e2e_connect_lab/scripts/public_smoke.sh:
+    e: print
+    print()
+  12-full_e2e_connect_lab/scripts/run_full_scenario.sh:
+    e: exec_pc,wait_http_from_host,print,install_node
+    exec_pc()
+    wait_http_from_host()
+    print()
+    install_node()
+  45-ksef-send-faktura/ksef-send.flow.yaml:
+  12-full_e2e_connect_lab/generated/connectors-result.json:
+  12-full_e2e_connect_lab/generated/routes.json:
+  14-llm-uri-agent/Makefile:
+  14-llm-uri-agent/flows/web-recon.yaml:
+  28-llm-novnc-desktop/generated/session.json:
+  28-llm-novnc-desktop/novnc_connector/__init__.py:
+  ci/examples-manifest.yml:
+  ci/ecosystem-coverage.yml:
+  51-router-guarded-autonomy/Makefile:
+  04-python/Makefile:
+  23-embedded-urirun/demo.sh:
+  33-office-automation-mcp/Makefile:
+  44-phone-webrtc-scanner-dashboard/run.sh:
+  34-all-connectors-flow/Makefile:
+  34-all-connectors-flow/connectors.py:
+  34-all-connectors-flow/flows/install.flow.yaml:
+  34-all-connectors-flow/flows/smoke.flow.yaml:
+  50-contract-guarded-flow/Makefile:
+  50-contract-guarded-flow/contracts.json:
+  40-local-portals-suite/run_all.sh:
+  40-local-portals-suite/bindings.json:
+  40-local-portals-suite/run_loop.sh:
+  40-local-portals-suite/run_prompt.sh:
+  39-local-social-autonomy/session-probe.bindings.json:
+  39-local-social-autonomy/run_email_connector.py:
+  39-local-social-autonomy/bindings.json:
+  39-local-social-autonomy/run_session_probe.sh:
+  39-local-social-autonomy/lenovo-office-workflow.yaml:
+  39-local-social-autonomy/run_prompt.sh:
+  39-local-social-autonomy/programs/07-people-search-bio-scan.json:
+  39-local-social-autonomy/programs/12-multi-keyword-tracker.json:
+  39-local-social-autonomy/programs/11-deep-comment-thread.json:
+  39-local-social-autonomy/programs/04-saved-posts-archive.json:
+  39-local-social-autonomy/programs/03-hashtag-watch.json:
+  39-local-social-autonomy/programs/02-search-filter-save.json:
+  39-local-social-autonomy/programs/09-competitor-monitor.json:
+  39-local-social-autonomy/programs/10-weekly-feed-and-saved-archive.json:
+  39-local-social-autonomy/programs/05-profile-posts-review.json:
+  39-local-social-autonomy/programs/01-feed-save.json:
+  39-local-social-autonomy/programs/06-comments-ocr-snapshot.json:
+  39-local-social-autonomy/programs/08-multi-hashtag-compare.json:
+  19-uri-tree/Makefile:
+  19-uri-tree/uri-tree.yaml:
+  05-generators/Makefile:
+  36-remote-browser-cdp/e2e.sh:
+  36-remote-browser-cdp/cdp-bindings.json:
+  18-openapi-import/Makefile:
+  18-openapi-import/petstore.json:
+  18-connector-transport/Makefile:
+  18-connector-transport/docker-compose.yml:
+  18-connector-transport/client/call.sh:
+    e: get,run,print,print
+    get()
+    run()
+    print()
+    print()
+  18-connector-transport/node/serve.sh:
+  13-simple_defaults/Makefile:
+  15-declarative-http/httpbin.toml:
+  15-declarative-http/Makefile:
+  15-declarative-http/httpbin.registry.json:
+  15-declarative-http/ksef.bindings.json:
+  15-declarative-http/ksef.toml:
+  15-declarative-http/httpbin.bindings.json:
+  26-agent-uri-flow/agent_flow.sh:
+  26-agent-uri-flow/generated/flow_llm.bindings.json:
+  26-agent-uri-flow/generated/flow.registry.json:
+  26-agent-uri-flow/generated/flow_kvm.bindings.json:
+  26-agent-uri-flow/generated/agent.report.json:
+  26-agent-uri-flow/generated/flow_ocr.bindings.json:
+  16-secrets/Makefile:

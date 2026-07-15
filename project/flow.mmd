@@ -1,26 +1,32 @@
 flowchart TD
-%% generated in 0.01s
+%% generated in 0.04s
 
     %% Entry points (blue)
     classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
 
-    subgraph Core
-        N_06_html_uri_app__test__bindings["bindings"]
-        N_09_docker_uri_flow__run__cleanup["cleanup"]
-        N_10_device_mesh_lab__www__runtime_config__host["host"]
-        N_06_html_uri_app__app__routeResponse["routeResponse"]
-        N_06_html_uri_app__app__button["button"]
-        N_06_html_uri_app__app__result["result"]
-        N_06_html_uri_app__app__route["route"]
-        N_06_html_uri_app__app__schema["schema"]
-        N_06_html_uri_app__app__properties["properties"]
-        N_06_html_uri_app__app__required["required"]
-        N_06_html_uri_app__app__defaults["defaults"]
-        N_06_html_uri_app__app__value["value"]
-        N_06_html_uri_app__app__inputType["inputType"]
-        N_06_html_uri_app__app__payloadFromForm["payloadFromForm"]
-        N_06_html_uri_app__app__refreshLogs["refreshLogs"]
-        ...["+176 more"]
+    subgraph CLI
+        N_18_connector_transport__client__call__get["get"]
+        N_18_connector_transport__client__call__run["run"]
+        N_18_connector_transport__client__call__print["print"]
     end
 
-    class N_06_html_uri_app__test__bindings,N_09_docker_uri_flow__run__cleanup,N_10_device_mesh_lab__www__runtime_config__host,N_06_html_uri_app__app__routeResponse,N_06_html_uri_app__app__button,N_06_html_uri_app__app__result,N_06_html_uri_app__app__route,N_06_html_uri_app__app__schema,N_06_html_uri_app__app__properties,N_06_html_uri_app__app__required entry
+    subgraph Core
+        N_02_decorators__example__echo_message["echo_message"]
+        N_02_decorators__example__transcode["transcode"]
+        N_02_decorators__example__shell_echo["shell_echo"]
+        N_11_novnc_lan_flow__orchestrator__run_flow__main["main"]
+        N_11_novnc_lan_flow__computer__browser_node__app_service_call{{app_service_call CC=22}}
+        N_11_novnc_lan_flow__computer__browser_node__Handler__log_message["log_message"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_OPTIONS["do_OPTIONS"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_GET["do_GET"]
+        N_11_novnc_lan_flow__computer__browser_node__Handler__do_POST["do_POST"]
+        N_11_novnc_lan_flow__computer__browser_node__main["main"]
+        N_07_transports__transport_lib__run_via["run_via"]
+        N_07_transports__transport_lib__available_transports["available_transports"]
+        N_07_transports__scan_and_run__main["main"]
+        N_08_multi_transport__worker__serve_http["serve_http"]
+        N_08_multi_transport__worker__serve_grpc["serve_grpc"]
+        ...["+469 more"]
+    end
+
+    class N_02_decorators__example__echo_message,N_02_decorators__example__transcode,N_02_decorators__example__shell_echo,N_11_novnc_lan_flow__orchestrator__run_flow__main,N_11_novnc_lan_flow__computer__browser_node__Handler__log_message,N_11_novnc_lan_flow__computer__browser_node__Handler__do_OPTIONS,N_11_novnc_lan_flow__computer__browser_node__Handler__do_GET,N_11_novnc_lan_flow__computer__browser_node__Handler__do_POST,N_11_novnc_lan_flow__computer__browser_node__main,N_07_transports__transport_lib__run_via entry

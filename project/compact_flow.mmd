@@ -1,7 +1,10 @@
 flowchart TD
-%% generated in 0.01s
-    M_06_html_uri_app__backend["06-html_uri_app.backend<br/>18 funcs"]
+%% generated in 0.04s
+    M_05_generators__ts["05-generators.ts<br/>5 funcs"]
+    M_06_html_uri_app__app["06-html_uri_app.app<br/>24 funcs"]
+    M_06_html_uri_app__backend["06-html_uri_app.backend<br/>19 funcs"]
     M_06_html_uri_app__test["06-html_uri_app.test<br/>2 funcs"]
+    M_07_transports__transport_lib["07-transports.transport_lib<br/>8 funcs"]
     M_08_multi_transport__worker["08-multi_transport.worker<br/>3 funcs"]
     M_09_docker_uri_flow__node_worker["09-docker_uri_flow.node-worker<br/>11 funcs"]
     M_09_docker_uri_flow__orchestrator["09-docker_uri_flow.orchestrator<br/>16 funcs"]
@@ -13,27 +16,199 @@ flowchart TD
     M_10_device_mesh_lab__www["10-device_mesh_lab.www<br/>92 funcs"]
     M_11_novnc_lan_flow__computer["11-novnc_lan_flow.computer<br/>17 funcs"]
     M_11_novnc_lan_flow__orchestrator["11-novnc_lan_flow.orchestrator<br/>6 funcs"]
+    M_11_tellmesh_uri_flow__run["11-tellmesh-uri-flow.run<br/>2 funcs"]
     M_12_full_e2e_connect_lab__registry_runtime["12-full_e2e_connect_lab.registry-runtime<br/>7 funcs"]
-    M_12_full_e2e_connect_lab__scripts["12-full_e2e_connect_lab.scripts<br/>22 funcs"]
+    M_12_full_e2e_connect_lab__scripts["12-full_e2e_connect_lab.scripts<br/>23 funcs"]
     M_13_simple_defaults__python_connector["13-simple_defaults.python_connector<br/>3 funcs"]
+    M_14_llm_uri_agent__agent["14-llm-uri-agent.agent<br/>9 funcs"]
+    M_14_llm_uri_agent__tools["14-llm-uri-agent.tools<br/>9 funcs"]
+    M_15_llm_yaml_repair__agent_repair["15-llm-yaml-repair.agent_repair<br/>12 funcs"]
+    M_15_llm_yaml_repair__tools["15-llm-yaml-repair.tools<br/>7 funcs"]
+    M_16_secrets__secret_demo["16-secrets.secret_demo<br/>5 funcs"]
+    M_17_flows__run_flow["17-flows.run_flow<br/>3 funcs"]
+    M_19_all_connectors__check_all["19-all-connectors.check_all<br/>5 funcs"]
+    M_19_uri_tree__build_uri_tree["19-uri-tree.build_uri_tree<br/>4 funcs"]
+    M_20_runtime_transport_matrix__matrix["20-runtime-transport-matrix.matrix<br/>3 funcs"]
+    M_21_generate_from_binding__generate["21-generate-from-binding.generate<br/>6 funcs"]
+    M_22_warm_worker__bench["22-warm-worker.bench<br/>2 funcs"]
+    M_23_llm_flow_repair__repair_flow["23-llm-flow-repair.repair_flow<br/>7 funcs"]
+    M_23_llm_flow_repair__repair_flow_mesh["23-llm-flow-repair.repair_flow_mesh<br/>5 funcs"]
+    M_25_tellmesh_uri_flow__flow["25-tellmesh-uri-flow.flow<br/>3 funcs"]
+    M_25_tellmesh_uri_flow__packs["25-tellmesh-uri-flow.packs<br/>3 funcs"]
+    M_27_agent_llm_rdp__run_task["27-agent-llm-rdp.run_task<br/>6 funcs"]
+    M_28_llm_novnc_desktop__novnc_connector["28-llm-novnc-desktop.novnc_connector<br/>10 funcs"]
+    M_28_llm_novnc_desktop__run_session["28-llm-novnc-desktop.run_session<br/>4 funcs"]
+    M_28_llm_novnc_desktop__schema_planner["28-llm-novnc-desktop.schema_planner<br/>5 funcs"]
+    M_29_mcp_desktop_agent__mcp_agent["29-mcp-desktop-agent.mcp_agent<br/>6 funcs"]
+    M_29_mcp_desktop_agent__mcp_serve["29-mcp-desktop-agent.mcp_serve<br/>1 funcs"]
+    M_31_llm_remote_office__build_node_registry["31-llm-remote-office.build_node_registry<br/>2 funcs"]
+    M_31_llm_remote_office__office_agent["31-llm-remote-office.office_agent<br/>13 funcs"]
+    M_31_llm_remote_office__tellmesh_bridge["31-llm-remote-office.tellmesh_bridge<br/>5 funcs"]
+    M_32_task_scenarios__aggregate_report["32-task-scenarios.aggregate_report<br/>1 funcs"]
+    M_32_task_scenarios__host_node_matrix["32-task-scenarios.host_node_matrix<br/>12 funcs"]
+    M_32_task_scenarios__nl_scenario["32-task-scenarios.nl_scenario<br/>7 funcs"]
+    M_32_task_scenarios__reversibility_check["32-task-scenarios.reversibility_check<br/>4 funcs"]
+    M_32_task_scenarios__run_scenarios["32-task-scenarios.run_scenarios<br/>6 funcs"]
+    M_33_office_automation_mcp__office_system["33-office-automation-mcp.office_system<br/>34 funcs"]
+    M_33_office_automation_mcp__run["33-office-automation-mcp.run<br/>7 funcs"]
+    M_34_all_connectors_flow__pkg_connector["34-all-connectors-flow.pkg_connector<br/>5 funcs"]
+    M_34_all_connectors_flow__run["34-all-connectors-flow.run<br/>7 funcs"]
+    M_35_deploy_lenovo_surface__lenovo_cdp["35-deploy-lenovo-surface.lenovo_cdp<br/>10 funcs"]
+    M_35_deploy_lenovo_surface__verify["35-deploy-lenovo-surface.verify<br/>2 funcs"]
+    M_36_remote_browser_cdp__drive_cdp["36-remote-browser-cdp.drive_cdp<br/>5 funcs"]
+    M_36_remote_browser_cdp__unattended_browser["36-remote-browser-cdp.unattended_browser<br/>15 funcs"]
+    M_37_closed_loop_automation__closed_loop["37-closed-loop-automation.closed_loop<br/>4 funcs"]
+    M_37_closed_loop_automation__planners["37-closed-loop-automation.planners<br/>4 funcs"]
+    M_37_closed_loop_automation__run["37-closed-loop-automation.run<br/>1 funcs"]
+    M_37_closed_loop_automation__vision_loop["37-closed-loop-automation.vision_loop<br/>2 funcs"]
+    M_38_self_managing__governance["38-self-managing.governance<br/>4 funcs"]
+    M_38_self_managing__run_live["38-self-managing.run_live<br/>5 funcs"]
+    M_38_self_managing__self_managing["38-self-managing.self_managing<br/>5 funcs"]
+    M_39_browser_observe__observe["39-browser-observe.observe<br/>5 funcs"]
+    M_39_local_social_autonomy__autonomous_browser["39-local-social-autonomy.autonomous_browser<br/>28 funcs"]
+    M_39_local_social_autonomy__mock_linkedin["39-local-social-autonomy.mock_linkedin<br/>16 funcs"]
+    M_39_local_social_autonomy__nl_autonomy["39-local-social-autonomy.nl_autonomy<br/>9 funcs"]
+    M_39_local_social_autonomy__scout["39-local-social-autonomy.scout<br/>19 funcs"]
+    M_39_local_social_autonomy__session_probe["39-local-social-autonomy.session_probe<br/>14 funcs"]
+    M_39_local_social_autonomy__uri_runtime["39-local-social-autonomy.uri_runtime<br/>17 funcs"]
+    M_40_local_portals_suite__domain_loop["40-local-portals-suite.domain_loop<br/>8 funcs"]
+    M_40_local_portals_suite__portal_autonomy["40-local-portals-suite.portal_autonomy<br/>15 funcs"]
+    M_40_local_portals_suite__portal_server["40-local-portals-suite.portal_server<br/>18 funcs"]
+    M_43_camera_usb_ocr_inspection__ledger["43-camera-usb-ocr-inspection.ledger<br/>3 funcs"]
+    M_43_camera_usb_ocr_inspection__run["43-camera-usb-ocr-inspection.run<br/>3 funcs"]
+    M_44_chat_prompt_sweep__run_chat_prompts["44-chat-prompt-sweep.run_chat_prompts<br/>19 funcs"]
+    M_44_ksef_token_via_browser__ksef_auth["44-ksef-token-via-browser.ksef_auth<br/>2 funcs"]
+    M_44_ksef_token_via_browser__run_token_capture["44-ksef-token-via-browser.run_token_capture<br/>2 funcs"]
+    M_45_ksef_send_faktura__send_invoice["45-ksef-send-faktura.send_invoice<br/>4 funcs"]
+    M_47_nl_desktop_control__computer_use["47-nl-desktop-control.computer_use<br/>10 funcs"]
+    M_47_nl_desktop_control__run["47-nl-desktop-control.run<br/>5 funcs"]
+    M_49_linkedin_compose_cdp__run["49-linkedin-compose-cdp.run<br/>6 funcs"]
+    M_50_contract_guarded_flow__run["50-contract-guarded-flow.run<br/>6 funcs"]
+    M_51_router_guarded_autonomy__run["51-router-guarded-autonomy.run<br/>9 funcs"]
+    M_52_office_vm_rdp_novnc__run["52-office-vm-rdp-novnc.run<br/>8 funcs"]
+    M_52_office_vm_rdp_novnc__vm_office_system["52-office-vm-rdp-novnc.vm_office_system<br/>29 funcs"]
+    ifuri_033_email_spam__run["ifuri-033-email-spam.run<br/>5 funcs"]
+    ifuri_033_email_spam__run_local["ifuri-033-email-spam.run_local<br/>7 funcs"]
+    ifuri_039_signal_reply__run["ifuri-039-signal-reply.run<br/>2 funcs"]
+    ifuri_229_executor_escalation__run["ifuri-229-executor-escalation.run<br/>2 funcs"]
+    scripts__audit_ecosystem_coverage["scripts.audit_ecosystem_coverage<br/>8 funcs"]
+    scripts__audit_test_coverage["scripts.audit_test_coverage<br/>7 funcs"]
+    scripts__run_ci_manifest["scripts.run_ci_manifest<br/>8 funcs"]
+    M_44_ksef_token_via_browser__run_token_capture ==>|24| M_29_mcp_desktop_agent__mcp_serve
+    M_49_linkedin_compose_cdp__run ==>|18| M_29_mcp_desktop_agent__mcp_serve
+    ifuri_033_email_spam__run ==>|17| M_29_mcp_desktop_agent__mcp_serve
+    M_43_camera_usb_ocr_inspection__run ==>|16| M_29_mcp_desktop_agent__mcp_serve
+    ifuri_033_email_spam__run_local ==>|16| M_29_mcp_desktop_agent__mcp_serve
     M_10_device_mesh_lab__device_agent ==>|14| M_10_device_mesh_lab__mesh_env
     M_10_device_mesh_lab__controller ==>|14| M_10_device_mesh_lab__mesh_env
+    ifuri_229_executor_escalation__run ==>|13| M_29_mcp_desktop_agent__mcp_serve
+    M_51_router_guarded_autonomy__run ==>|12| M_29_mcp_desktop_agent__mcp_serve
+    M_15_llm_yaml_repair__agent_repair ==>|11| M_29_mcp_desktop_agent__mcp_serve
+    ifuri_039_signal_reply__run ==>|11| M_29_mcp_desktop_agent__mcp_serve
     M_06_html_uri_app__backend ==>|10| M_11_novnc_lan_flow__computer
+    M_43_camera_usb_ocr_inspection__ledger ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_52_office_vm_rdp_novnc__run ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_37_closed_loop_automation__run ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_45_ksef_send_faktura__send_invoice ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_50_contract_guarded_flow__run ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_47_nl_desktop_control__computer_use ==>|9| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__reversibility_check ==>|8| M_29_mcp_desktop_agent__mcp_serve
+    M_38_self_managing__run_live ==>|8| M_29_mcp_desktop_agent__mcp_serve
+    M_36_remote_browser_cdp__drive_cdp ==>|8| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__run_scenarios ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    scripts__audit_test_coverage ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_23_llm_flow_repair__repair_flow_mesh ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_33_office_automation_mcp__run ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_34_all_connectors_flow__run ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_16_secrets__secret_demo ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_47_nl_desktop_control__run ==>|7| M_29_mcp_desktop_agent__mcp_serve
+    M_31_llm_remote_office__build_node_registry ==>|6| M_29_mcp_desktop_agent__mcp_serve
+    M_20_runtime_transport_matrix__matrix ==>|6| M_29_mcp_desktop_agent__mcp_serve
+    M_44_chat_prompt_sweep__run_chat_prompts ==>|6| M_29_mcp_desktop_agent__mcp_serve
+    M_21_generate_from_binding__generate ==>|6| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__nl_scenario ==>|6| M_29_mcp_desktop_agent__mcp_serve
     M_09_docker_uri_flow__shell_worker ==>|5| M_10_device_mesh_lab__www
     M_09_docker_uri_flow__python_worker ==>|5| M_10_device_mesh_lab__www
+    M_25_tellmesh_uri_flow__flow ==>|5| M_29_mcp_desktop_agent__mcp_serve
+    M_23_llm_flow_repair__repair_flow ==>|5| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__host_node_matrix ==>|5| M_29_mcp_desktop_agent__mcp_serve
+    M_14_llm_uri_agent__agent ==>|5| M_29_mcp_desktop_agent__mcp_serve
+    M_19_all_connectors__check_all ==>|5| M_29_mcp_desktop_agent__mcp_serve
+    M_28_llm_novnc_desktop__schema_planner ==>|5| M_05_generators__ts
     M_12_full_e2e_connect_lab__registry_runtime ==>|4| M_09_docker_uri_flow__node_worker
-    M_08_multi_transport__worker -->|2| M_12_full_e2e_connect_lab__scripts
-    M_10_device_mesh_lab__controller -->|2| M_12_full_e2e_connect_lab__scripts
-    M_11_novnc_lan_flow__computer -->|2| M_12_full_e2e_connect_lab__scripts
-    M_13_simple_defaults__python_connector -->|1| M_12_full_e2e_connect_lab__scripts
-    M_09_docker_uri_flow__orchestrator -->|1| M_12_full_e2e_connect_lab__scripts
-    M_11_novnc_lan_flow__orchestrator -->|1| M_12_full_e2e_connect_lab__scripts
-    M_10_device_mesh_lab__device_agent -->|1| M_12_full_e2e_connect_lab__scripts
+    M_17_flows__run_flow ==>|4| M_29_mcp_desktop_agent__mcp_serve
+    M_34_all_connectors_flow__pkg_connector ==>|4| M_29_mcp_desktop_agent__mcp_serve
+    scripts__run_ci_manifest ==>|4| M_29_mcp_desktop_agent__mcp_serve
+    M_25_tellmesh_uri_flow__flow -->|3| M_10_device_mesh_lab__www
+    M_35_deploy_lenovo_surface__verify -->|3| M_29_mcp_desktop_agent__mcp_serve
+    M_52_office_vm_rdp_novnc__vm_office_system -->|3| M_29_mcp_desktop_agent__mcp_serve
+    M_33_office_automation_mcp__office_system -->|3| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__uri_runtime -->|3| M_39_local_social_autonomy__scout
+    M_22_warm_worker__bench -->|3| M_29_mcp_desktop_agent__mcp_serve
+    M_11_novnc_lan_flow__computer -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_08_multi_transport__worker -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_12_full_e2e_connect_lab__scripts -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_27_agent_llm_rdp__run_task -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__aggregate_report -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_15_llm_yaml_repair__tools -->|2| M_29_mcp_desktop_agent__mcp_serve
+    scripts__audit_ecosystem_coverage -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_37_closed_loop_automation__closed_loop -->|2| M_40_local_portals_suite__portal_autonomy
+    M_28_llm_novnc_desktop__run_session -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_14_llm_uri_agent__tools -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_06_html_uri_app__backend -->|2| M_10_device_mesh_lab__device_agent
+    M_06_html_uri_app__backend -->|2| M_28_llm_novnc_desktop__novnc_connector
+    M_40_local_portals_suite__domain_loop -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_36_remote_browser_cdp__unattended_browser -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__mock_linkedin -->|2| M_40_local_portals_suite__portal_server
+    M_31_llm_remote_office__office_agent -->|2| M_29_mcp_desktop_agent__mcp_serve
+    M_11_novnc_lan_flow__orchestrator -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_10_device_mesh_lab__device_agent -->|1| M_29_mcp_desktop_agent__mcp_serve
     M_10_device_mesh_lab__device_agent -->|1| M_10_device_mesh_lab__www
-    M_10_device_mesh_lab__controller -->|1| M_10_device_mesh_lab__www
-    M_09_docker_uri_flow__python_worker -->|1| M_09_docker_uri_flow__shell_worker
-    M_11_novnc_lan_flow__computer -->|1| M_10_device_mesh_lab__device_agent
+    M_09_docker_uri_flow__shell_worker -->|1| M_10_device_mesh_lab__device_agent
+    M_09_docker_uri_flow__python_worker -->|1| M_10_device_mesh_lab__device_agent
+    M_09_docker_uri_flow__orchestrator -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_13_simple_defaults__python_connector -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_32_task_scenarios__run_scenarios -->|1| M_43_camera_usb_ocr_inspection__run
+    M_38_self_managing__governance -->|1| scripts__audit_ecosystem_coverage
+    M_20_runtime_transport_matrix__matrix -->|1| M_10_device_mesh_lab__www
+    M_35_deploy_lenovo_surface__verify -->|1| M_06_html_uri_app__app
+    M_35_deploy_lenovo_surface__verify -->|1| M_19_all_connectors__check_all
+    M_35_deploy_lenovo_surface__lenovo_cdp -->|1| M_09_docker_uri_flow__node_worker
+    M_31_llm_remote_office__tellmesh_bridge -->|1| M_10_device_mesh_lab__www
+    M_15_llm_yaml_repair__agent_repair -->|1| M_25_tellmesh_uri_flow__packs
+    M_15_llm_yaml_repair__agent_repair -->|1| M_40_local_portals_suite__portal_autonomy
+    M_44_chat_prompt_sweep__run_chat_prompts -->|1| M_10_device_mesh_lab__www
+    scripts__audit_test_coverage -->|1| scripts__run_ci_manifest
+    M_52_office_vm_rdp_novnc__run -->|1| M_25_tellmesh_uri_flow__packs
+    M_52_office_vm_rdp_novnc__run -->|1| M_40_local_portals_suite__portal_autonomy
+    M_38_self_managing__self_managing -->|1| M_40_local_portals_suite__portal_autonomy
+    M_38_self_managing__self_managing -->|1| M_37_closed_loop_automation__closed_loop
+    M_38_self_managing__self_managing -->|1| M_38_self_managing__run_live
+    M_37_closed_loop_automation__vision_loop -->|1| M_25_tellmesh_uri_flow__packs
+    M_11_tellmesh_uri_flow__run -->|1| M_10_device_mesh_lab__www
+    M_37_closed_loop_automation__run -->|1| M_15_llm_yaml_repair__agent_repair
+    M_37_closed_loop_automation__run -->|1| M_37_closed_loop_automation__planners
+    M_45_ksef_send_faktura__send_invoice -->|1| M_44_ksef_token_via_browser__ksef_auth
+    M_39_browser_observe__observe -->|1| M_25_tellmesh_uri_flow__packs
+    M_06_html_uri_app__backend -->|1| M_47_nl_desktop_control__run
     M_06_html_uri_app__backend -->|1| M_06_html_uri_app__test
-    M_06_html_uri_app__backend -->|1| M_10_device_mesh_lab__device_agent
-    M_06_html_uri_app__backend -->|1| M_09_docker_uri_flow__shell_worker
-    M_06_html_uri_app__backend -->|1| M_12_full_e2e_connect_lab__scripts
+    M_06_html_uri_app__backend -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_33_office_automation_mcp__run -->|1| M_25_tellmesh_uri_flow__packs
+    M_33_office_automation_mcp__run -->|1| M_40_local_portals_suite__portal_autonomy
+    M_40_local_portals_suite__portal_autonomy -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_40_local_portals_suite__portal_server -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_19_uri_tree__build_uri_tree -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__uri_runtime -->|1| M_10_device_mesh_lab__device_agent
+    M_39_local_social_autonomy__uri_runtime -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__nl_autonomy -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_10_device_mesh_lab__controller -->|1| M_07_transports__transport_lib
+    M_10_device_mesh_lab__controller -->|1| M_37_closed_loop_automation__closed_loop
+    M_10_device_mesh_lab__controller -->|1| M_10_device_mesh_lab__www
+    M_10_device_mesh_lab__controller -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_19_all_connectors__check_all -->|1| M_10_device_mesh_lab__www
+    M_39_local_social_autonomy__scout -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__autonomous_browser -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__session_probe -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_39_local_social_autonomy__mock_linkedin -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_29_mcp_desktop_agent__mcp_agent -->|1| M_29_mcp_desktop_agent__mcp_serve
+    M_31_llm_remote_office__office_agent -->|1| M_43_camera_usb_ocr_inspection__run

@@ -1,52 +1,52 @@
-# examples | 348 func | 39f | 60653L | json | 2026-06-21
+# examples | 994 func | 134f | 99131L | python | 2026-07-14
 # generated in 0.00s
 
 HEALTH:
-  CC̄=3.5  critical=23 (limit:10)  dup=1  cycles=0
+  CC̄=4.4  critical=107 (limit:10)  dup=2  cycles=0
 
 ALERTS[20]:
+  !!! high_fan_out     main = 52 (limit:10)
+  !!! high_fan_out     main = 44 (limit:10)
   !!! cc_exceeded      main = 38 (limit:15)
+  !!! high_fan_out     main = 35 (limit:10)
   !!! cc_exceeded      fallback_steps = 33 (limit:15)
-  !!! cc_exceeded      md = 28 (limit:15)
-  !!! cc_exceeded      DeviceAgent.dispatch = 27 (limit:15)
-  !!! high_fan_out     main = 23 (limit:10)
-  !!! high_fan_out     main = 20 (limit:10)
-  !!! high_fan_out     start_http_worker = 20 (limit:10)
-  !!! high_fan_out     serve_http = 20 (limit:10)
-  !!  cc_exceeded      parse_flow = 24 (limit:15)
-  !!  cc_exceeded      app_service_call = 22 (limit:15)
+  !!! cc_exceeded      main = 32 (limit:15)
+  !!! high_fan_out     run = 32 (limit:10)
+  !!! high_fan_out     main = 31 (limit:10)
+  !!! cc_exceeded      run_flow = 30 (limit:15)
+  !!! high_fan_out     main = 30 (limit:10)
 
-MODULES[125] (top by size):
-  M[12-full_e2e_connect_lab/generated/connectors-result.json] 25765L C:0 F:0 CC↑0 D:0 (json)
-  M[12-full_e2e_connect_lab/generated/connectors-install-registry.json] 8163L C:0 F:0 CC↑0 D:0 (json)
+MODULES[404] (top by size):
+  M[12-full_e2e_connect_lab/generated/connectors-result.json] 26686L C:0 F:0 CC↑0 D:0 (json)
   M[12-full_e2e_connect_lab/generated/connectors-registry.json] 8163L C:0 F:0 CC↑0 D:0 (json)
+  M[24-adopt-tellmesh-packs/generated/tellmesh.registry.json] 6087L C:0 F:0 CC↑0 D:0 (json)
+  M[12-full_e2e_connect_lab/generated/connectors-install-registry.json] 3579L C:0 F:0 CC↑0 D:0 (json)
+  M[24-adopt-tellmesh-packs/generated/tellmesh.bindings.json] 2978L C:0 F:0 CC↑0 D:0 (json)
+  M[32-task-scenarios/generated/host-node-matrix-report.json] 2949L C:0 F:0 CC↑0 D:0 (json)
+  M[12-full_e2e_connect_lab/generated/connectors-catalog.json] 2631L C:0 F:0 CC↑0 D:0 (json)
   M[12-full_e2e_connect_lab/generated/monitor-bindings.json] 2150L C:0 F:0 CC↑0 D:0 (json)
+  M[31-llm-remote-office/generated/node-office.registry.json] 2127L C:0 F:0 CC↑0 D:0 (json)
   M[12-full_e2e_connect_lab/generated/task-bindings.json] 1838L C:0 F:0 CC↑0 D:0 (json)
-  M[12-full_e2e_connect_lab/generated/agents.json] 1590L C:0 F:0 CC↑0 D:0 (json)
-  M[09-docker_uri_flow/generated/registry.json] 1069L C:0 F:0 CC↑0 D:0 (json)
-  M[12-full_e2e_connect_lab/generated/nodes.json] 1066L C:0 F:0 CC↑0 D:0 (json)
-  M[12-full_e2e_connect_lab/generated/connectors-catalog.json] 842L C:0 F:0 CC↑0 D:0 (json)
-  M[12-full_e2e_connect_lab/generated/data-bindings.json] 725L C:0 F:0 CC↑0 D:0 (json)
-  M[11-novnc_lan_flow/generated/smoke-output.json] 663L C:0 F:0 CC↑0 D:0 (json)
-  M[10-device_mesh_lab/device_agent.py] 608L C:1 F:23 CC↑27 D:2 (python)
-  M[10-device_mesh_lab/www/app.js] 562L C:0 F:91 CC↑20 D:4 (javascript)
-  M[09-docker_uri_flow/generated/bindings.v2.json] 521L C:0 F:0 CC↑0 D:0 (json)
-  M[10-device_mesh_lab/controller.py] 490L C:1 F:28 CC↑33 D:0 (python)
-  LANGS: json:49/python:19/other:17/shell:14/javascript:11/yml:5/txt:3/yaml:2/go:1/php:1/c:1/typescript:1/toml:1
+  M[12-full_e2e_connect_lab/generated/agents.json] 1680L C:0 F:0 CC↑0 D:0 (json)
+  M[planfile.yaml] 1319L C:0 F:0 CC↑0 D:0 (yaml)
+  M[12-full_e2e_connect_lab/generated/nodes.json] 1156L C:0 F:0 CC↑0 D:0 (json)
+  M[09-docker_uri_flow/generated/registry.json] 1124L C:0 F:0 CC↑0 D:0 (json)
+  M[31-llm-remote-office/generated/node-office.bindings.json] 912L C:0 F:0 CC↑0 D:0 (json)
+  LANGS: python:118/json:118/yaml:50/shell:44/other:39/javascript:11/yml:9/txt:5/toml:3/go:1/php:1/c:1/typescript:1/proto:1/gateway:1/ini:1
 
 HOTSPOTS[10]:
-  ★ main fan=23  // Orchestrates 23 calls
-  ★ main fan=20  // Orchestrates 20 calls
-  ★ start_http_worker fan=20  // Orchestrates 20 calls
-  ★ serve_http fan=20  // Orchestrates 20 calls
-  ★ md fan=19  // Orchestrates 19 calls
+  ★ main fan=52  // Orchestrates 52 calls
+  ★ main fan=44  // Orchestrates 44 calls
+  ★ main fan=35  // Orchestrates 35 calls
+  ★ run fan=32  // Orchestrates 32 calls
+  ★ main fan=31  // Orchestrates 31 calls
 
 REFACTOR[15]:
-  [1] H/L Split main (CC=38)
-  [2] H/L Split DeviceAgent.dispatch (CC=27)
-  [3] H/L Split fallback_steps (CC=33)
-  [4] H/L Split md (CC=28)
-  [5] H/H Split god module 10-device_mesh_lab/device_agent.py (608L, 1 classes)
+  [1] H/L Split DeviceAgent.dispatch (CC=27)
+  [2] H/L Split main (CC=38)
+  [3] H/L Split main (CC=25)
+  [4] H/L Split run (CC=29)
+  [5] H/L Split main (CC=27)
 
 EVOLUTION:
-  2026-06-21 CC̄=3.5 crit=23 60653L // Automated analysis
+  2026-07-14 CC̄=4.4 crit=107 99131L // Automated analysis
