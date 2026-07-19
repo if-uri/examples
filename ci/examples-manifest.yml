@@ -34,7 +34,7 @@ examples:
     command: make test-full
   11-tellmesh-uri-flow:
     class: host
-    command: python -m pytest -q .
+    command: make test
   12-full_e2e_connect_lab:
     class: docker
     command: make test
