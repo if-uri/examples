@@ -12,8 +12,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "urirun" / "adapter
 import governance
 
 TRUSTED = {"package": "urirun-connector-x", "schemes": ["x"],
-           "install": {"local": "/home/tom/github/if-uri/urirun-connector-x",
+           "install": {"local": "/workspace/trusted/urirun-connector-x",
                        "git": "git+https://github.com/if-uri/urirun-connector-x.git"}}
+TEST_ALLOWLIST = ("/workspace/trusted",)
 UNTRUSTED = {"package": "urirun-connector-evil", "schemes": ["evil"],
              "install": {"git": "git+https://github.com/random-person/urirun-connector-evil.git"}}
 
@@ -26,7 +27,7 @@ class GovernanceTest(unittest.TestCase):
         self.audit = self.audit_log.append
 
     def test_trusted_source_installs(self):
-        p = governance.governed_provision(self.install, audit=self.audit)
+        p = governance.governed_provision(self.install, allowlist=TEST_ALLOWLIST, audit=self.audit)
         self.assertTrue(p(None, TRUSTED))
         self.assertEqual(self.calls, ["urirun-connector-x"])
         self.assertTrue(self.audit_log[-1]["ok"])
@@ -43,7 +44,12 @@ class GovernanceTest(unittest.TestCase):
         self.assertEqual(self.calls, ["urirun-connector-evil"])
 
     def test_failed_verify_blocks_serving(self):
-        p = governance.governed_provision(self.install, verify_fn=lambda c: False, audit=self.audit)
+        p = governance.governed_provision(
+            self.install,
+            allowlist=TEST_ALLOWLIST,
+            verify_fn=lambda c: False,
+            audit=self.audit,
+        )
         self.assertFalse(p(None, TRUSTED))
         self.assertEqual(self.calls, [])                       # verify gate stopped it
         self.assertIn("verify", self.audit_log[-1]["decision"])
