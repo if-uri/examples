@@ -58,7 +58,7 @@ examples:
     command: python -m pytest -q .
   18-connector-transport:
     class: docker
-    command: NODE_PORT=18765 make test
+    command: make test
   18-openapi-import:
     class: host
     command: make test
