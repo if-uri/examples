@@ -29,6 +29,8 @@ cleanup() {
   docker compose --profile full down -v --remove-orphans >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
+# Recover deterministically from an interrupted earlier run of this same example.
+cleanup
 
 mkdir -p generated/screenshots
 rm -f generated/flow-result.json generated/smoke-output.json generated/screenshots/*.png

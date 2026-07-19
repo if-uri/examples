@@ -22,7 +22,7 @@ services:
       - ./node:/app:ro
     command: ["bash", "serve.sh"]
     networks: [mesh]
-    ports: ["8765:8765"]
+    ports: ["127.0.0.1:${NODE_PORT:-8765}:8765"]
 
   client:                       # NO connector installed — talks HTTP only
     image: python:3.13-slim
