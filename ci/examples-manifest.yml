@@ -146,12 +146,6 @@ examples:
   40-wordpress-article:
     class: host
     command: python -m pytest -q .
-  41-invoice-audit-flow:
-    class: host
-    command: python -m pytest -q .
-  42-host-compute-node-ocr:
-    class: host
-    command: python -m pytest -q .
   43-camera-usb-ocr-inspection:
     class: hardware
     skip_reason: Requires a real USB camera or phone camera stream for OCR inspection.

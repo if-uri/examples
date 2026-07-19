@@ -22,7 +22,29 @@ CLASSES = RUNNABLE | SKIPPED
 
 
 def numbered_dirs(root: Path) -> list[str]:
-    return sorted(p.name for p in root.iterdir() if p.is_dir() and EXAMPLE_RE.match(p.name))
+    """Return numbered examples that are part of this Git checkout.
+
+    Developer workspaces may contain intentionally ignored, data-bearing example
+    directories. They remain runnable locally but must not make the published CI
+    manifest fail for paths that do not exist in the repository.
+    """
+    process = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z"],
+        capture_output=True,
+        check=False,
+    )
+    if process.returncode != 0:
+        return sorted(p.name for p in root.iterdir() if p.is_dir() and EXAMPLE_RE.match(p.name))
+    tracked = {
+        Path(item.decode("utf-8", errors="replace")).parts[0]
+        for item in process.stdout.split(b"\0")
+        if item
+    }
+    return sorted(
+        name
+        for name in tracked
+        if EXAMPLE_RE.match(name) and (root / name).is_dir()
+    )
 
 
 def _simple_yaml_manifest(path: Path) -> dict[str, dict[str, str]]:

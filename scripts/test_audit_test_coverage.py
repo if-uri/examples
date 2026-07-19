@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import subprocess
+
 from scripts.audit_test_coverage import audit
-from scripts.run_ci_manifest import validate_manifest
+from scripts.run_ci_manifest import numbered_dirs, validate_manifest
 
 
 def test_audit_reports_pytest_dirs_missing_from_smoke(tmp_path):
@@ -58,3 +60,18 @@ def test_manifest_requires_skip_reason_for_skipped_classes(tmp_path):
     _, errors = validate_manifest(root, manifest)
 
     assert "47-android: skipped class 'hardware' requires skip_reason" in errors
+
+
+def test_numbered_dirs_ignores_untracked_developer_examples(tmp_path):
+    root = tmp_path / "examples"
+    root.mkdir()
+    tracked = root / "01-tracked"
+    tracked.mkdir()
+    (tracked / "README.md").write_text("tracked\n", encoding="utf-8")
+    ignored = root / "41-local-data"
+    ignored.mkdir()
+    (ignored / "private.json").write_text("{}\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(root)], check=True)
+    subprocess.run(["git", "-C", str(root), "add", "01-tracked/README.md"], check=True)
+
+    assert numbered_dirs(root) == ["01-tracked"]
