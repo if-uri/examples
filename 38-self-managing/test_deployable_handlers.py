@@ -56,7 +56,9 @@ class DeployableHandlersTest(unittest.TestCase):
             res = mesh.deploy_to_node(client.base, bindings=spec["bindings"], code=spec["code"],
                                       allow=[f"{s}://**" for s in spec["schemes"]], merge=True, token="t")
             return bool(res.get("ok"))
-        return governance.governed_provision(install_fn)   # local HERE path → trusted
+        # The test itself is the standing ALLOW for this exact checkout. Keeping the
+        # resolved path explicit makes it portable across local and GitHub runners.
+        return governance.governed_provision(install_fn, allowlist=(str(HERE.resolve()),))
 
     def _resolver(self, scheme):
         spec = dh.for_scheme(scheme, "local")

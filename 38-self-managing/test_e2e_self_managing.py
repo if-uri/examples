@@ -53,7 +53,9 @@ class E2ESelfManagingTest(unittest.TestCase):
         self.server.shutdown()
 
     def test_full_trilogy_real_connector(self):
-        idx = resolver.index_local()
+        # Prefer connector checkouts prepared next to ``examples`` by CI, then fall
+        # back to the developer inventory under ~/github.
+        idx = resolver.index_local(roots=(str(HERE.parents[1]), "~/github"))
         hits = resolver.resolve("time", idx)
         if not hits or "time-tools" not in hits[0]["package"]:
             self.skipTest("urirun-connector-time-tools not found under ~/github")
@@ -67,8 +69,15 @@ class E2ESelfManagingTest(unittest.TestCase):
                                       allow=["time://**"], merge=True, token="t")
             return bool(res.get("ok"))
 
+        # The selected, canonical checkout is the standing ALLOW for this isolated
+        # test environment; no fixed machine-specific path is required.
+        selected_source = str(Path(hits[0]["install"]["local"]).resolve())
         provision = governance.governed_provision(
-            install_fn, verify_fn=governance.make_verify_fn(), audit=audit.append)
+            install_fn,
+            allowlist=(selected_source,),
+            verify_fn=governance.make_verify_fn(),
+            audit=audit.append,
+        )
 
         # the time route the real connector serves
         def planner(goal, routes, prev_error, observation):
