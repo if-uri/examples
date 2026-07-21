@@ -2,46 +2,36 @@
 task:
   title: Use every urirun connector (one route each)
 allow:
-- browser://*
-- fs://*
-- httpcheck://*
-- log://*
-- monitor://*
-- node://*
 - pkg://*
 - time://*
 steps:
 - id: use-time-tools
   uri: time://host/clock/query/now
   payload: {}
-- id: use-mcp-filesystem
-  uri: fs://host/dir/query/list
+- id: check-mcp-filesystem
+  uri: pkg://host/connector/query/installed
   payload:
-    path: .
-- id: use-http-check
-  uri: httpcheck://host/http/query/status
+    module: urirun_connector_mcp_filesystem
+- id: check-http-check
+  uri: pkg://host/connector/query/installed
   payload:
-    url: https://example.com
-- id: use-domain-monitor
-  uri: monitor://host/dns/query/current
+    module: urirun_connector_http_check
+- id: check-domain-monitor
+  uri: pkg://host/connector/query/installed
   payload:
-    domain: example.com
-    current_records:
-    - Name: '@'
-      Type: A
-      Address: 203.0.113.10
-- id: use-get-node
-  uri: node://get/installer/query/script
-  payload: {}
-- id: use-sqlite-context
-  uri: log://host/logs/query/recent
+    module: urirun_connector_domain_monitor
+- id: check-get-node
+  uri: pkg://host/connector/query/installed
   payload:
-    limit: 5
-- id: use-browser-control
-  uri: browser://chrome/page/query/text
+    module: urirun_connector_get_node
+- id: check-sqlite-context
+  uri: pkg://host/connector/query/installed
   payload:
-    url: https://example.com
-    max: 80
+    module: urirun_connector_sqlite_context
+- id: check-browser-control
+  uri: pkg://host/connector/query/installed
+  payload:
+    module: urirun_connector_browser_control
 - id: check-email
   uri: pkg://host/connector/query/installed
   payload:
