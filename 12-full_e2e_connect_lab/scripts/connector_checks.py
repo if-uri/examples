@@ -22,6 +22,11 @@ REGISTRY = BASE / "connectors-registry.json"
 POLICY = BASE / "connectors-policy.json"
 IFURI_URL = "http://ifuri-site/"
 DEFAULT_CONNECTORS = "planfile,sqlite-context,domain-monitor,http-check,time-tools,grpc-transport,namecheap-dns,browser-control"
+BINDING_MODULES = {
+    "http-check": "urirun_connector_http_check",
+    "time-tools": "urirun_connector_time_tools",
+    "browser-control": "urirun_connector_browser_control",
+}
 
 
 def run(args: list[str], *, check: bool = True, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -61,34 +66,14 @@ def selected_connector_ids() -> set[str]:
     return {item.strip() for item in raw.split(",") if item.strip()}
 
 
-def emit_http_check_bindings() -> None:
-    code = """
+def emit_connector_bindings(connector_id: str, module_name: str) -> None:
+    code = f"""
 import json
-from urirun_connector_http_check import urirun_bindings
+from {module_name} import urirun_bindings
 print(json.dumps(urirun_bindings(), indent=2))
 """.strip()
     result = run(["python3", "-c", code])
-    (BASE / "http-check-bindings.json").write_text(result.stdout, encoding="utf-8")
-
-
-def emit_time_tools_bindings() -> None:
-    code = """
-import json
-from urirun_connector_time_tools import urirun_bindings
-print(json.dumps(urirun_bindings(), indent=2))
-""".strip()
-    result = run(["python3", "-c", code])
-    (BASE / "time-tools-bindings.json").write_text(result.stdout, encoding="utf-8")
-
-
-def emit_browser_control_bindings() -> None:
-    code = """
-import json
-from urirun_connector_browser_control import urirun_bindings
-print(json.dumps(urirun_bindings(), indent=2))
-""".strip()
-    result = run(["python3", "-c", code])
-    (BASE / "browser-control-bindings.json").write_text(result.stdout, encoding="utf-8")
+    (BASE / f"{connector_id}-bindings.json").write_text(result.stdout, encoding="utf-8")
 
 
 def build_registry() -> None:
@@ -97,9 +82,8 @@ def build_registry() -> None:
     SCREENSHOTS.mkdir(parents=True, exist_ok=True)
     write_json(POLICY, {"execute": {"allow": ["**"]}})
 
-    emit_http_check_bindings()
-    emit_time_tools_bindings()
-    emit_browser_control_bindings()
+    for connector_id, module_name in BINDING_MODULES.items():
+        emit_connector_bindings(connector_id, module_name)
     run(["urirun", "host", "data", "bindings", "--target", "host", "--db", str(DB), "--out", str(BASE / "data-bindings.json")])
     run([
         "urirun",
