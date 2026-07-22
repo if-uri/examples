@@ -26,6 +26,8 @@ from __future__ import annotations
 import argparse, base64, io, json, os, re, subprocess, sys, time
 from pathlib import Path
 
+from nested_value import find_value
+
 ROOT = Path("/home/tom/github/if-uri")
 sys.path.insert(0, str(ROOT / "urirun" / "adapters" / "python"))
 from urirun.node.mesh import _maybe_load_dotenv  # noqa: E402
@@ -39,21 +41,6 @@ NODE = "http://192.168.188.201:8765"
 IRREVERSIBLE = re.compile(r"\b(post|publish|send|submit|confirm|buy|pay|delete|share|opublikuj|wyślij)\b", re.I)
 
 
-def _find(o, k):
-    if isinstance(o, dict):
-        if k in o and o[k] is not None:
-            return o[k]
-        for v in o.values():
-            r = _find(v, k)
-            if r is not None:
-                return r
-    if isinstance(o, list):
-        for v in o:
-            r = _find(v, k)
-            if r is not None:
-                return r
-
-
 def run_uri(uri: str, payload: dict, timeout: float = 40) -> dict:
     p = subprocess.run([URIRUN, "host", "run", NODE, uri, "--payload", json.dumps(payload),
                         "--identity", IDENT, "--timeout", str(timeout)], capture_output=True, text=True)
@@ -63,7 +50,7 @@ def run_uri(uri: str, payload: dict, timeout: float = 40) -> dict:
 
 def capture(label: str = "") -> tuple[bytes, int, int]:
     env = run_uri("kvm://laptop/screen/query/capture", {"base64": True})
-    png = base64.b64decode(_find(env, "pngBase64"))
+    png = base64.b64decode(find_value(env, "pngBase64"))
     from PIL import Image
     w, h = Image.open(io.BytesIO(png)).size
     if label:

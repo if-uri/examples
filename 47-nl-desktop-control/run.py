@@ -23,6 +23,8 @@ import sys
 import time
 from pathlib import Path
 
+from nested_value import find_value
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "urirun" / "adapters" / "python"))
 
@@ -133,20 +135,7 @@ def save_shot(node: str, identity: str, outdir: str, label: str, at=None) -> str
         import base64 as _b64
         import io
 
-        def find(o, k):
-            if isinstance(o, dict):
-                if k in o and o[k] is not None:
-                    return o[k]
-                for v in o.values():
-                    r = find(v, k)
-                    if r is not None:
-                        return r
-            if isinstance(o, list):
-                for v in o:
-                    r = find(v, k)
-                    if r is not None:
-                        return r
-        b = find(env, "pngBase64")
+        b = find_value(env, "pngBase64")
         if not b:
             return None
         from PIL import Image
