@@ -5,11 +5,11 @@ and checked against `ci/ecosystem-coverage.yml`.
 
 ## Summary
 
-- Total repositories reviewed: 126
-- Active repositories: 90
+- Total repositories reviewed: 127
+- Active repositories: 91
 - Complete coverage: 14
 - Partial coverage: 61
-- Missing coverage: 28
+- Missing coverage: 29
 - Not applicable: 18
 - Deprecated: 5
 - Current numbered examples: 65
@@ -52,14 +52,15 @@ report lists the main active and high-risk entries.
 | `if-uri/urirun` | active | Core URI runtime, host/node, CLI | core | `01-json`, `04-python`, `07-transports`, `17-flows` | complete | keep CLI current | P1 |
 | `if-uri/examples` | active | Runnable catalog | catalog | `53-ecosystem-coverage-audit` | complete | none | P0 |
 | `if-uri/human-connector` | active | Human task provider over `human://` | connector | none dedicated | partial | `human-task-provider` | P0 |
-| `if-uri/pc1` | active | Digital twin orchestration | E2E lab | `12-full_e2e_connect_lab` | partial | `pc1-pc2-customer-buyer-human` | P0 |
-| `if-uri/pc2` | active | Operator host for twin | E2E lab | none | missing | `pc1-pc2-customer-buyer-human` | P0 |
-| `if-uri/ifuri-buyer` | active | Buyer persona | digital persona | none | partial | `buyer-customer-digital-personas` | P0 |
-| `if-uri/ifuri-customer` | active | Customer persona | digital persona | none | partial | `buyer-customer-digital-personas` | P0 |
-| `if-uri/net-user-pl` | active | Offline virtual internet | service/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
-| `if-uri/pc-user-pl` | active | Desktop node | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
-| `if-uri/mobile-user-pl` | active | SMS phone twin | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
-| `if-uri/report` | active | Session reports from event bus | evidence/reporting | none | missing | `eventbus-session-report` | P1 |
+| `digitaltwin-run/pc1` | active | Digital twin orchestration | E2E lab | `12-full_e2e_connect_lab` | partial | `pc1-pc2-customer-buyer-human` | P0 |
+| `digitaltwin-run/pc2` | active | Operator host for twin | E2E lab | none | missing | `pc1-pc2-customer-buyer-human` | P0 |
+| `digitaltwin-run/ifuri-buyer` | active | Buyer persona | digital persona | none | partial | `buyer-customer-digital-personas` | P0 |
+| `digitaltwin-run/ifuri-customer` | active | Customer persona | digital persona | none | partial | `buyer-customer-digital-personas` | P0 |
+| `digitaltwin-run/net-user-pl` | active | Offline virtual internet | service/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
+| `digitaltwin-run/pc-user-pl` | active | Desktop node | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
+| `digitaltwin-run/mobile-user-pl` | active | SMS phone twin | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
+| `digitaltwin-run/urirun-twin-human` | active | Human actors exposed as URI processes | actor/twin | none | missing | `human-twin-actor` | P1 |
+| `digitaltwin-run/report` | active | Session reports from event bus | evidence/reporting | none | missing | `eventbus-session-report` | P1 |
 | `if-uri/urirun-api-rest` | archived | Retired duplicate of `llm-urirun-com` | none | — | deprecated | none | — |
 | `if-uri/urirun-contract-{capture-click,filepair,kvstore,windowpair}` | archived | Completed contract-package experiments; descriptors moved to `urirun-capability/contracts` | capability migration fixtures | — | deprecated | none | — |
 | `if-uri/urirun-api-mcp` | active | MCP API adapter | API surface | `29-mcp-desktop-agent` | partial | `api-mcp-adapter` | P1 |
