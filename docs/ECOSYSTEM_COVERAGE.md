@@ -6,12 +6,12 @@ and checked against `ci/ecosystem-coverage.yml`.
 ## Summary
 
 - Total repositories reviewed: 126
-- Active repositories: 94
+- Active repositories: 90
 - Complete coverage: 14
-- Partial coverage: 65
+- Partial coverage: 61
 - Missing coverage: 28
 - Not applicable: 18
-- Deprecated: 1
+- Deprecated: 5
 - Current numbered examples: 65
 - New catalog/audit example: `53-ecosystem-coverage-audit`
 
@@ -61,6 +61,7 @@ report lists the main active and high-risk entries.
 | `if-uri/mobile-user-pl` | active | SMS phone twin | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
 | `if-uri/report` | active | Session reports from event bus | evidence/reporting | none | missing | `eventbus-session-report` | P1 |
 | `if-uri/urirun-api-rest` | archived | Retired duplicate of `llm-urirun-com` | none | — | deprecated | none | — |
+| `if-uri/urirun-contract-{capture-click,filepair,kvstore,windowpair}` | archived | Completed contract-package experiments; descriptors moved to `urirun-capability/contracts` | capability migration fixtures | — | deprecated | none | — |
 | `if-uri/urirun-api-mcp` | active | MCP API adapter | API surface | `29-mcp-desktop-agent` | partial | `api-mcp-adapter` | P1 |
 | `if-uri/urirun-api-a2a` | active | A2A API adapter | API surface | `04-python` | partial | `api-a2a-adapter` | P1 |
 | `if-uri/urirun-connector-kvm` | active | KVM input/screen | connector | `28`, `37`, `52` | complete | none | P1 |
@@ -78,7 +79,8 @@ report lists the main active and high-risk entries.
 
 ## Notes
 
-- No repository is marked `deprecated` or `archived` in the GitHub inventory.
+- Five retired repositories are marked `deprecated`; their maintained code or
+  data has an explicit replacement recorded in the machine-readable inventory.
 - Website/documentation/infrastructure repos are classified as `not-applicable`
   when they have no direct URI runtime surface.
 - Hardware and external-secret examples stay in the backlog unless they can be

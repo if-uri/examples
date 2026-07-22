@@ -2,12 +2,12 @@
   "generated_from": "gh api --paginate orgs/if-uri/repos on 2026-07-13",
   "summary": {
     "total_repositories": 126,
-    "active_repositories": 94,
+    "active_repositories": 90,
     "complete": 14,
-    "partial": 65,
+    "partial": 61,
     "missing": 28,
     "not_applicable": 18,
-    "deprecated": 1
+    "deprecated": 5
   },
   "repositories": {
     "if-uri/about": {"status": "website", "level": "not-applicable", "reason": "Static project presentation site; covered by docs/site links rather than runnable code examples.", "examples": []},
@@ -112,10 +112,10 @@
     "if-uri/urirun-connector-youtube": {"status": "active", "level": "missing", "examples": [], "proposed_examples": ["youtube-transcript-no-api-key"], "priority": "P2"},
     "if-uri/urirun-connectors-toolkit": {"status": "active", "level": "partial", "examples": ["05-generators", "19-all-connectors"], "proposed_examples": ["connector-authoring-toolkit"], "priority": "P1"},
     "if-uri/urirun-contract": {"status": "active", "level": "complete", "examples": ["50-contract-guarded-flow", "51-router-guarded-autonomy"]},
-    "if-uri/urirun-contract-capture-click": {"status": "active", "level": "partial", "examples": ["50-contract-guarded-flow"], "proposed_examples": ["capture-click-contract"], "priority": "P2"},
-    "if-uri/urirun-contract-filepair": {"status": "active", "level": "partial", "examples": ["50-contract-guarded-flow"], "proposed_examples": ["filepair-contract"], "priority": "P2"},
-    "if-uri/urirun-contract-kvstore": {"status": "active", "level": "partial", "examples": ["50-contract-guarded-flow"], "proposed_examples": ["kvstore-contract"], "priority": "P2"},
-    "if-uri/urirun-contract-windowpair": {"status": "active", "level": "partial", "examples": ["50-contract-guarded-flow"], "proposed_examples": ["windowpair-contract"], "priority": "P2"},
+    "if-uri/urirun-contract-capture-click": {"status": "archived", "level": "deprecated", "reason": "Experiment completed; its descriptor is maintained in urirun-capability/contracts/capture-click.json.", "examples": []},
+    "if-uri/urirun-contract-filepair": {"status": "archived", "level": "deprecated", "reason": "Experiment completed; its descriptor is maintained in urirun-capability/contracts/filepair.json.", "examples": []},
+    "if-uri/urirun-contract-kvstore": {"status": "archived", "level": "deprecated", "reason": "Experiment completed; its descriptor is maintained in urirun-capability/contracts/kvstore.json.", "examples": []},
+    "if-uri/urirun-contract-windowpair": {"status": "archived", "level": "deprecated", "reason": "Experiment completed; its descriptor is maintained in urirun-capability/contracts/windowpair.json.", "examples": []},
     "if-uri/urirun-declarative": {"status": "active", "level": "partial", "examples": ["15-declarative-http"], "proposed_examples": ["declarative-connector-spec"], "priority": "P1"},
     "if-uri/urirun-fleet": {"status": "active", "level": "missing", "examples": [], "proposed_examples": ["fleet-reconcile-readiness"], "priority": "P1"},
     "if-uri/urirun-flow": {"status": "active", "level": "complete", "examples": ["17-flows", "25-tellmesh-uri-flow", "34-all-connectors-flow"]},
