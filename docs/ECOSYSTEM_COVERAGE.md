@@ -6,12 +6,13 @@ and checked against `ci/ecosystem-coverage.yml`.
 ## Summary
 
 - Total repositories reviewed: 126
-- Active repositories: 86
-- Complete coverage: 8
-- Partial coverage: 35
-- Missing coverage: 43
-- Not applicable: 40
-- Current numbered examples: 63
+- Active repositories: 94
+- Complete coverage: 14
+- Partial coverage: 65
+- Missing coverage: 28
+- Not applicable: 18
+- Deprecated: 1
+- Current numbered examples: 65
 - New catalog/audit example: `53-ecosystem-coverage-audit`
 
 Important P0 gaps:
@@ -22,7 +23,7 @@ Important P0 gaps:
 Important P1 gaps:
 
 - Browser extension coverage for `chrome-plugin` and `firefox-plugin`.
-- API adapters: `urirun-api-rest`, `urirun-api-mcp`, `urirun-api-a2a`.
+- API adapters: `urirun-api-mcp`, `urirun-api-a2a`; REST/OpenAI proxy: `llm-urirun-com`.
 - Connector generation, fleet/node administration and headless document/PDF examples.
 - Session report generation from the digital-twin event bus.
 
@@ -59,7 +60,7 @@ report lists the main active and high-risk entries.
 | `if-uri/pc-user-pl` | active | Desktop node | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
 | `if-uri/mobile-user-pl` | active | SMS phone twin | node/twin | `12-full_e2e_connect_lab` | complete | none | P1 |
 | `if-uri/report` | active | Session reports from event bus | evidence/reporting | none | missing | `eventbus-session-report` | P1 |
-| `if-uri/urirun-api-rest` | active | REST API adapter | API surface | `15-declarative-http` | partial | `api-rest-adapter` | P1 |
+| `if-uri/urirun-api-rest` | archived | Retired duplicate of `llm-urirun-com` | none | — | deprecated | none | — |
 | `if-uri/urirun-api-mcp` | active | MCP API adapter | API surface | `29-mcp-desktop-agent` | partial | `api-mcp-adapter` | P1 |
 | `if-uri/urirun-api-a2a` | active | A2A API adapter | API surface | `04-python` | partial | `api-a2a-adapter` | P1 |
 | `if-uri/urirun-connector-kvm` | active | KVM input/screen | connector | `28`, `37`, `52` | complete | none | P1 |

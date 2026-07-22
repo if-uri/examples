@@ -2,11 +2,12 @@
   "generated_from": "gh api --paginate orgs/if-uri/repos on 2026-07-13",
   "summary": {
     "total_repositories": 126,
-    "active_repositories": 86,
-    "complete": 8,
-    "partial": 35,
-    "missing": 43,
-    "not_applicable": 40
+    "active_repositories": 94,
+    "complete": 14,
+    "partial": 65,
+    "missing": 28,
+    "not_applicable": 18,
+    "deprecated": 1
   },
   "repositories": {
     "if-uri/about": {"status": "website", "level": "not-applicable", "reason": "Static project presentation site; covered by docs/site links rather than runnable code examples.", "examples": []},
@@ -54,7 +55,7 @@
     "if-uri/urirun-android-node-app": {"status": "active", "level": "partial", "examples": ["47-android-nexus7-node"], "proposed_examples": ["android-node-app-build-smoke"], "priority": "P3"},
     "if-uri/urirun-api-a2a": {"status": "active", "level": "partial", "examples": ["04-python"], "proposed_examples": ["api-a2a-adapter"], "priority": "P1"},
     "if-uri/urirun-api-mcp": {"status": "active", "level": "partial", "examples": ["04-python", "29-mcp-desktop-agent"], "proposed_examples": ["api-mcp-adapter"], "priority": "P1"},
-    "if-uri/urirun-api-rest": {"status": "active", "level": "partial", "examples": ["15-declarative-http"], "proposed_examples": ["api-rest-adapter"], "priority": "P1"},
+    "if-uri/urirun-api-rest": {"status": "archived", "level": "deprecated", "reason": "Byte-identical proxy retired in favor of the canonical llm-urirun-com deployment repository.", "examples": []},
     "if-uri/urirun-artifacts": {"status": "active", "level": "partial", "examples": ["03-artifacts"], "proposed_examples": ["artifact-schema-codegen"], "priority": "P1"},
     "if-uri/urirun-capability": {"status": "active", "level": "missing", "examples": [], "proposed_examples": ["capability-resolver"], "priority": "P1"},
     "if-uri/urirun-cdp": {"status": "active", "level": "complete", "examples": ["36-remote-browser-cdp", "39-browser-observe"]},
