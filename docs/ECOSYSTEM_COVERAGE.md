@@ -23,7 +23,7 @@ Important P0 gaps:
 Important P1 gaps:
 
 - Browser extension coverage for `chrome-plugin` and `firefox-plugin`.
-- API adapters: `urirun-api-mcp`, `urirun-api-a2a`; REST/OpenAI proxy: `llm-urirun-com`.
+- Protocol connectors: `urirun-connectors/urirun-connector-mcp`, `urirun-connectors/urirun-connector-a2a`; REST/OpenAI proxy: `llm-urirun-com`.
 - Connector generation, fleet/node administration and headless document/PDF examples.
 - Session report generation from the digital-twin event bus.
 
@@ -63,8 +63,8 @@ report lists the main active and high-risk entries.
 | `digitaltwin-run/report` | active | Session reports from event bus | evidence/reporting | none | missing | `eventbus-session-report` | P1 |
 | `if-uri/urirun-api-rest` | archived | Retired duplicate of `llm-urirun-com` | none | — | deprecated | none | — |
 | `if-uri/urirun-contract-{capture-click,filepair,kvstore,windowpair}` | archived | Completed contract-package experiments; descriptors moved to `urirun-capability/contracts` | capability migration fixtures | — | deprecated | none | — |
-| `if-uri/urirun-api-mcp` | active | MCP API adapter | API surface | `29-mcp-desktop-agent` | partial | `api-mcp-adapter` | P1 |
-| `if-uri/urirun-api-a2a` | active | A2A API adapter | API surface | `04-python` | partial | `api-a2a-adapter` | P1 |
+| `urirun-connectors/urirun-connector-mcp` | active | MCP connector | protocol integration | `29-mcp-desktop-agent` | partial | `api-mcp-adapter` | P1 |
+| `urirun-connectors/urirun-connector-a2a` | active | A2A connector | protocol integration | `04-python` | partial | `api-a2a-adapter` | P1 |
 | `if-uri/urirun-connector-kvm` | active | KVM input/screen | connector | `28`, `37`, `52` | complete | none | P1 |
 | `if-uri/urirun-connector-router` | active | Routing guard | connector | `51-router-guarded-autonomy` | complete | none | P1 |
 | `if-uri/urirun-contract` | active | Route contracts | contract layer | `50`, `51` | complete | none | P1 |
