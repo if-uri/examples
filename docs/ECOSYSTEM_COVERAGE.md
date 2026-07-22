@@ -10,8 +10,8 @@ and checked against `ci/ecosystem-coverage.yml`.
 - Complete coverage: 14
 - Partial coverage: 61
 - Missing coverage: 29
-- Not applicable: 18
-- Deprecated: 5
+- Not applicable: 16
+- Deprecated: 7
 - Current numbered examples: 65
 - New catalog/audit example: `53-ecosystem-coverage-audit`
 
@@ -51,7 +51,7 @@ report lists the main active and high-risk entries.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `if-uri/urirun` | active | Core URI runtime, host/node, CLI | core | `01-json`, `04-python`, `07-transports`, `17-flows` | complete | keep CLI current | P1 |
 | `if-uri/examples` | active | Runnable catalog | catalog | `53-ecosystem-coverage-audit` | complete | none | P0 |
-| `if-uri/human-connector` | active | Human task provider over `human://` | connector | none dedicated | partial | `human-task-provider` | P0 |
+| `urirun-connectors/urirun-connector-human` | active | Human task provider over `human://` | connector | none dedicated | partial | `human-task-provider` | P0 |
 | `digitaltwin-run/pc1` | active | Digital twin orchestration | E2E lab | `12-full_e2e_connect_lab` | partial | `pc1-pc2-customer-buyer-human` | P0 |
 | `digitaltwin-run/pc2` | active | Operator host for twin | E2E lab | none | missing | `pc1-pc2-customer-buyer-human` | P0 |
 | `digitaltwin-run/ifuri-buyer` | active | Buyer persona | digital persona | none | partial | `buyer-customer-digital-personas` | P0 |
@@ -80,7 +80,7 @@ report lists the main active and high-risk entries.
 
 ## Notes
 
-- Five retired repositories are marked `deprecated`; their maintained code or
+- Seven retired repositories are marked `deprecated`; their maintained code or
   data has an explicit replacement recorded in the machine-readable inventory.
 - Website/documentation/infrastructure repos are classified as `not-applicable`
   when they have no direct URI runtime surface.

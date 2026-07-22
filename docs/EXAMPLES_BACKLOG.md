@@ -5,7 +5,7 @@ need hardware, secrets, a self-hosted runner, or a larger product fix.
 
 ## `54-human-task-provider`
 
-- Repositories: `if-uri/human-connector`, `if-uri/urirun-flow`
+- Repositories: `urirun-connectors/urirun-connector-human`, `if-uri/urirun-flow`
 - Goal: demonstrate `human://{node}/task/command/request`, poll, resolve,
   decline and cancel as first-class URI flow steps.
 - Scenario: local task store, deterministic operator resolve, event trace.
