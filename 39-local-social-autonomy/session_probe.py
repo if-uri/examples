@@ -13,7 +13,6 @@ import base64
 import json
 import os
 import socket
-import struct
 import sys
 import urllib.parse
 import urllib.request
@@ -25,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import mock_linkedin
+from websocket_frames import recv_json, send_text
 
 
 DEFAULT_ENV = HERE / ".env"
@@ -80,48 +80,6 @@ def _http_json(base: str, path: str, timeout: float = 2.0) -> Any:
         return json.loads(response.read().decode("utf-8") or "{}")
 
 
-def _send_ws(sock: socket.socket, text: str) -> None:
-    payload = text.encode("utf-8")
-    mask = os.urandom(4)
-    header = bytearray([0x81])
-    n = len(payload)
-    if n < 126:
-        header.append(0x80 | n)
-    elif n < 65536:
-        header.append(0x80 | 126)
-        header += struct.pack(">H", n)
-    else:
-        header.append(0x80 | 127)
-        header += struct.pack(">Q", n)
-    header += mask
-    sock.sendall(bytes(header) + bytes(b ^ mask[i % 4] for i, b in enumerate(payload)))
-
-
-def _read_exact(sock: socket.socket, n: int) -> bytes:
-    data = b""
-    while len(data) < n:
-        chunk = sock.recv(n - len(data))
-        if not chunk:
-            raise RuntimeError("websocket closed")
-        data += chunk
-    return data
-
-
-def _recv_ws(sock: socket.socket) -> dict[str, Any]:
-    head = _read_exact(sock, 2)
-    length = head[1] & 0x7F
-    if length == 126:
-        length = struct.unpack(">H", _read_exact(sock, 2))[0]
-    elif length == 127:
-        length = struct.unpack(">Q", _read_exact(sock, 8))[0]
-    if head[1] & 0x80:
-        mask = _read_exact(sock, 4)
-        payload = bytes(b ^ mask[i % 4] for i, b in enumerate(_read_exact(sock, length)))
-    else:
-        payload = _read_exact(sock, length)
-    return json.loads(payload.decode("utf-8", "replace"))
-
-
 def _ws_command(ws_url: str, method: str, params: dict[str, Any] | None = None, timeout: float = 4.0) -> dict[str, Any]:
     parsed = urllib.parse.urlparse(ws_url)
     sock = socket.create_connection((parsed.hostname, parsed.port), timeout=timeout)
@@ -135,9 +93,9 @@ def _ws_command(ws_url: str, method: str, params: dict[str, Any] | None = None, 
         while b"\r\n\r\n" not in buf:
             buf += sock.recv(4096)
         msg_id = 1
-        _send_ws(sock, json.dumps({"id": msg_id, "method": method, "params": params or {}}))
+        send_text(sock, json.dumps({"id": msg_id, "method": method, "params": params or {}}))
         while True:
-            message = _recv_ws(sock)
+            message = recv_json(sock)
             if message.get("id") == msg_id:
                 return message
     finally:

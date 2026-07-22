@@ -14,7 +14,6 @@ import json
 import os
 import shutil
 import socket
-import struct
 import subprocess
 import sys
 import tempfile
@@ -29,6 +28,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import mock_linkedin
+from websocket_frames import recv_json, send_text
 
 
 DEFAULT_ENV = HERE / ".env"
@@ -229,44 +229,11 @@ class CDPBrowser:
 
     def _send_ws(self, text: str) -> None:
         assert self.sock is not None
-        payload = text.encode("utf-8")
-        mask = os.urandom(4)
-        header = bytearray([0x81])
-        n = len(payload)
-        if n < 126:
-            header.append(0x80 | n)
-        elif n < 65536:
-            header.append(0x80 | 126)
-            header += struct.pack(">H", n)
-        else:
-            header.append(0x80 | 127)
-            header += struct.pack(">Q", n)
-        header += mask
-        self.sock.sendall(bytes(header) + bytes(b ^ mask[i % 4] for i, b in enumerate(payload)))
-
-    def _read_exact(self, n: int) -> bytes:
-        assert self.sock is not None
-        data = b""
-        while len(data) < n:
-            chunk = self.sock.recv(n - len(data))
-            if not chunk:
-                raise RuntimeError("websocket closed")
-            data += chunk
-        return data
+        send_text(self.sock, text)
 
     def _recv_ws(self) -> dict[str, Any]:
-        head = self._read_exact(2)
-        length = head[1] & 0x7F
-        if length == 126:
-            length = struct.unpack(">H", self._read_exact(2))[0]
-        elif length == 127:
-            length = struct.unpack(">Q", self._read_exact(8))[0]
-        if head[1] & 0x80:
-            mask = self._read_exact(4)
-            payload = bytes(b ^ mask[i % 4] for i, b in enumerate(self._read_exact(length)))
-        else:
-            payload = self._read_exact(length)
-        return json.loads(payload.decode("utf-8", "replace"))
+        assert self.sock is not None
+        return recv_json(self.sock)
 
     def command(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         msg_id = self.next_id

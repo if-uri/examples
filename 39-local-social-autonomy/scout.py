@@ -26,6 +26,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import mock_linkedin
+from websocket_frames import recv_json, send_text
 
 DEFAULT_ENV = HERE / ".env"
 CAPTURES = HERE / ".state" / "captures.md"
@@ -82,7 +83,7 @@ class AttachCDP:
         parsed = urllib.parse.urlparse(ws_url)
         self.sock = socket.create_connection((parsed.hostname, parsed.port), timeout=6)
         # Finish the WS handshake so subsequent command() works.
-        import base64, os, struct  # local; only needed once
+        import base64, os  # local; only needed once
         key = base64.b64encode(os.urandom(16)).decode()
         self.sock.sendall((f"GET {parsed.path} HTTP/1.1\r\n"
                            f"Host: {parsed.hostname}:{parsed.port}\r\n"
@@ -94,48 +95,12 @@ class AttachCDP:
 
     # --- send/recv frames (mirrors autonomous_browser.CDPBrowser) ---
     def _send(self, text: str) -> None:
-        import os, struct
         assert self.sock is not None
-        payload = text.encode("utf-8")
-        mask = os.urandom(4)
-        header = bytearray([0x81])
-        n = len(payload)
-        if n < 126:
-            header.append(0x80 | n)
-        elif n < 65536:
-            header.append(0x80 | 126)
-            header += struct.pack(">H", n)
-        else:
-            header.append(0x80 | 127)
-            header += struct.pack(">Q", n)
-        header += mask
-        self.sock.sendall(bytes(header) + bytes(b ^ mask[i % 4] for i, b in enumerate(payload)))
-
-    def _recv_exact(self, n: int) -> bytes:
-        import struct
-        assert self.sock is not None
-        data = b""
-        while len(data) < n:
-            chunk = self.sock.recv(n - len(data))
-            if not chunk:
-                raise RuntimeError("websocket closed")
-            data += chunk
-        return data
+        send_text(self.sock, text)
 
     def _recv(self) -> dict[str, Any]:
-        import struct
-        head = self._recv_exact(2)
-        length = head[1] & 0x7F
-        if length == 126:
-            length = struct.unpack(">H", self._recv_exact(2))[0]
-        elif length == 127:
-            length = struct.unpack(">Q", self._recv_exact(8))[0]
-        if head[1] & 0x80:
-            mask = self._recv_exact(4)
-            payload = bytes(b ^ mask[i % 4] for i, b in enumerate(self._recv_exact(length)))
-        else:
-            payload = self._recv_exact(length)
-        return json.loads(payload.decode("utf-8", "replace"))
+        assert self.sock is not None
+        return recv_json(self.sock)
 
     def command(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         msg_id = self.next_id
